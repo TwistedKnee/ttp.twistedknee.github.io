@@ -1,20 +1,20 @@
-#Command and Control Notes
+**Command and Control Notes**
 
 CRTO focuses on cobalt strike as the C2 for the course. 
 
-##Starting the Team Server
+**Starting the Team Server**
 ```
 sudo ./teamserver <IP> <password> <webbug.profile>
 ```
 IP is the IP address of the Attacker, password is the shared password to connect from cobalt strike, webbug.profile is malleable C2.
 
-##Listener Management
+**Listener Management**
 Can make a HTTP listener and give it a name, also an SMB, TCP and TCP local listener. DNS is also an option.
 
-##Generating Payloads
+**Generating Payloads**
 You can create multiple different type of payloads, explore what might be a good fit here.
 
-##Interacting with beacon
+**Interacting with beacon**
 Commands of interest:
 ```
 help
@@ -22,10 +22,10 @@ pwd
 sleep 5
 ```
 
-##Pivot Listeners
+**Pivot Listeners**
 Tells the beacon what port to bind and listen on. Right click a beacon and click Pivoting>Listener.
 
-##Running as a Service
+**Running as a Service**
 Allows teamserver to run as service automatically.
 
 Create new file:
