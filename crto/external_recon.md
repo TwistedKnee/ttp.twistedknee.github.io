@@ -17,5 +17,5 @@ Whois
 whois <IP>
 ```
 
-Subdomains are another important thing to check, we could use something like ffuf with a fuzz on the Host header, or just use a tool like dnscan [https://github.com/rbsec/dnscan](https://github.com/rbsec/dnscan). There's other tools to like [Sublist3r](https://github.com/aboul3la/Sublist3r)
+Subdomains are another important thing to check, we could use something like ffuf with a fuzz on the Host header, or just use a tool like dnscan [dnscan](https://github.com/rbsec/dnscan). There's other tools to like [Sublist3r](https://github.com/aboul3la/Sublist3r)
 
