@@ -42,3 +42,5 @@ filetype:<extension> example: .pdf,.xlsx
 
 **Social media**
 This is interesting as you never know what you will get. My experience was finding employees badges designs from employee influencers youtube videos. Very funny. So check around and see what you might get. 
+
+For course related info, check linkedin scrapers like [LinkedInt](https://github.com/vysecurity/LinkedInt) or try sites like [hunter.io](https://hunter.io/) to find employee emails. 
