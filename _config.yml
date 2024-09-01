@@ -2,6 +2,7 @@ theme: jekyll-theme-minimal
 title: twistedknees homepage
 description: the start of my notes pages
 layout: default
+include: ['_pages']
 
 nav:
   - Homepage: index.md
