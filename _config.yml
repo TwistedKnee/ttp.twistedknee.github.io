@@ -1,10 +1,34 @@
-remote-theme: pages-themes/cayman@v0.2.0
+# Set the remote theme (ensure it's available and correctly referenced)
+remote_theme: pages-themes/cayman@v0.2.0
 plugins:
-- jekyll-remote-theme 
-title: twistedknees homepage
-description: the start of my notes pages
-layout: default
-include: ['_pages']
+  - jekyll-remote-theme
 
-nav:
-- Homepage: index.md
+# Site settings
+title: twistedknees homepage
+description: The start of my notes pages
+baseurl: "" # Ensure this is empty if you're using GitHub Pages' default domain
+
+# Permalink settings
+permalink: pretty # Adjust permalink structure if needed
+
+# Collections (if using collections for notes)
+collections:
+  pentest_notes:
+    output: true
+    permalink: /pentest_notes/:path/
+
+# Directories and files to include or exclude
+include:
+  - _pages
+exclude:
+  - README.md # Add any files or directories you don't want to include
+
+# Navigation menu settings (if using a custom menu, modify according to your layout)
+# This part depends on your theme's support for navigation configuration
+
+# Build settings
+markdown: kramdown # Optional: specifies the markdown processor (kramdown is default)
+
+# Options for Jekyll build and serving
+future: true # Show posts with future dates
+unpublished: true # Show unpublished posts (useful for drafts)
