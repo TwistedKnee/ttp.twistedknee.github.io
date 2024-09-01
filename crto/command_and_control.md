@@ -50,3 +50,14 @@ ExecStart=/home/attacker/cobaltstrike/teamserver <IP> <password> path/to/webbug.
 [Install]
 WantedBy=multi-user.target
 ```
+Next just reload the systemd manager a check status, it will be inactive/dead
+```
+sudo systemctl daemon-reload
+sudo systemctl status teamserver.service
+```
+Then restart the service and check it status to ensure it ran correctly. Last command starts it on reboot
+```
+sudo systemctl start teamserver.service
+sudo systemctl status teamserver.service
+sudo systemctl enable teamserver.service
+```
