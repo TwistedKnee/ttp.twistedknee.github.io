@@ -32,7 +32,7 @@ Create new file:
 ```
 sudo vim /etc/systemd/system/teamserver.service
 ```
-Paste, make sure to change webbug.profil path, IP and password:
+Paste, make sure to change webbug.profile path, IP and password:
 ```
 [Unit]
 Description=Cobalt Strike Team Server
