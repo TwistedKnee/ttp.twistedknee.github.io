@@ -5,9 +5,3 @@
 Course is from zero point security, probably one of the best trainings I've received so far. I strongly recommend this to get started in red teaming. 
 
 Course link: [Red Team Ops](https://training.zeropointsecurity.co.uk/courses/red-team-ops)
-
-##List of Notes:
-
-[Command and Control](command_and_control.md)
-
-[External Reconnaissance](external_recon.md)
