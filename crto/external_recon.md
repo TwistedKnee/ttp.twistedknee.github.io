@@ -28,3 +28,17 @@ if we find email in the name it might be an email service and we can enumerate t
 ```
 python3 spoofy.py -d <domain> -o stdout
 ```
+
+**Google Dorking**
+This is using search engines dorks, just operators that let you search for specific things like file extensions or to search for only things in a domain, here are some interesting dorks:
+```
+site:<site>
+intitle:<searchterm>
+inurl:<searchterm>
+intext:<searchterm>
+filetype:<extension> example: .pdf,.xlsx
+- this excludes the text example: site:<domain> -support --> means exclude support from the subdomains
+```
+
+**Social media**
+This is interesting as you never know what you will get. My experience was finding employees badges designs from employee influencers youtube videos. Very funny. So check around and see what you might get. 
