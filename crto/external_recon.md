@@ -19,3 +19,12 @@ whois <IP>
 
 Subdomains are another important thing to check, we could use something like ffuf with a fuzz on the Host header, or just use a tool like dnscan [dnscan](https://github.com/rbsec/dnscan). There's other tools to like [Sublist3r](https://github.com/aboul3la/Sublist3r)
 
+dnscan
+```
+./dnscan.py -d <domain> -w subdomains-100.txt
+```
+
+if we find email in the name it might be an email service and we can enumerate that security with a tool like [Spoofy](https://github.com/MattKeeley/Spoofy)
+```
+python3 spoofy.py -d <domain> -o stdout
+```
