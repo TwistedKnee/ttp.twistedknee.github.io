@@ -1,4 +1,4 @@
-**External Reconaissance Notes**
+# External Reconaissance Notes
 
 If no assumed breach, you need an initial entry into the network. This can be low hanging vulnerabilities exposed externally, or more likely from phishing or something else entirely. In either case we will use recon to gain information about the target to help us find the entrypoint. 
 
