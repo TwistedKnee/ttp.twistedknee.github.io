@@ -1,8 +1,10 @@
-theme: jekyll-theme-minimal
+remote-theme: pages-themes/midnight@v0.2.0
+plugins:
+- jekyll-remote-theme 
 title: twistedknees homepage
 description: the start of my notes pages
 layout: default
 include: ['_pages']
 
 nav:
-  - Homepage: index.md
+- Homepage: index.md
