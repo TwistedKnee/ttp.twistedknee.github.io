@@ -9,4 +9,5 @@ Course link: [Red Team Ops](https://training.zeropointsecurity.co.uk/courses/red
 ##List of Notes:
 
 [Command and Control](command_and_control.md)
+
 [External Reconnaissance](external_recon.md)
