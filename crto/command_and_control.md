@@ -1,4 +1,4 @@
-**Command and Control Notes**
+# Command and Control Notes
 
 CRTO focuses on cobalt strike as the C2 for the course. 
 
