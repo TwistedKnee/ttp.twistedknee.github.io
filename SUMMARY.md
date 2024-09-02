@@ -10,3 +10,4 @@
   * [command\_and\_control](crto/command\_and\_control.md)
   * [external\_recon](crto/external\_recon.md)
   * [initial\_compromise](crto/initial_compromise.md)
+  * [host\_reconnaissance](crto/host_reconnaissance.md)
