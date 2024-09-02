@@ -12,3 +12,4 @@
   * [initial\_compromise](crto/initial_compromise.md)
   * [host\_reconnaissance](crto/host_reconnaissance.md)
   * [host\_persistence](crto/host_persistence.md)
+  * [host\_privilege_escalation](crto/host_privilege_escalation.md)
