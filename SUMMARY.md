@@ -9,4 +9,3 @@
   * [crto\_intro](crto/crto\_intro.md)
   * [command\_and\_control](crto/command\_and\_control.md)
   * [external\_recon](crto/external\_recon.md)
-* [Page 1](page-1.md)
