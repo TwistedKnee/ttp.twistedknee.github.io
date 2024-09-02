@@ -9,3 +9,4 @@
   * [crto\_intro](crto/crto\_intro.md)
   * [command\_and\_control](crto/command\_and\_control.md)
   * [external\_recon](crto/external\_recon.md)
+  * [initial\_compromise](crto/initial_compromise.md)
