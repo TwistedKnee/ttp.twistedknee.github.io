@@ -33,6 +33,7 @@ execute-assembly C:\Tools\SharpUp\SharpUp\bin\Release\SharpUp.exe audit Unquoted
 ```
 
 ***Abusing***
+
 If you have services that are named like Service 1.exe and not quoted we can abuse this by placing a Service.exe beacon in this file path which allows us to abuse it. Could also be the file path name to like *C:\Here is\Service 1.exe* we can drop a *C:\Here.exe* if we have permissions to abuse.
 ```
 cd C:\Program Files\Vulnerable Services
