@@ -17,3 +17,4 @@
   * [password\_cracking](crto/password_cracking.md)
   * [domain\_recon](crto/domain_recon.md)
   * [user\_impersonation](crto/user_impersonation.md)
+  * [lateral\_movement](crto/lateral_movement.md)
