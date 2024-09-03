@@ -62,7 +62,7 @@ hashcat.exe -a 6 -m 1000 ntlm.txt list.txt ?d?d?d?d
 -a 6 specifies the hybrid wordlist + mask mode.
 ?d?d?d?d is the mask.
 
-**kwprocessor**
+**Kwprocessor**
 
 Another cracking tool to make passwords that use [keyboard walks](https://github.com/hashcat/kwprocessor)
 ```
