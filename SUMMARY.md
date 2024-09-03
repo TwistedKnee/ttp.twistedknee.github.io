@@ -18,3 +18,4 @@
   * [domain\_recon](crto/domain_recon.md)
   * [user\_impersonation](crto/user_impersonation.md)
   * [lateral\_movement](crto/lateral_movement.md)
+  * [session\_passing](crto/session_passing.md)
