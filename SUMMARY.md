@@ -23,3 +23,4 @@
   * [kerberos](crto/kerberos.md)
   * [pivoting](crto/pivoting.md)
   * [adcs](crto/adcs.md)
+  * [group_policy](crto/group_policy.md)
