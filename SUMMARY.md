@@ -22,3 +22,4 @@
   * [dpapi](crto/dpapi.md)
   * [kerberos](crto/kerberos.md)
   * [pivoting](crto/pivoting.md)
+  * [adcs](crto/adcs.md)
