@@ -30,3 +30,4 @@
   * [forest_and_domain_trusts](crto/forest_and_domain_trusts.md)
   * [laps](laps.md)
   * [microsoft_defender_antivirus.md](crto/microsoft_defender_antivirus.md)
+  * [application_whitelisting](crto/application_whitelisting.md)
