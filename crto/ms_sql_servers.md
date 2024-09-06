@@ -181,6 +181,6 @@ execute-assembly C:\Tools\SweetPotato\bin\Release\SweetPotato.exe -p C:\Windows\
 connect localhost 4444
 ```
 
-
+doing a connect localhost because we used a tcp beacon which binds to localhost when ran
 
 
