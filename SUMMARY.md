@@ -21,3 +21,4 @@
   * [session\_passing](crto/session_passing.md)
   * [dpapi](crto/dpapi.md)
   * [kerberos](crto/kerberos.md)
+  * [pivoting](crto/pivoting.md)
