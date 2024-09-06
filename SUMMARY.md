@@ -31,3 +31,4 @@
   * [laps](laps.md)
   * [microsoft_defender_antivirus.md](crto/microsoft_defender_antivirus.md)
   * [application_whitelisting](crto/application_whitelisting.md)
+  * [data_hunting_and_exfiltrating](crto/data_hunting_and_exfiltrating.md)
