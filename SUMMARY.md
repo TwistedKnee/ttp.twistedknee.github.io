@@ -27,3 +27,4 @@
   * [ms_sql_servers](crto/ms_sql_servers.md)
   * [microsoft_configuration_manager](crto/microsoft_configuration_manager.md)
   * [domain_dominance](crto/domain_dominance.md)
+  * [forest_and_domain_trusts](crto/forest_and_domain_trusts.md)
