@@ -25,3 +25,4 @@
   * [adcs](crto/adcs.md)
   * [group_policy](crto/group_policy.md)
   * [ms_sql_servers](crto/ms_sql_servers.md)
+  * [microsoft_configuration_manager](crto/microsoft_configuration_manager.md)
