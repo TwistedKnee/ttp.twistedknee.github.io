@@ -1,2 +1,0 @@
-# MS SQL Servers Notes
-
