@@ -1,6 +1,6 @@
 # DPAPI Notes
 
-**Credential Manager**
+## Credential Manager
 
 
 To enumerate a user's vaults, you can use the native vaultcmd tool.
@@ -42,7 +42,7 @@ Now get the decryption
 mimikatz dpapi::cred /in:C:\Users\<USER>\AppData\Local\Microsoft\Credentials\<credential> /masterkey:<masterkey>
 ```
 
-**Scheduled Task Credentials**
+## Scheduled Task Credentials
 
 check for scheduled tasks under:
 ```
