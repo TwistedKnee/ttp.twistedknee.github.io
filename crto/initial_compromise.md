@@ -1,6 +1,6 @@
 # Initial Compromise Notes
 
-**Password Spraying**
+## Password Spraying
 I have a love/hate relationship with password spraying. Anyways, tools like [MailSniper](https://github.com/dafthack/MailSniper) or [SprayingToolkit](https://github.com/byt3bl33d3r/SprayingToolkit) can help.
 
 Import MailSniper, turn off defenders real-time protection for this.
@@ -33,10 +33,10 @@ MailSniper has other functions like downloading the glabal address list
 Get-GlobalAddressList -ExchHostname <mail subdomain> -UserName <domain\poppedUser -Password <password found> -OutFile gal.txt
 ```
 
-**internal phishing**
+## internal phishing
 With user creds you could just go to that email subdomain through a browser and logging in and sending phishing emails like that. 
 
-**Initial Access Payloads**
+## Initial Access Payloads
 You can attach a payload in the email or send a url where to download the malicious file. MOTW exists for any files downloaded via a browser which makes the file look untrusted. 
 
 ## VBA Macros
