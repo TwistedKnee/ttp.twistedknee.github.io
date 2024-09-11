@@ -32,3 +32,4 @@
   * [microsoft_defender_antivirus.md](crto/microsoft_defender_antivirus.md)
   * [application_whitelisting](crto/application_whitelisting.md)
   * [data_hunting_and_exfiltrating](crto/data_hunting_and_exfiltrating.md)
+  * [extending_cobalt_strike](crto/extending_cobalt_strike.md)
