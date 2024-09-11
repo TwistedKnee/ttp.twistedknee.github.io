@@ -1,6 +1,6 @@
 # Application Whitelisting Notes
 
-**Policy Enumeration**
+## Policy Enumeration
 
 policy can be read from the GPO or the local registry
 ```
@@ -11,14 +11,14 @@ Get-ChildItem "HKLM:Software\Policies\Microsoft\Windows\SrpV2"
 Get-ChildItem "HKLM:Software\Policies\Microsoft\Windows\SrpV2\<policy to check from above>"
 ```
 
-**Writeable paths**
+## Writeable paths
 
 use get-acl to check if you have permissions to write
 ```
 powershell Get-Acl C:\Windows\Tasks | fl
 ```
 
-**Living Off The Land Binaries, Scripts and Libraries**
+## Living Off The Land Binaries, Scripts and Libraries
 Tools:
 [LOLBAS](https://lolbas-project.github.io/)
 
@@ -127,7 +127,7 @@ Weaponized with shellcode injection
 </Project>
 ```
 
-**Powershell CLM**
+## Powershell CLM
 
 If you try to run a script or command in PowerShell and see an error like "only core types in this language mode", then you know you're operating in a restricted environment
 
@@ -191,13 +191,10 @@ This can also be done in C# (using MSBuild as the example again)
 </Project>
 ```
 
-**Beacon DLL**
+## Beacon DLL
 
 As previously mentioned, DLL enforcement is not commonly enabled which allows us to call exported functions from DLLs on disk via rundll32.  Beacon's DLL payload exposes several exports including DllMain and StartW.  These can be changed in the Artifact Kit under src-main, dllmain.def.
 ```
 C:\Windows\System32\rundll32.exe http_x64.dll,StartW
 ```
-
-
-
 
