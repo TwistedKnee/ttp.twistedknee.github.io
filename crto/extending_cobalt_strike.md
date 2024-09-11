@@ -14,7 +14,7 @@ Load mimikatz.cna via the Cobalt Strike > Script Manager menu and clicking the L
 ## Jump and Remote-Exec
 
 in this example we'll integrat Invoke-DCOM.ps1 into jump
-create new text file in visual studio and save as dcom.cnd, and put this in
+create new text file in visual studio and save as dcom.cna, and put this in
 ```
 sub invoke_dcom
 {
