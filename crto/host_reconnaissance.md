@@ -1,13 +1,13 @@
 # Host Reconnaissance Notes
 
-**Processes**
+## Processes
 Look for interesting processes
 ```
 ps
 ps -aux
 ```
 
-**Seatbelt**
+## Seatbelt
 [Seatbelt](https://github.com/GhostPack/Seatbelt) a post exploitation tool
 In a beacon:
 ```
@@ -16,7 +16,7 @@ execute-assembly C:\Tools\Seatbelt\Seatbelt\bin\Release\Seatbelt.exe -group=syst
 
 Look out for things like web proxies
 
-**Screenshots**
+## Screenshots
 Can use beacon to take screenshots
 ```
 printscreen
@@ -25,7 +25,7 @@ screenwatch
 ```
 Can view all of these in Cobalt Strike *View>Screenshots*
 
-**Keylogger**
+## Keylogger
 Capture user keystrokes
 ```
 keylogger
@@ -38,13 +38,13 @@ jobs
 jobkill <PID>
 ```
 
-**Clipboard**
+## Clipboard
 Capturing any user clipboards
 ```
 clipboard
 ```
 
-**User Sessions**
+## User Sessions
 See the current user sessions
 ```
 net logons
