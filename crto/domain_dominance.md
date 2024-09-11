@@ -1,6 +1,6 @@
 # Domain Dominance Notes
 
-### Silver tickets
+## Silver tickets
 
 a forged service ticket, signed using the secret material (RC4/AES keys) of a computer account.
 
@@ -23,7 +23,7 @@ winrm	- HOST & HTTP
 dcsync - (DCs only)	LDAP
 
 
-### Golden tickets
+## Golden tickets
 
 forged TGT, signed by the domain's krbtgt account
 
@@ -43,7 +43,7 @@ execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe createnetonly /pr
 steal_token <PID>
 ```
 
-### Diamond tickets
+## Diamond tickets
 
 A "diamond ticket" is made by modifying the fields of a legitimate TGT that was issued by a DC.  This is achieved by requesting a TGT, decrypting it with the domain's krbtgt hash, modifying the desired fields of the ticket, then re-encrypting it. 
 
@@ -62,7 +62,7 @@ use rubues describe to show the info of the TGT
 C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe describe /ticket:<base64>
 ```
 
-### Forged Certificates
+## Forged Certificates
 
 Tools:
 [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI)
