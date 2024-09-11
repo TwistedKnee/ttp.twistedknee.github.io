@@ -1,6 +1,6 @@
 # Password Cracking Notes
 
-**Wordlists**
+## Wordlists
 
 Utilize [Sec Lists](https://github.com/danielmiessler/SecLists/tree/master/Passwords) with hashcat, this cracks NTLM hashes
 ```
@@ -11,7 +11,7 @@ hashcat.exe -a 0 -m 1000 ntlm.txt rockyou.txt
 ntlm.txt is a text file containing the NTLM hash to crack.
 rockyou.txt is the wordlist.
 
-**Wordlist Rules**
+## Wordlist Rules
 
 Check the wiki for rules [info](https://hashcat.net/wiki/doku.php?id=rule_based_attack)
 
@@ -21,7 +21,7 @@ cat hashcat\rules\add-year.rule
   $2$0$2$0
 ```
 
-**Masks**
+## Masks
 
 ```
 hashcat.exe -a 3 -m 1000 C:\Temp\ntlm.txt ?u?l?l?l?l?l?l?l?d
@@ -29,7 +29,7 @@ hashcat.exe -a 3 -m 1000 C:\Temp\ntlm.txt ?u?l?l?l?l?l?l?l?d
 -a 3 specifies the mask attack.
 ?u?l?l?l?l?l?l?l?d is the mask.
 
-**Mask Length and Mask Files**
+## Mask Length and Mask Files
 
 By default, this mask attack sets a static password length - ?u?l?l?l?l?l?l?l?1 defines 9 characters, 
 which means we can only crack a 9-character password. To crack passwords of different lengths, we have to manually adjust the mask accordingly.
@@ -46,14 +46,14 @@ cat example.hcmask
 hashcat.exe -a 3 -m 1000 ntlm.txt example.hcmask
 ```
 
-**Combinator**
+## Combinator
 
 Combines lists together
 ```
 hashcat.exe -a 1 -m 1000 ntlm.txt list1.txt list2.txt -j $- -k $!
 ```
 
-**Hybrid**
+## Hybrid
 
 you can mix all of these together
 ```
@@ -62,7 +62,7 @@ hashcat.exe -a 6 -m 1000 ntlm.txt list.txt ?d?d?d?d
 -a 6 specifies the hybrid wordlist + mask mode.
 ?d?d?d?d is the mask.
 
-**Kwprocessor**
+## Kwprocessor
 
 Another cracking tool to make passwords that use [keyboard walks](https://github.com/hashcat/kwprocessor)
 ```
