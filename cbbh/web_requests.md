@@ -56,3 +56,4 @@ curl -k https://inlanefreight.com
 ## Cheat Sheet
 | Command | Description |
 |:--------|:------------|
+| curl -h | cURL help menu |
