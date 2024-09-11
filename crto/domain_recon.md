@@ -1,6 +1,6 @@
 # Domain Reconnaissance Notes
 
-**Powerview**
+## Powerview
 
 Commands to look into
 
@@ -21,14 +21,14 @@ powershell Get-DomainGPOUserLocalGroupMapping -LocalGroup Administrators | selec
 powershell Get-DomainTrust
 ```
 
-**SharpView**
+## SharpView
 
 A C# port of PowerView
 ```
 execute-assembly C:\Tools\SharpView\SharpView\bin\Release\SharpView.exe Get-Domain
 ```
 
-**ADSearch**
+## ADSearch
 
 Additionally, the --json parameter can be used to format the output in JSON.
 
