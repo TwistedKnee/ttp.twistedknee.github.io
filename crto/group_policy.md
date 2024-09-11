@@ -1,6 +1,6 @@
 # Group Policy Notes
 
-**Modifying Existing GPO**
+## Modifying Existing GPO
 
 Tools:
 [SharpGPOAbuse](https://github.com/FSecureLABS/SharpGPOAbuse)
@@ -29,7 +29,7 @@ execute-assembly C:\Tools\SharpGPOAbuse\SharpGPOAbuse\bin\Release\SharpGPOAbuse.
 the victim would need to ```run gpupdate /force``` then reboot to apply
 
 
-**Create and Link a GPO**
+## Create and Link a GPO
 
 Finding GPO's that are stored in System Policies that can create new GPOs in the domain with the "Create GroupPolicyContainer objects" using Powerview by looking for those that have "CreateChild" rights on the "Group-Policy-Container", and then resolving their SIDs to readable names.
 ```
