@@ -5,7 +5,7 @@ The spawn command will spawn an x86 or x64 process and inject shellcode for the 
 spawn x64 http
 ```
 
-**Foreign Listener**
+## Foreign Listener
 
 using msf
 ```
@@ -22,7 +22,7 @@ In CS
 
 Now we can use spawn, jump, or elevate with this listener
 
-**Spawn and Inject**
+## Spawn and Inject
 
 in msf with the above 
 ```
