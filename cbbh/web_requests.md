@@ -57,3 +57,4 @@ curl -k https://inlanefreight.com
 | Command | Description |
 |:--------|:------------|
 | curl -h | cURL help menu |
+| curl inlanefreight.com|Basic GET request|
