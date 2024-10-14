@@ -47,3 +47,4 @@ Infra setups models
 
 ## Sensitive Data Exposure
 
+This is about the exposure of sensitive details like comments in the html code on a site. You can view the source code of a webpage to inspect for these or use a proxy. 
