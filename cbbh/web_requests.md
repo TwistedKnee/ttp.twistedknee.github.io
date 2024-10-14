@@ -46,9 +46,12 @@ curl -k https://inlanefreight.com
 
 ## HTTP Requests and Responses
 
+```
+curl inlanefreight.com -v
+```
 
-
-
+Access DevTools
+[CTRL+SHIFT+I] or simply click [F12]
 
 
 
