@@ -15,7 +15,7 @@ Infra setups models
 - Many Servers - One Database
 - Many Servers - Many Databases
 
-OWASP Top 10
+### OWASP Top 10
 
 |No. 	|Vulnerability|
 |:--------|:------------|
@@ -31,7 +31,7 @@ OWASP Top 10
 |10. |	Server-Side Request Forgery (SSRF)|
 
 
-URL Encoding
+### URL Encoding
 |Character |	Encoding|
 |:--------|:------------|
 |space 	|%20|
@@ -44,3 +44,6 @@ URL Encoding
 |' 	|%27|
 |( 	|%28|
 |) 	|%29|
+
+## Sensitive Data Exposure
+
