@@ -10,7 +10,7 @@
 
 Infra setups models
 
-    Client-Server
-    One Server
-    Many Servers - One Database
-    Many Servers - Many Databases
+- Client-Server
+- One Server
+- Many Servers - One Database
+- Many Servers - Many Databases
