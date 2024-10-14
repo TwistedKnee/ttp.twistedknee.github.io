@@ -29,3 +29,18 @@ OWASP Top 10
 |8. 	|Software and Data Integrity Failures|
 |9. 	|Security Logging and Monitoring Failures|
 |10. |	Server-Side Request Forgery (SSRF)|
+
+
+URL Encoding
+|Character |	Encoding|
+|:--------|:------------|
+|space 	|%20|
+|! |	%21|
+|" 	|%22|
+|# 	|%23|
+|$ 	|%24|
+|% 	|%25|
+|& 	|%26|
+|' 	|%27|
+|( 	|%28|
+|) 	|%29|
