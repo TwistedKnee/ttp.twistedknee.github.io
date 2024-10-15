@@ -69,3 +69,14 @@ XSS is very similar to HTML Injection in practice. However, XSS involves the inj
 |Reflected XSS 	|Occurs when user input is displayed on the page after processing (e.g., search result or error message).|
 |Stored XSS 	|Occurs when user input is stored in the back end database and then displayed upon retrieval (e.g., posts or comments).|
 |DOM XSS| 	Occurs when user input is directly shown in the browser and is written to an HTML DOM object (e.g., vulnerable username or page title).|
+
+We can try to inject the following DOM XSS JavaScript code as a payload, which should show us the cookie value for the current user:
+```
+#"><img src=/ onerror=alert(document.cookie)>
+```
+
+
+
+
+
+
