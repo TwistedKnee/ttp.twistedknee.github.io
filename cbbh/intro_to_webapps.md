@@ -59,3 +59,13 @@ To test for HTML Injection, we can simply input a small snippet of HTML code as 
 ```
 <style> body { background-image: url('https://academy.hackthebox.com/images/logo.svg'); } </style>
 ```
+
+## XSS
+
+XSS is very similar to HTML Injection in practice. However, XSS involves the injection of JavaScript code to perform more advanced attacks on the client-side, instead of merely injecting HTML code. There are three main types of XSS:
+
+|Type 	|Description|
+|:--------|:------------|
+|Reflected XSS 	|Occurs when user input is displayed on the page after processing (e.g., search result or error message).|
+|Stored XSS 	|Occurs when user input is stored in the back end database and then displayed upon retrieval (e.g., posts or comments).|
+|DOM XSS| 	Occurs when user input is directly shown in the browser and is written to an HTML DOM object (e.g., vulnerable username or page title).|
