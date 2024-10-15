@@ -50,3 +50,12 @@ Infra setups models
 This is about the exposure of sensitive details like comments in the html code on a site. You can view the source code of a webpage to inspect for these or use a proxy. 
 
 ## HTML Injection
+The following example is a very basic web page with a single button "Click to enter your name." When we click on the button, it prompts us to input our name and then displays our name as "Your name is ...":
+
+If no input sanitization is in place, this is potentially an easy target for HTML Injection and Cross-Site Scripting (XSS) attacks. We take a look at the page source code and see no input sanitization in place whatsoever, as the page takes user input and directly displays it.
+
+To test for HTML Injection, we can simply input a small snippet of HTML code as our name, and see if it is displayed as part of the page. We will test the following code, which changes the background image of the web page:
+
+```
+<style> body { background-image: url('https://academy.hackthebox.com/images/logo.svg'); } </style>
+```
