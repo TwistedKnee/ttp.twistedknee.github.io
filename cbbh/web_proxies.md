@@ -5,7 +5,7 @@ Allows us to capture and replay HTTP requests. Tools:
 - Burp Suite
 - OWASP ZAP
 
-|Burp Shortcuts|
+|Burp Shortcuts| |
 |:--------|:------------|
 |Shortcut 	|Description|
 |[CTRL+R]| 	Send to repeater|
