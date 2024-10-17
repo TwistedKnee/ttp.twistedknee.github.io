@@ -136,3 +136,4 @@ SQLi - similar to command injection, this vuln may occur when web apps executes 
 
 ## Public Vulns
 
+Once we identify the web application version, we can search Google for public exploits for this version of the web application. We can also utilize online exploit databases, like [Exploit DB](https://www.exploit-db.com/), [Rapid7 DB](https://www.rapid7.com/db/), or [Vulnerability Lab](https://www.vulnerability-lab.com/)
