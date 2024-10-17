@@ -112,4 +112,8 @@ A back-end server is the hardware and operating system on the back end that host
 
 Common technologies: apache, nginx, IIS
 
+## Databases
 
+SQL - Relational store data in tables, rows, and columns
+
+NoSQL - non-relational databases do not use tables, rows, columns, primary keys or schemas. Instead stores using vairious storage models. Dependent on the data stored. 
