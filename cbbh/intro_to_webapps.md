@@ -117,3 +117,22 @@ Common technologies: apache, nginx, IIS
 SQL - Relational store data in tables, rows, and columns
 
 NoSQL - non-relational databases do not use tables, rows, columns, primary keys or schemas. Instead stores using vairious storage models. Dependent on the data stored. 
+
+## APIs
+
+SOAP - simple object access standard shares data through xml where a requests and responses are made in xml through http. 
+
+REST - Representational state transfer shares data through the URL path, (/search/users/1)
+
+## Common Web Vulns
+
+Broken Authentication/Access Control - most command most dangerous vulnerabilities for web apps.
+
+Malicious file upload - If a web app has a file upload feature and does not properly validate the uploaded files, you may be able to upload a malicious script
+
+Command injection - web apps execute os commands to perform certain processes. 
+
+SQLi - similar to command injection, this vuln may occur when web apps executes a sql query
+
+## Public Vulns
+
