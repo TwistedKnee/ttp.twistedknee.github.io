@@ -110,6 +110,6 @@ A back-end server is the hardware and operating system on the back end that host
 |502 Bad Gateway |	The server, while working as a gateway to get a response needed to handle the request, received an invalid response|
 |504 Gateway Timeout| 	The server is acting as a gateway and cannot get a response in time|
 
-
+Common technologies: apache, nginx, IIS
 
 
