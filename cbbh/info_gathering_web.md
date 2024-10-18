@@ -78,3 +78,28 @@ Common dig commands
 |dig +noall +answer domain.com |	Displays only the answer section of the query output.|
 |dig domain.com ANY 	|Retrieves all available DNS records for the domain (Note: Many DNS servers ignore ANY queries to reduce load and prevent abuse, as per RFC 8482).|
 
+## Subdomain bruteforcing
+
+4 steps
+- wordlist selection
+- iteration and querying
+- dns lookup
+- filtering and validation
+
+tools for bruteforcing subdomains
+- dnsenum
+- fierce
+- dnsrecon
+- amass
+- assetfinder
+- puredns
+
+  dnsenume example
+  ```
+  dnsenum --enum <domain> -f <wordlist> -r
+  The -r is for recursive brute forcing
+  ```
+
+  ## Zone Transfers
+
+  
