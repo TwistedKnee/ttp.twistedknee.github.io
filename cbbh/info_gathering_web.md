@@ -77,3 +77,4 @@ Common dig commands
 |dig +short domain.com| 	Provides a short, concise answer to the query.|
 |dig +noall +answer domain.com |	Displays only the answer section of the query output.|
 |dig domain.com ANY 	|Retrieves all available DNS records for the domain (Note: Many DNS servers ignore ANY queries to reduce load and prevent abuse, as per RFC 8482).|
+
