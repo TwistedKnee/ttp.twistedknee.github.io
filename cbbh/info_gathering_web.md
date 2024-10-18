@@ -26,7 +26,7 @@ whois <domain>
 
 resolution for domain names to IP's
 
-
+### Concepts
 |DNS Concept |	Description |	Example|
 |:--------|:------------|:--------|
 |Domain Name 	|A human-readable label for a website or other internet resource. 	|www.example.com|
@@ -37,6 +37,7 @@ resolution for domain names to IP's
 |Authoritative Name Server| 	The server that holds the actual IP address for a domain. 	|Often managed by hosting providers or domain registrars.|
 |DNS Record Types 	|Different types of information stored in DNS. |	A, AAAA, CNAME, MX, NS, TXT, etc.
 
+### Records
 |Record Type 	|Full Name 	|Description 	|Zone File Example|
 |:--------|:------------|:--------|:--------|
 |A |	Address Record |	Maps a hostname to its IPv4 address. |	www.example.com. IN A 192.0.2.1|
