@@ -39,7 +39,7 @@ resolution for domain names to IP's
 
 |Record Type 	|Full Name 	|Description 	|Zone File Example|
 |:--------|:------------|:--------|:--------|
-|A 	Address Record 	Maps a hostname to its IPv4 address. 	www.example.com. IN A 192.0.2.1
+|A |	Address Record |	Maps a hostname to its IPv4 address. |	www.example.com. IN A 192.0.2.1|
 |AAAA 	|IPv6 Address Record 	|Maps a hostname to its IPv6 address. 	|www.example.com. IN AAAA 2001:db8:85a3::8a2e:370:7334|
 |CNAME |	Canonical Name Record 	|Creates an alias for a hostname, pointing it to another hostname. 	|blog.example.com. IN CNAME webserver.example.net.|
 |MX 	|Mail Exchange Record| 	Specifies the mail server(s) responsible for handling email for the domain. 	|example.com. IN MX 10 mail.example.com.|
