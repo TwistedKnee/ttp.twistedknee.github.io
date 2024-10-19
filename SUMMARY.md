@@ -3,6 +3,7 @@
 * [index](README.md)
 * [gcih](README.md)
   * [gcih\_intro](gcih/gcih\_intro.md)
+  * [live_windows_examination_with_powershell](gcih/live_windows_examination_with_powershell.md)
 * [cbbh](cbbh/README.md)
   * [cbbh\_intro](cbbh/cbbh\_intro.md)
   * [web_requests](cbbh/web\_requests.md)
