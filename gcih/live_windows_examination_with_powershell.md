@@ -94,7 +94,25 @@ Remove-LocalUser -Name dynamics
 
 ## Bonus
 
+```
+Get-NetTCPConnection -State Listen | Out-File tcpports-baseline.txt
+Get-NetTCPConnection -State Listen >tcpports-current.txt
+$baseline = Get-Content .\tcpports-baseline.txt
+$current = Get-Content .\tcpports-current.txt
+Compare-Object $baseline $current
+Get-NetTCPConnection -State Listen | Where-Object -Property LocalPort -eq <port> | Select-Object -Property OwningProcess
+Get-CimInstance -Class Win32_process | Where-Object -Property ProcessId -eq <PID>
+Get-CimInstance -Class Win32_process | Where-Object -Property ProcessId -eq 3584 | Select-Object -Property ParentProcessId
+nc 127.0.0.1 <port>
+Get-NetTCPConnection -State Listen | Where-Object -Property OwningProcess -eq 3584 | Select-Object LocalPort
+Get-Process |Where-Object -Property id -eq <parentprocesPID>
+Get-Process -id 6676
+Get-Process -id 6676 |Stop-Process
+Get-Process -name powershell
+Get-Process -name powershell | Select-Object id, starttime
+Get-CimInstance -Class Win32_Process | Where-Object -Property ProcessId -eq <PID> | Select-Object -ExpandProperty CommandLine
 
+```
 
 
 
