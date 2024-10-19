@@ -2,7 +2,7 @@
 
 * [index](README.md)
 * [gcih](README.md)
-  * [gcih](gcih/gcih\_intro.md)
+  * [gcih\_intro](gcih/gcih\_intro.md)
 * [cbbh](cbbh/README.md)
   * [cbbh\_intro](cbbh/cbbh\_intro.md)
   * [web_requests](cbbh/web\_requests.md)
