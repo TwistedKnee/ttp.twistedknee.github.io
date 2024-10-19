@@ -9,6 +9,7 @@
   * [web_requests](cbbh/web\_requests.md)
   * [info\_gathering\_web](cbbh/info\_gathering\_web.md)
   * [intro\_to\_webapps](cbbh/intro\_to\_webapps.md)
+  * [web\_proxies](cbbh/web_proxies.md)
 * [cpts](cpts/README.md)
   * [cpts\_intro](cpts/cpts\_intro.md)
 * [crto](crto/README.md)
