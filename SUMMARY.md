@@ -1,6 +1,8 @@
 # Table of contents
 
 * [index](README.md)
+* [gcih](README.md)
+  * [gcih](gcih/gcih\_intro.md)
 * [cbbh](cbbh/README.md)
   * [cbbh\_intro](cbbh/cbbh\_intro.md)
   * [web_requests](cbbh/web\_requests.md)
@@ -34,3 +36,5 @@
   * [application_whitelisting](crto/application_whitelisting.md)
   * [data_hunting_and_exfiltrating](crto/data_hunting_and_exfiltrating.md)
   * [extending_cobalt_strike](crto/extending_cobalt_strike.md)
+ 
+ 
