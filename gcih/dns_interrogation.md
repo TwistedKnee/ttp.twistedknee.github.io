@@ -30,3 +30,14 @@ DNS Log analysis
 head queries
 awk '/172.30.0.1/ {print $2}' queries | cut -d: -f1-2 | uniq -c 
 ```
+
+
+bonus
+
+```
+head labs/dns/dns.log
+tail labs/dns/dns.log
+awk '{print $2}' labs/dns/dns.log | cut -d: -f1 | head
+awk '{print $2}' labs/dns/dns.log | cut -d: -f1 | uniq -c
+awk '{print $2}' labs/dns/dns.log | cut -d: -f1-2 |uniq -c | more
+```
