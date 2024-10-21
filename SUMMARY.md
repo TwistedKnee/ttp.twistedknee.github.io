@@ -8,6 +8,7 @@
   * [malware\_investigation](gcih/malware\_investigation.md)
   * [dns\_interrogation](gcih/dns\_interrogation.md)
   * [nmap](gcih/nmap.md)
+  * [cloud\_scanning](gcih/cloud\_scanning.md)
 * [cbbh](cbbh/README.md)
   * [cbbh\_intro](cbbh/cbbh\_intro.md)
   * [web_requests](cbbh/web\_requests.md)
