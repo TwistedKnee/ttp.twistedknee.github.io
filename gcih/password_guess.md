@@ -36,6 +36,8 @@ set RHOSTS 127.0.0.1
 set username root
 set password sec504
 set gatherproof false
+run
 unset password
 set PASS_FILE /home/sec504/labs/passhydra/passwords.txtPASS_FILE => /home/sec504/labs/passhydra/passwords.txt
+run
 ```
