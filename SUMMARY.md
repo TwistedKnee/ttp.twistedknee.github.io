@@ -11,6 +11,7 @@
   * [cloud\_scanning](gcih/cloud\_scanning.md)
   * [smb\_investigation](gcih/smb\_investigation.md)
   * [hayabusa](gcih/hayabusa.md)
+  * [password\_guess](gcih/password_guess.md)
 * [cbbh](cbbh/README.md)
   * [cbbh\_intro](cbbh/cbbh\_intro.md)
   * [web_requests](cbbh/web\_requests.md)
