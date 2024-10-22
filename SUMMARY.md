@@ -12,6 +12,7 @@
   * [smb\_investigation](gcih/smb\_investigation.md)
   * [hayabusa](gcih/hayabusa.md)
   * [password\_guess](gcih/password_guess.md)
+  * [attacking\_msft365](gcih/attacking_msft365.md)
 * [cbbh](cbbh/README.md)
   * [cbbh\_intro](cbbh/cbbh\_intro.md)
   * [web_requests](cbbh/web\_requests.md)
