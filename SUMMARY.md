@@ -16,6 +16,7 @@
   * [hashcat](gcih/hashcat.md)
   * [cloud\_bucket\_discovery](gcih/cloud\_bucket\_discovery.md)
   * [netcat](gcih/netcat.md)
+  * [msf](gcih/msf.md)
 * [cbbh](cbbh/README.md)
   * [cbbh\_intro](cbbh/cbbh\_intro.md)
   * [web_requests](cbbh/web\_requests.md)
