@@ -23,7 +23,7 @@ exploit
 beef
 ```
 
-interacting with beef
+### interacting with beef
 
 - go to the http://10.10.75.1:3000/demos/thetofuartist/index.html page as the victim
 - sign into admin panel on the linux machine running beef
