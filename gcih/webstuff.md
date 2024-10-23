@@ -16,3 +16,7 @@ simple system input for a connectivity test page
 
 - test with '-h' to see if you get help page info
     - '127.0.0.1 -h' or just '-h'
+- try with '; ls'
+    - '; ls'
+- other things to try
+    - '|| ls' or '&& ls'
