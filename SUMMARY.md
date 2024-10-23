@@ -18,6 +18,7 @@
   * [netcat](gcih/netcat.md)
   * [msf](gcih/msf.md)
   * [beEf](gcih/beEf.md)
+  * [webstuff](gcih/webstuff.md)
 * [cbbh](cbbh/README.md)
   * [cbbh\_intro](cbbh/cbbh\_intro.md)
   * [web_requests](cbbh/web\_requests.md)
