@@ -21,6 +21,7 @@
   * [webstuff](gcih/webstuff.md)
   * [app\_allow\_list\_bypass](gcih/app\_allow\_list\_bypass.md)
   * [pivot\_exploitation](gcih/pivot\_exploitation.md)
+  * [responder](gcih/responder.md)
 * [cbbh](cbbh/README.md)
   * [cbbh\_intro](cbbh/cbbh\_intro.md)
   * [web_requests](cbbh/web\_requests.md)
