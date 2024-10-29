@@ -24,6 +24,7 @@
   * [responder](gcih/responder.md)
   * [persistence_with_msf](gcih/persistence_with_msf.md)
   * [rita](gcih/rita.md)
+  * [cloud_config_assessment](gcih/cloud_config_assessment.md)
 * [cbbh](cbbh/README.md)
   * [cbbh\_intro](cbbh/cbbh\_intro.md)
   * [web_requests](cbbh/web\_requests.md)
