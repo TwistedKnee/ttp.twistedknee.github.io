@@ -53,5 +53,4 @@ cd ~/labs/scoutsuite-report/scoutsuite-results
 head -c 40 scoutsuite_results_aws-912182608192.js ; echo
 tail -n +2 scoutsuite_results_aws-912182608192.js | jq '.' | more
 tail -n +2 scoutsuite_results_aws-912182608192.js | jq '.services.ec2.regions[].vpcs[].instances[] | .name, .Tags'
-
 ```
