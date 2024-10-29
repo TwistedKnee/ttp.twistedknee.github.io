@@ -23,6 +23,7 @@
   * [pivot\_exploitation](gcih/pivot\_exploitation.md)
   * [responder](gcih/responder.md)
   * [persistence_with_msf](gcih/persistence_with_msf.md)
+  * [rita](gcih/rita.md)
 * [cbbh](cbbh/README.md)
   * [cbbh\_intro](cbbh/cbbh\_intro.md)
   * [web_requests](cbbh/web\_requests.md)
