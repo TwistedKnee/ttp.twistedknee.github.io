@@ -32,7 +32,7 @@ getpid
 dumping hashes with msf
 
 ```
-hashid
+hashdump
 ```
 
 process migration
