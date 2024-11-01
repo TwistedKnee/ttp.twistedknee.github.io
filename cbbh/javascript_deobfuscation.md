@@ -1,0 +1,2 @@
+# Javascript Deobfuscation Notes
+
