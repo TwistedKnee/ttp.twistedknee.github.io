@@ -51,10 +51,37 @@ ffuf -w /opt/userful/seclists/Discovery/Web-Content/direcotry-list-2.3-small.txt
 ffuf -w /opt/useful/seclists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://SERVER_IP:PORT/FUZZ
 ```
 
+### Extension Fuzzing
 
+This tests by fuzzing the end of a filename and tries to search for different extensions
 
+```
+ffuf -w /opt/useful/seclists/Discovery/Web-Content/web-extensions.txt:FUZZ -u http://SERVER_IP:PORT/blog/indexFUZZ
+```
 
+### Page Fuzzing
 
+This is testing for any filenames with the .php ending, could be others, .php is just one or many extensions to try
 
+```
+ffuf -w /opt/useful/seclists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://SERVER_IP:PORT/blog/FUZZ.php
+```
 
+### Recursive Scanning
+
+In cases where we find another folder that needs to be fuzzed as well from the scan this will set it up as a job that ffuf will continue to scan
+
+```
+ffuf -w /opt/useful/seclists/Discovery/Web-Content/directory-list-2.3-small.txt:FUZZ -u http://SERVER_IP:PORT/FUZZ -recursion -recursion-depth 1 -e .php -v
+```
+
+## Domain fuzzing
+
+If we identify other types of DNS records from our scanning make sure to update the /etc/hosts file
+
+```
+sudo sh -c 'echo "SERVER_IP  academy.htb" >> /etc/hosts'
+```
+
+### Sub-domain fuzzing
 
