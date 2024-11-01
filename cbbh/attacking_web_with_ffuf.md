@@ -136,3 +136,46 @@ Fuzzing with this
 ```
 ffuf -w ids.txt -u http://admin.academy.htb:45887/admin/admin.php -X POST -d 'id=FUZZ' -H 'Content-Type: application/x-www-form-urlencoded' -fs 768
 ```
+
+## Skills assessment
+
+Question 1: 
+
+subdomain/vhost scanning 
+
+```
+ffuf -w /opt/useful/seclists/Discovery/DNS/subdomains-top1million-5000.txt:FUZZ -u http://academy.htb:47453 -H 'Host: FUZZ.academy.htb' -fs 985
+```
+
+Question 2: 
+
+Add the identified above to hosts file the run scans
+
+```
+ffuf -w /opt/useful/seclists/Discovery/Web-Content/web-extensions.txt -u http://test.academy.htb:47453/indexFUZZ
+```
+
+Question 3: 
+
+Looking for page that says 'You don't have access!'
+
+```
+ffuf -w /opt/useful/seclists/Discovery/Web-Content/directory-list-2.3-small.txt -u http://faculty.academy.htb:47453/courses/FUZZ -recursion -recursion-depth 1 -e .php,.phps,.php7 -mr "You don't have access!" -t 100
+```
+
+Question 4: 
+
+Parameter scanning above file
+
+```
+ffuf -w /opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt -u http://faculty.academy.htb:47453/courses/linux-security.php7?FUZZ=key -fs 774
+ffuf -w /opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt:FUZZ -u http://faculty.academy.htb:47453/courses/linux-security.php7 -X POST -d 'FUZZ=key' -H 'Content-Type: application/x-www-form-urlencoded' -fs 774 -t 100
+```
+
+Question 5: 
+
+Scan the parameters for values
+
+```
+ffuf -w /opt/useful/SecLists/Usernames/Names/names.txt:FUZZ -u http://faculty.academy.htb:STMPO/courses/linux-security.php7 -X POST -d 'username=FUZZ' -H 'Content-Type: application/x-www-form-urlencoded' -fs 781 -t 100
+```
