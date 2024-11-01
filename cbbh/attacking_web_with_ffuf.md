@@ -85,3 +85,54 @@ sudo sh -c 'echo "SERVER_IP  academy.htb" >> /etc/hosts'
 
 ### Sub-domain fuzzing
 
+Scanning subdomains of a Top Level Domain like inlanefreight.com
+
+```
+ffuf -w /opt/useful/seclists/Discovery/DNS/subdomains-top1million-5000.txt:FUZZ -u https://FUZZ.inlanefreight.com/
+```
+
+### Vhost fuzzing
+
+To scan for virtual host names of a site, sing the HOST header to identify these
+
+```
+ffuf -w /opt/useful/seclists/Discovery/DNS/subdomains-top1million-5000.txt:FUZZ -u http://academy.htb:PORT/ -H 'Host: FUZZ.academy.htb'
+```
+
+Filtering results: So if we get to run the above and there are plenty of results we can filter based on size with -fs 
+
+```
+ffuf -w /opt/useful/seclists/Discovery/DNS/subdomains-top1million-5000.txt:FUZZ -u http://academy.htb:PORT/ -H 'Host: FUZZ.academy.htb' -fs 900
+```
+
+### Parameter Fuzzing GET
+
+Scanning a site for a parameter we might be able to abuse, make sure to update the /etc/hosts if you are doing another subdomain from the original like admin.academy.htb below
+
+```
+ffuf -w /opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php?FUZZ=key -fs xxx
+```
+
+### Parameter Fuzzing POST
+
+doing the same above but with a post request
+
+```
+ffuf -w /opt/useful/seclists/Discovery/Web-Content/burp-parameter-names.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'FUZZ=key' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx
+```
+
+### Value Fuzzing
+
+After identifying a valid parameter from above we can test for the value with fuzzing 
+
+Creating a number wordlist
+
+```
+for i in $(seq 1 1000); do echo $i >> ids.txt; done
+```
+
+Fuzzing with this
+
+```
+ffuf -w ids.txt -u http://admin.academy.htb:45887/admin/admin.php -X POST -d 'id=FUZZ' -H 'Content-Type: application/x-www-form-urlencoded' -fs 768
+```
