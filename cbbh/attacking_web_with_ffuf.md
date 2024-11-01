@@ -2,6 +2,8 @@
 
 Automating the fuzzing of a web application with ffuf to identify resources. 
 
+
+## FFUF cheatsheet
 |Command 	|Description|
 |:--------|:------------|
 |ffuf -h| 	ffuf help|
@@ -14,3 +16,13 @@ Automating the fuzzing of a web application with ffuf to identify resources.
 |ffuf -w wordlist.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php?FUZZ=key -fs xxx 	|Parameter Fuzzing - GET|
 |ffuf -w wordlist.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'FUZZ=key' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx 	|Parameter Fuzzing - POST|
 |ffuf -w ids.txt:FUZZ -u http://admin.academy.htb:PORT/admin/admin.php -X POST -d 'id=FUZZ' -H 'Content-Type: application/x-www-form-urlencoded' -fs xxx 	|Value Fuzzing|
+
+
+## Wordlists cheatsheet
+
+|Command |	Description|
+|:--------|:------------|
+|/opt/useful/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt 	|Directory/Page Wordlist|
+|/opt/useful/SecLists/Discovery/Web-Content/web-extensions.txt 	|Extensions Wordlist|
+|/opt/useful/SecLists/Discovery/DNS/subdomains-top1million-5000.txt 	|Domain Wordlist|
+|/opt/useful/SecLists/Discovery/Web-Content/burp-parameter-names.txt 	|Parameters Wordlist|
