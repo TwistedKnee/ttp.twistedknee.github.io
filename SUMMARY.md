@@ -32,6 +32,8 @@
   * [intro\_to\_webapps](cbbh/intro\_to\_webapps.md)
   * [web\_proxies](cbbh/web_proxies.md)
   * [attacking_web_with_ffuf](cbbh/attacking_web_with_ffuf.md)
+  * [javascript_deobfuscation](cbbh/javascript_deobfuscation.md)
+  * [xss](cbbh/xss.md)
 * [cpts](cpts/README.md)
   * [cpts\_intro](cpts/cpts\_intro.md)
 * [crto](crto/README.md)
