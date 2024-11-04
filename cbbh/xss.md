@@ -28,3 +28,73 @@ Commands 	|
 |python xsstrike.py -u "http://SERVER_IP:PORT/index.php?task=test" 	|Run xsstrike on a url parameter|
 |sudo nc -lvnp 80 	|Start netcat listener|
 |sudo php -S 0.0.0.0:80 	|Start PHP server|
+
+
+## Stored XSS
+
+If the value gets stored in say the DB and is pulled up for any user it's stored.
+
+Typical payload
+```
+<script>alert('1')</script>
+```
+
+## Reflected XSS
+
+Only displayed for the current user, usually from input placed in. Perfect for phishing or csrf type of attacks.
+
+Display cookie values
+
+```
+<script>alert(document.cookie)</script>
+```
+
+## DOM XSS
+
+While reflected XSS sends the input data to the back-end server through HTTP requests, DOM XSS is completely processed on the client-side through JavaScript. DOM XSS occurs when JavaScript is used to change the page source through the Document Object Model (DOM).
+
+For DOM XSS there are two definitions to understand. The `Source` is the JavaScript object that takes the user input, and it can be any input parameter. The `Sink` is the function that writes the user input to a DOM Object. If the Sink doesn't properly sanitize the input we could get XSS. Common DOM objects:
+- document.write()
+- DOM.innerHTML
+- DOM.outerHTML
+
+JQuery functions that write to the DOM:
+- add()
+- after()
+- append()
+
+Other payload
+
+```
+<img src="" onerror=alert(window.origin)>
+```
+
+## XSS Discovery 
+
+### Automated
+
+We can use automated tools like Nessus, Burp Pro, or ZAP
+
+Some of the common open-source tools that can assist us in XSS discovery are [XSS Strike](https://github.com/s0md3v/XSStrike), [Brute XSS](https://github.com/rajeshmajumdar/BruteXSS), and [XSSer](https://github.com/epsylon/xsser). We can try XSS Strike by cloning it to our VM with git clone
+
+```
+git clone https://github.com/s0md3v/XSStrike.git
+cd XSStrike
+pip install -r requirements.txt
+python xsstrike.py
+python xsstrike.py -u "http://SERVER_IP:PORT/index.php?task=test" 
+```
+
+### Manual
+
+Payload lists: 
+- [Payloadallthethings](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/XSS%20Injection/README.md)
+- [xss-payload-list](https://github.com/payloadbox/xss-payload-list)
+
+Using fuzzers like ffuf we can take these lists and test parameters like this.
+
+
+### Code Review
+
+Reviewing code would be the quickest way to check, but requires access to the code for it to work. 
+
