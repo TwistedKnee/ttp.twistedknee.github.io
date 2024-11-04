@@ -34,6 +34,7 @@
   * [attacking_web_with_ffuf](cbbh/attacking_web_with_ffuf.md)
   * [javascript_deobfuscation](cbbh/javascript_deobfuscation.md)
   * [xss](cbbh/xss.md)
+  * [cmd_injection](cbbh/cmd_injection.md)
 * [cpts](cpts/README.md)
   * [cpts\_intro](cpts/cpts\_intro.md)
 * [crto](crto/README.md)
