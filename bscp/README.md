@@ -14,4 +14,12 @@ Here are my separated points
   - HTTP host header attacks
   - HTTP request smuggling
 
- - 
+ - Promote yourself to admin or steal his data
+  - SQL Injection
+  - CSRF
+  - Insecure Deserialization
+  - OAuth authentication
+  - JWT
+  - Access control vulnerabilities
+
+- 
