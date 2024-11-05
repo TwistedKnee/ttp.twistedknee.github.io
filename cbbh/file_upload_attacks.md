@@ -12,6 +12,8 @@ To test if we can abuse php site with a webshell we can save a file with this to
 
 ## Cheat Sheets
 
+### Web Shells
+
 |Web Shell 	|Description|
 |:----|:----|
 |\<?php file_get_contents('/etc/passwd'); ?> 	|Basic PHP File Read|
@@ -22,3 +24,32 @@ To test if we can abuse php site with a webshell we can save a file with this to
 |[PHP Web Shell](https://github.com/Arrexel/phpbash)| 	PHP Web Shell|
 |[PHP Reverse Shell](https://github.com/pentestmonkey/php-reverse-shell) |	PHP Reverse Shell|
 |[Web/Reverse Shells](https://github.com/danielmiessler/SecLists/tree/master/Web-Shells) |	List of Web Shells and Reverse Shells|
+
+### Bypasses
+
+|Command 	|Description|
+|:----|:----|
+|Client-Side |Bypass 	|
+|[CTRL+SHIFT+C] |	Toggle Page Inspector|
+|Blacklist Bypass 	|
+|shell.phtml 	|Uncommon Extension|
+|shell.pHp 	|Case Manipulation|
+|[PHP Extensions](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Upload%20Insecure%20Files/Extension%20PHP/extensions.lst) 	|List of PHP Extensions|
+|[ASP Extensions](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Extension%20ASP) 	|List of ASP Extensions|
+|[Web Extensions](https://github.com/danielmiessler/SecLists/blob/master/Discovery/Web-Content/web-extensions.txt) 	|List of Web Extensions|
+|Whitelist Bypass 	|
+|shell.jpg.php |	Double Extension|
+|shell.php.jpg |	Reverse Double Extension|
+|%20, %0a, %00, %0d0a, /, .\, ., … |	Character Injection - Before/After Extension|
+|Content/Type Bypass 	|
+|[Web Content-Types](https://github.com/danielmiessler/SecLists/blob/master/Miscellaneous/Web/content-type.txt) |	List of Web Content-Types|
+|[Content-Types](https://github.com/danielmiessler/SecLists/blob/master/Discovery/Web-Content/web-all-content-types.txt) 	|List of All Content-Types|
+|[File Signatures](https://en.wikipedia.org/wiki/List_of_file_signatures) 	|List of File Signatures/Magic Bytes|
+
+### Limited Uploads
+
+|Potential Attack 	|File Types|
+|:----|:----|
+|XSS 	|HTML, JS, SVG, GIF|
+|XXE/SSRF |	XML, SVG, PDF, PPT, DOC|
+|DoS 	|ZIP, JPG, PNG|
