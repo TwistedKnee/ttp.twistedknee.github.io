@@ -11,3 +11,7 @@ Injection points to consider:
 - search parameters
 - cookie values
 
+## Labs walkthrough sections
+
+### SQLi vulnerability in WHERE clause allowing retrieval of hidden data
+
