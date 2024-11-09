@@ -6,3 +6,8 @@ Tips for exam: If 'Advanced Search' is used privilege escalation will be easy.
 
 Cheat sheet: https://portswigger.net/web-security/sql-injection/cheat-sheet 
 
+Injection points to consider:
+
+- search parameters
+- cookie values
+
