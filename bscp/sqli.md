@@ -12,7 +12,7 @@ Injection points to consider:
 - cookie values
 - url parameters
 
-UNION Methodology
+### UNION Methodology
 
 ```
 ' UNION SELECT NULL--
