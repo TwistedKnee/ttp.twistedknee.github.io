@@ -31,3 +31,27 @@ Go to `my account` and enter arbirtraty login values with burp intercept on, the
 ![image](https://github.com/user-attachments/assets/8ed32490-050b-4102-bfd7-5b397c7eecb6)
 
 
+### SQL injection attack, querying the database type and version on Oracle
+
+So first methodology for UNION attacks, in Oracle based on the Cheatsheet we see that every Oracle db needs a table to select from. We will always need a table to call to in Oracle, so in this case let's start with adding FROM dual in our query at the end. All of these injections are in the same as above, in the categories filter.
+
+So it would look like
+
+```
+' UNION SELECT NULL FROM DUAL--
+```
+
+Just add Null's until we identify the length of columns. We find that 2 no longer gives us internal server errors. So now we are going to check for text by just adding random strings to the columns where the NULLS are like: "abc" 
+
+```
+' UNION SELECT 'abc', NULL FROM DUAL--
+' UNION SELECT 'abc', 'abc' FROM DUAL--
+```
+
+We see both columns contain text values, so now the end challenge is to display the version of Oracle. Which you call by doing `SELECT BANNER FROM v$version`
+
+```
+' UNION SELECT BANNER, NULL FROM v$version--
+```
+
+### 
