@@ -10,6 +10,7 @@ Injection points to consider:
 
 - search parameters
 - cookie values
+- url parameters
 
 ## Labs walkthrough sections
 
