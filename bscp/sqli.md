@@ -33,7 +33,7 @@ Go to `my account` and enter arbirtraty login values with burp intercept on, the
 
 ### SQL injection attack, querying the database type and version on Oracle
 
-So first methodology for UNION attacks, in Oracle based on the Cheatsheet we see that every Oracle db needs a table to select from. We will always need a table to call to in Oracle, so in this case let's start with adding FROM dual in our query at the end. All of these injections are in the same as above, in the categories filter.
+So first methodology for UNION attacks, in Oracle based on the Cheatsheet we see that every Oracle db needs a table to select from. We will always need a table to call to in Oracle, so in this case let's start with adding FROM dual in our query at the end. All of these injections are placed in the same as above, in the categories filter.
 
 So it would look like
 
