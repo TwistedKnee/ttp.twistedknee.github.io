@@ -24,3 +24,9 @@ When selecting a refined search category like `Gifts` one can see the value in t
 
 ![image](https://github.com/user-attachments/assets/2d0bf1ab-78c8-480f-8f95-c2906d9fd7fe)
 
+### SQL injection vulnerability allowing login bypass
+
+Go to `my account` and enter arbirtraty login values with burp intercept on, then change the url value with: `administrator'--`
+![image](https://github.com/user-attachments/assets/8ed32490-050b-4102-bfd7-5b397c7eecb6)
+
+
