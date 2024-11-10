@@ -4,7 +4,7 @@ This will be the start of the SQL injection notes from the portswigger web secur
 
 Tips for exam: If 'Advanced Search' is used privilege escalation will be easy. 
 
-### Cheat sheet: 
+### Cheat sheet
 https://portswigger.net/web-security/sql-injection/cheat-sheet 
 
 Injection points to consider:
