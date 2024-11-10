@@ -5,7 +5,7 @@ This will be the start of the SQL injection notes from the portswigger web secur
 Tips for exam: If 'Advanced Search' is used privilege escalation will be easy. 
 
 ### Cheat sheet
-https://portswigger.net/web-security/sql-injection/cheat-sheet 
+[cheat sheet](https://portswigger.net/web-security/sql-injection/cheat-sheet)
 
 Injection points to consider:
 
@@ -26,6 +26,12 @@ MySQl or Microsoft:
 Check if text in columns:
 ' UNION SELECT 'abc',NULL--
 ' UNION SELECT NULL,'abc'--
+```
+
+## Checking for tables
+
+```
+
 ```
 
 
