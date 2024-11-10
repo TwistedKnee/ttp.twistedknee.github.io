@@ -16,3 +16,11 @@ Injection points to consider:
 
 ### SQLi vulnerability in WHERE clause allowing retrieval of hidden data
 
+When selecting a refined search category like `Gifts` one can see the value in the URL set as Gifts. Adding the below  payload let's us view all products even unreleased ones.  
+
+```
+' or 1=1--
+```
+
+![image](https://github.com/user-attachments/assets/2d0bf1ab-78c8-480f-8f95-c2906d9fd7fe)
+
