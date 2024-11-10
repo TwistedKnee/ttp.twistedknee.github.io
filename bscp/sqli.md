@@ -31,11 +31,26 @@ Check if text in columns:
 ## Checking for tables
 
 ```
+Oracle:
+SELECT * FROM all_tables
+SELECT * FROM all_tab_columns WHERE table_name = 'TABLE-NAME-HERE'
 
+Microsoft:
+SELECT * FROM information_schema.tables
+SELECT * FROM information_schema.columns WHERE table_name = 'TABLE-NAME-HERE'
+
+PostgreSQL:
+SELECT * FROM information_schema.tables
+SELECT * FROM information_schema.columns WHERE table_name = 'TABLE-NAME-HERE'
+
+MySQL:
+SELECT * FROM information_schema.tables
+SELECT * FROM information_schema.columns WHERE table_name = 'TABLE-NAME-HERE'
 ```
 
+# Labs walkthrough sections
 
-## Labs walkthrough sections
+## UNIONS
 
 ### SQLi vulnerability in WHERE clause allowing retrieval of hidden data
 
@@ -143,5 +158,5 @@ Get Admins password:
 ' UNION SELECT username_abcdef, password_abcdef FROM users_abcdef--
 ```
 
-### 
+### SQL injection UNION attack, determining the number of columns returned by the query
 
