@@ -218,8 +218,10 @@ There exists a TrackingId cokie value when visiting the site.
 Same injection point within the TrackingId cookie. 
 
 Steps to follow:
-- inject ' into the cookie value, notice an internal server error
-- inject '' and notice no errors, we can deduce based on conditional errors for our usecase. In this example this is an Oracle DB so make sure to add the FROM DUAL for all queries
-- inject '||(SELECT '')||' and notice the error, again use FROM DUAL to get no errors, meaning our syntax is correct: '||(SELECT '' FROM DUAL)||' 
-- use users table name to see if that exists, if you get an error you know it doesn't. You have to do something like this: '||(SELECT '' FROM users where rownum = 1)||', `where rownum =1` makes sure we don't break the concatentation and limits the response to 1 row.  
+- inject `'` into the cookie value, notice an internal server error
+- inject `''` and notice no errors, we can deduce based on conditional errors for our usecase. In this example this is an Oracle DB so make sure to add the FROM DUAL for all queries
+- inject `'||(SELECT '')||'` and notice the error, again use FROM DUAL to get no errors, meaning our syntax is correct: `'||(SELECT '' FROM DUAL)||'`
+- use users table name to see if that exists, if you get an error you know it doesn't. You have to do something like this: `'||(SELECT '' FROM users where rownum = 1)||'`, `where rownum =1` makes sure we don't break the concatentation and limits the response to 1 row.
+- from the cheat sheet we use this: `'||(SELECT CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE NULL END FROM DUAL)||'` and `'||(SELECT CASE WHEN (1=0) THEN TO_CHAR(1/0) ELSE NULL END FROM DUAL)||'`, notice errors happen with one over the other
+- 
 
