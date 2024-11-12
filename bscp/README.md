@@ -39,7 +39,7 @@ Here are my separated points based on the above note preps. I am going to take l
 In Portswigger they have 31 current topics, this may increase over time. Here they are listed in their categories
 
 - Server Side
-  - SQLi
+  - [SQLi](/bscp/sqli.md)
   - Authentication
   - Path traversal
   - Command Injection
@@ -55,7 +55,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - Web cache deception
  
 - Client side
-  - XSS
+  - [XSS](/bscp/xss.md)
   - CSRF
   - CORS
   - Clickjacking
