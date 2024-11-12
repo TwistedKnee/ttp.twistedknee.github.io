@@ -1,6 +1,9 @@
 # Cross Site Scripting Notes
 
-## methodology
+
+[Portswigger](https://portswigger.net/web-security/cross-site-scripting)
+
+## Methodology
 
 Payloads
 ```
