@@ -15,7 +15,7 @@ Here are my separated points based on the above note preps. I am going to take l
   - HTTP request smuggling
 
 - Promote yourself to admin or steal his data
-  - SQL Injection
+  - [SQL Injection](/bscp/sqli.md)
   - CSRF
   - Insecure Deserialization
   - OAuth authentication
