@@ -117,5 +117,12 @@ We can add `hidden="hidden"` to hide our iframe on the browser
 ### Reflected DOM XSS
 
 - again can use DOM Invader, but for more indepth understanding let's discuss it here
+- I wrote more of this lab above in DOM misc, but injection is `\"-alert(1)}//`
+
+### Stored DOM XSS
+
+
+
+
 
 
