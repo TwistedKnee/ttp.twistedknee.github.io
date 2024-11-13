@@ -5,7 +5,7 @@
 
 ## Methodology
 
-Payloads
+__Payloads__
 ```
 Simple
 <script>alert(1)</script>
@@ -18,6 +18,8 @@ Break out of Javascript string
 AngularJS - look for things like ng-app in source
 {{$on.constructor('alert(1)')()}}
 ```
+
+__Using XSS cheat sheet to find unblocked tags and attributes__
 
 ### Misc DOM stuff
 - Here we can see in developer tools the DOM Invader usage, the canary is on the left, you can copy your canary with the button:
@@ -129,7 +131,9 @@ We can add `hidden="hidden"` to hide our iframe on the browser
 
 - since replace() only looks for first accorance of the brackets placing dumby ones beforehand will let us continue injecting our payload with no issues: `<><img src=1 onerror=alert(1)>`
 
+### Reflected XSS into HTML context with most tags and attributes blocked
 
+This I should write a methodology also for, with finding blocked attributes
 
 
 
