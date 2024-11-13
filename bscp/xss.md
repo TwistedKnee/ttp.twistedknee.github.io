@@ -1,5 +1,6 @@
 # Cross Site Scripting Notes
 
+[Cheat Sheet](https://portswigger.net/web-security/cross-site-scripting/cheat-sheet)
 
 [Portswigger](https://portswigger.net/web-security/cross-site-scripting)
 
@@ -20,6 +21,52 @@ AngularJS - look for things like ng-app in source
 ```
 
 __Using XSS cheat sheet to find unblocked tags and attributes__
+
+- input a standard XSS vector: `<img src=1 onerror=print()>` Notice it gets blocked
+
+![image](https://github.com/user-attachments/assets/8387a6d6-3a67-4dfa-b661-d449219899c7)
+
+- send this call to burp intruder and replace the search term with `<>` and put your input in between these
+
+![image](https://github.com/user-attachments/assets/e37e759e-b175-482c-a97a-fd670b27537d)
+
+
+- now go to the XSS cheat sheet and select copy tags to clipboard
+
+![image](https://github.com/user-attachments/assets/e9b00ea8-1f52-467c-9f31-36863a37c239)
+
+- in burp intruder under payload select paste
+
+![image](https://github.com/user-attachments/assets/7a8c480c-80dd-46ea-bde3-edbc91d944fd)
+
+
+-  start the attack in intruder and review the results
+
+![image](https://github.com/user-attachments/assets/19ce7f48-49e3-4adf-b491-3a74612b7672)
+
+- we can see that the payloads `body` and `custom tags` gives us a 200 which means we can use these without getting blocked
+
+- now we can continue trying to find payloads that can work with `<body%20=1>` and place our input between the space encoding space character after `body` and the equal signs.
+
+- Clear the payloads and go back to the cheat sheet and select `Copy events to clipboard` and paste that into intruder
+
+![image](https://github.com/user-attachments/assets/98e4832c-c53d-4310-84d0-ed6fb816b8a8)
+
+![image](https://github.com/user-attachments/assets/3e9ec721-cc90-47e4-a544-6e5dd0ba2704)
+
+![image](https://github.com/user-attachments/assets/d0b2652c-4213-412e-99d5-766cbebbe730)
+
+- now start intruder and find the events you can use
+
+![image](https://github.com/user-attachments/assets/67ac4321-9fc6-473f-b0cd-824478bc39d4)
+
+- we have many options here to use, let's use onresize to exploit this. We will go to the exploit server and craft and iframe with this payload
+```
+<iframe src="https://YOUR-LAB-ID.web-security-academy.net/?search=%22%3E%3Cbody%20onresize=print()%3E" onload=this.style.width='100px'>
+```
+
+![image](https://github.com/user-attachments/assets/4ac01d03-f736-492f-8f78-c3c8a47b5260)
+
 
 ### Misc DOM stuff
 - Here we can see in developer tools the DOM Invader usage, the canary is on the left, you can copy your canary with the button:
@@ -133,7 +180,6 @@ We can add `hidden="hidden"` to hide our iframe on the browser
 
 ### Reflected XSS into HTML context with most tags and attributes blocked
 
-This I should write a methodology also for, with finding blocked attributes
-
+I wrote the methodology of this above, we are using burp intruder and the XSS cheatsheet to detect whcih tags and attributes aren't blocked and abuse it that way
 
 
