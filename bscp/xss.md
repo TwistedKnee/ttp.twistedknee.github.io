@@ -203,5 +203,27 @@ when viewing the exploit we can see it placed this as a new custom tag for our u
 
 - in this one we are again getting blocked when doing a standard payload like `<img src=1 onerror=alert(1)>`
 - follow the methodology above to identify tags and attributes that aren't blocked
-- notice that svg works, so let's attempt that 
+- notice that svg, animatetransform, title and image works, so let's attempt that 
+
+![image](https://github.com/user-attachments/assets/cf92603c-d1f1-4faf-8620-9e6968848f9a)
+
+- now we just gotta attempt to see what events work to create our payload following similar methodology using this payload as a start `<svg><animatetransform%20§§=1>`
+- onbegin works
+
+![image](https://github.com/user-attachments/assets/7fe6696c-fe69-499a-b3a0-9f3ea0a011f1)
+
+- payload to exploit `"><svg><animatetransform onbegin=alert(1)>`
+
+### Reflected XSS in canonical link tag
+
+For our usage the simulated user will enter these: 
+- ALT+SHIFT+X - Windows
+- CTRL+ALT+X - MacOS
+- Alt+X - Linux
+
+payload to use: `'accesskey='x'onclick='alert(1)`
+
+if a user clicks `x` it will work, for our use case to exploit we have to select one of the above to exploit
+
+### Reflected XSS into a JavaScript string with single quote and backslash escaped
 
