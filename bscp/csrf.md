@@ -205,7 +205,7 @@ when observing a `POST /my-account/change-email`, and your change request method
 - confirm it works and you see your session cookie in the latest `GET /chat` message
 - deliver this to victim
 
-### 
+### SameSite Lax bypass via cookie refresh
 
 
 
