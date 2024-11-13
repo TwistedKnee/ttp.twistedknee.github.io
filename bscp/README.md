@@ -16,7 +16,7 @@ Here are my separated points based on the above note preps. I am going to take l
 
 - Promote yourself to admin or steal his data
   - [SQL Injection](/bscp/sqli.md)
-  - CSRF
+  - [CSRF](/bscp/csrf.md)
   - Insecure Deserialization
   - OAuth authentication
   - JWT
@@ -56,7 +56,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
  
 - Client side
   - [XSS](/bscp/xss.md)
-  - CSRF
+  - [CSRF](/bscp/csrf.md)
   - CORS
   - Clickjacking
   - DOM-based vulnerabilities
