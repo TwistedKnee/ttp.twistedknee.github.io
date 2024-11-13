@@ -9,11 +9,18 @@ Tips for exam: If 'Advanced Search' is used privilege escalation will be easy.
 ### Cheat sheet
 [cheat sheet](https://portswigger.net/web-security/sql-injection/cheat-sheet)
 
-Injection points to consider:
+**Injection points to consider:**
 
 - search parameters
 - cookie values
 - url parameters
+
+**SQLMAP**
+You can always cheat with SQLMAP, super easy. You can even save the request from burp and then reference it with sqlmap:
+In burp right click a request and select save item for the one you want to inject into:
+![image](https://github.com/user-attachments/assets/a0d6fbf5-5c74-4bbf-9b34-df3ed4a1c08c)
+
+`sqlmap -r <sqlinjectionrequest>`
 
 ### UNION Methodology
 
