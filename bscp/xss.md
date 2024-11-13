@@ -15,6 +15,8 @@ Escape quotes
 "onmouseover="alert(1)
 Break out of Javascript string
 '-alert(1)-'
+AngularJS - look for things like ng-app in source
+{{$on.constructor('alert(1)')()}}
 ```
 
 
@@ -81,5 +83,18 @@ We can add `hidden="hidden"` to hide our iframe on the browser
 - you encounter information about a location.search function referencing a storeId value. We don't have this in the URL parameters we have so attempt to add this to the URL.
 - Now with DOM Invader turned on inject your canary into the storeId parameter
 - DOM Invader will have a simple `exploit` button you can use to exploit or use this payload `"></select><img%20src=1%20onerror=alert(1)>`
+
+### DOM XSS in AngularJS expression with angle brackets and double quotes HTML-encoded
+
+- enter string into search bar, again can use DOM invaders canary for this
+- view source to examine the sink, notice the usage of ng-app this implies this is AngularJS
+- Now we can abuse AngularJS `{{$on.constructor('alert(1)')()}}`
+
+### Reflected DOM XSS
+
+- again can use DOM Invader, but for more indepth understanding let's discuss it here
+- Here we can see in developer tools the DOM Invader usage, the canary is on the left, you can copy your canary with the button:
+![image](https://github.com/user-attachments/assets/66afdc74-2726-47ee-80b6-b0f2a8a25a56)
+  
 
 
