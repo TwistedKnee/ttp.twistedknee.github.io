@@ -269,7 +269,27 @@ when observing a `POST /my-account/change-email`, and your change request method
 
 ### CSRF where Referer validation depends on header being present
 
+- Send the request to Burp Repeater and observe that if you change the domain in the Referer HTTP header then the request is rejected.
+- Delete the Referer header entirely and observe that the request is now accepted. 
+- follow methodology from beginning to craft csrf poc, add this to the HTML to suppress the `Referer header`
 
+```<meta name="referrer" content="no-referrer">```
 
-
+- store and deliver to victim
  
+### CSRF with broken Referer validation
+
+- Open Burp's browser and log in to your account. Submit the "Update email" form, and find the resulting request in your Proxy history
+- Send the request to Burp Repeater. Observe that if you change the domain in the Referer HTTP header, the request is rejected
+- Copy the original domain of your lab instance and append it to the Referer header in the form of a query string. The result should look something like this `Referer: https://arbitrary-incorrect-domain.net?YOUR-LAB-ID.web-security-academy.net`
+- sending the request shows that it accepts an referer header as long as it contains the expected domain somewhere in the string
+- create methodology csrf poc from top, and edit the JavaScript so that the `history.pushState()` includes a query string with your lab instance URL `history.pushState("", "", "/?YOUR-LAB-ID.web-security-academy.net")`
+- if you run into issues viewing the exploit add this to the exploit server in the `Head` section `Referrer-Policy: unsafe-url`
+- deliver to victim
+
+###
+
+
+
+
+
