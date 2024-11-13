@@ -19,6 +19,12 @@ AngularJS - look for things like ng-app in source
 {{$on.constructor('alert(1)')()}}
 ```
 
+### DOM stuff
+- Here we can see in developer tools the DOM Invader usage, the canary is on the left, you can copy your canary with the button:
+![image](https://github.com/user-attachments/assets/66afdc74-2726-47ee-80b6-b0f2a8a25a56)
+  
+now this is how we use DOM Invader and sending the canary into every input will help us find DOM XSS, but let's discuss now how we can 
+
 
 # Labs walkthroughs
 
@@ -93,8 +99,5 @@ We can add `hidden="hidden"` to hide our iframe on the browser
 ### Reflected DOM XSS
 
 - again can use DOM Invader, but for more indepth understanding let's discuss it here
-- Here we can see in developer tools the DOM Invader usage, the canary is on the left, you can copy your canary with the button:
-![image](https://github.com/user-attachments/assets/66afdc74-2726-47ee-80b6-b0f2a8a25a56)
-  
 
 
