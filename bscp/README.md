@@ -58,7 +58,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [XSS](/bscp/xss.md)
   - [CSRF](/bscp/csrf.md)
   - CORS
-  - Clickjacking
+  - [Clickjacking](/bscp/clickjacking.md)
   - DOM-based vulnerabilities
   - Websockets
 
