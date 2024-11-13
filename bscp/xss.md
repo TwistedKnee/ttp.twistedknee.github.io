@@ -124,7 +124,9 @@ We can add `hidden="hidden"` to hide our iframe on the browser
 - we can post our canary from DOM Invader and notice the comment field might be injectable
 - review sources in developer tools and we see a loadCommentsWithEscapeHtml.js
 - Here we see it replacing <> with &lt or &gt
+
 ![image](https://github.com/user-attachments/assets/afde9de6-9825-48d9-839f-c7bb7b01eeda)
+
 - since replace() only looks for first accorance of the brackets placing dumby ones beforehand will let us continue injecting our payload with no issues: `<><img src=1 onerror=alert(1)>`
 
 
