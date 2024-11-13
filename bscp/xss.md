@@ -67,8 +67,14 @@ __Using XSS cheat sheet to find unblocked tags and attributes__
 
 ![image](https://github.com/user-attachments/assets/4ac01d03-f736-492f-8f78-c3c8a47b5260)
 
+__View backslash escaping__
 
-### Misc DOM stuff
+1. in a random string add a special character like `'` and view the source to see if the site adds a backslash to avoid, in one case we can just finish the script block and start a new one to get xss with a payload like this `</script><script>alert(1)</script>`
+
+2. enter this payload to view if backslash is being escaped `test\payload` if so we can use our own backslash to break out of the JavaScript string and inject an alert like `\'-alert(1)//`
+
+
+__Misc DOM stuff__
 - Here we can see in developer tools the DOM Invader usage, the canary is on the left, you can copy your canary with the button:
 ![image](https://github.com/user-attachments/assets/66afdc74-2726-47ee-80b6-b0f2a8a25a56)
   
@@ -86,7 +92,6 @@ We can see in Searchresults.js that it is using the `eval()` function which is a
 payload used:
 \"-alert(1)}//
 ```
-
 
 _As you have injected a backslash and the site isn't escaping them, when the JSON response attempts to escape the opening double-quotes character, it adds a second backslash. The resulting double-backslash causes the escaping to be effectively canceled out. This means that the double-quotes are processed unescaped, which closes the string that should contain the search term._
 
@@ -226,4 +231,30 @@ payload to use: `'accesskey='x'onclick='alert(1)`
 if a user clicks `x` it will work, for our use case to exploit we have to select one of the above to exploit
 
 ### Reflected XSS into a JavaScript string with single quote and backslash escaped
+
+- send a payload like `test'payload` to see the `'` is being backslashed escaped
+
+![image](https://github.com/user-attachments/assets/4f37c19b-3926-4893-bf01-9c2f3e40cb29)
+
+- enter payload to end that block that is escaping and add our xss payload like this `</script><script>alert(1)</script>`
+
+![image](https://github.com/user-attachments/assets/3b5a0594-babd-4147-af9c-ef53dae15a4a)
+
+### Reflected XSS into a JavaScript string with angle brackets and double quotes HTML-encoded and single quotes escaped
+
+- do similar as above, enter `test'payload`, then send `test\payload` and observe that the backslash doesn't get escapted but the quote does
+- break out of it with a payload like this `\'-alert(1)//`
+
+### Stored XSS into onclick event with angle brackets and double quotes HTML-encoded and single quotes and backslash escaped
+
+- this time we are going to abuse the `website` input on the comments section, if we enter random strings we can observe that it is reflected inside an onclick event handler attribute
+
+![image](https://github.com/user-attachments/assets/3673f9c8-0044-4440-b742-688e2f1a5b5d)
+
+- we can modify this using this type of payload `http://foo?&apos;-alert(1)-&apos;`
+
+![image](https://github.com/user-attachments/assets/e00d666c-19f9-4942-a792-669ef3edac04)
+
+- we can see it added it as an href, the &apos are single quotes `'`
+
 
