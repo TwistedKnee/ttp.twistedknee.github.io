@@ -198,3 +198,10 @@ location = 'https://YOUR-LAB-ID.web-security-academy.net/?search=%3Cxss+id%3Dx+o
 when viewing the exploit we can see it placed this as a new custom tag for our use case and exploited the `alert(document.cookie)`
 
 ![image](https://github.com/user-attachments/assets/9264df6e-f02c-44b0-a475-15bf19b13406)
+
+### Reflected XSS with some SVG markup allowed
+
+- in this one we are again getting blocked when doing a standard payload like `<img src=1 onerror=alert(1)>`
+- follow the methodology above to identify tags and attributes that aren't blocked
+- notice that svg works, so let's attempt that 
+
