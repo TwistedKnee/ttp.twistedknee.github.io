@@ -74,3 +74,12 @@ We can add `hidden="hidden"` to hide our iframe on the browser
 - inject string like above
 - notice it is reflected inside a JavaScript string
 - break out of string with a payload like: `'-alert(1)-'`
+
+### DOM XSS in document.write sink using source location.search inside a select element
+
+- when visiting the site go to a product and read the source
+- you encounter information about a location.search function referencing a storeId value. We don't have this in the URL parameters we have so attempt to add this to the URL.
+- Now with DOM Invader turned on inject your canary into the storeId parameter
+- DOM Invader will have a simple `exploit` button you can use to exploit or use this payload `"></select><img%20src=1%20onerror=alert(1)>`
+
+
