@@ -1,5 +1,7 @@
 # CSRF Notes
 
+[Portswigger](https://portswigger.net/web-security/csrf)
+
 ## random
 
 if you notice a live chat service check your web sockets, this might be vulnerable to cross-site websocket hijacking
