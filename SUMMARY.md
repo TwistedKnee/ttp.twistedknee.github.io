@@ -2,7 +2,10 @@
 
 * [index](README.md)
 * [bscp](bscp/README.md)
-  * [sqli.md](bscp/sqli.md)
+  * [sqli](bscp/sqli.md)
+  * [xss](bscp/xss.md)
+  * [csrf](bscp/csrf.md)
+  * [clickjacking](bscp/clickjacking.md)
 * [gcih](gcih/README.md)
   * [live\_windows\_examination\_with\_powershell](gcih/live\_windows\_examination\_with\_powershell.md)
   * [network\_investigation](gcih/network\_investigation.md)
