@@ -8,7 +8,7 @@ Here are my separated points based on the above note preps. I am going to take l
 
 - Get access to any user
   - [XSS](/bscp/xss.md)
-  - DOM-based vulns
+  - [DOM-based vulns](bscp/dom_based.md)
   - Authentication
   - Web Cache Poisoning
   - HTTP host header attacks
@@ -59,7 +59,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [CSRF](/bscp/csrf.md)
   - CORS
   - [Clickjacking](/bscp/clickjacking.md)
-  - DOM-based vulnerabilities
+  - [DOM-based vulns](bscp/dom_based.md)
   - Websockets
 
 - Advanced topics
