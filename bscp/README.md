@@ -6,7 +6,7 @@ So for the exam there are two sites that you have to get access to a user, promo
 
 Here are my separated points based on the above note preps. I am going to take loose notes as I reread the material. I have already done all of these labs before but I am reinforcing this by rereading and taking notes. I recommend everyone to at least take notes while they study if you stumble across this.  
 
-In preparation I am also going through Rana Khalil's course as well [here](https://academy.ranakhalil.com/), I thought why not do this on top of it all since this would also be good primer for OSWE. 
+In preparation I am also going through Rana Khalil's course as well [here](https://academy.ranakhalil.com/), I thought why not do this on top of it all since this would also be good primer for OSWE. I am writing her code for the manual testing in the scripts section of this github, but these are all based on her's from her [github](https://github.com/rkhal101/Web-Security-Academy-Series/)
 
 - Get access to any user
   - [XSS](/bscp/xss.md)
