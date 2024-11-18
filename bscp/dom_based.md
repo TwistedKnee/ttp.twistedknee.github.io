@@ -56,6 +56,31 @@ Database
 |DOM-data manipulation 	|element.setAttribute()|
 |Denial of service 	|RegExp() |
 
+**For open-redirection vulns**
+
+```
+location
+location.host
+location.hostname
+location.href
+location.pathname
+location.search
+location.protocol
+location.assign()
+location.replace()
+open()
+element.srcdoc
+XMLHttpRequest.open()
+XMLHttpRequest.send()
+jQuery.ajax()
+$.ajax()
+```
+
+**For cookie**
+```
+document.cookie
+```
+
 **ADDITIONAL**
 Further lists exists on [Hacktricks](https://book.hacktricks.xyz/pentesting-web/xss-cross-site-scripting/dom-xss)
 
@@ -105,10 +130,30 @@ Further lists exists on [Hacktricks](https://book.hacktricks.xyz/pentesting-web/
 
 - store and deliver to victim
 
-### 
+### DOM-based cookie manipulation
 
+- view a post and inspect the `Back to Blog` section
+- ![image](https://github.com/user-attachments/assets/e83fd6c8-94da-4d5b-a983-4a37cc75475d)
+- notice this functions values:
+- ![image](https://github.com/user-attachments/assets/fb148073-72fa-4d83-8555-fb2362dcfe3f)
+- we can abuse the `url` parameter to open redirect to any site we choose, including the exploit server
 
+```
+https://YOUR-LAB-ID.web-security-academy.net/post?postId=4&url=https://YOUR-EXPLOIT-SERVER-ID.exploit-server.net/
+```
 
+### DOM-based cookie manipulation
 
+- review a product and go back to the homepage, notice that a cookie is set with the url of the last product we were at
+- ![image](https://github.com/user-attachments/assets/69f6f810-b1ba-468d-a5c6-c825c70cc906)
+- We can also see in the source page that there is an href that must be what the cookie is reading from:
+- ![image](https://github.com/user-attachments/assets/79a06497-2a2c-48da-ae31-f599d9eab1e7)
+- craft a payload in exploit server to abuse this behavior of last product url being written to the cookie
 
+```
+<iframe src="https://YOUR-LAB-ID.web-security-academy.net/product?productId=1&'><script>print()</script>" onload="if(!window.x)this.src='https://YOUR-LAB-ID.web-security-academy.net';window.x=1;">
+```
 
+- we can confirm that it does load into the cookie when viewing the exploit ourselves:
+- ![image](https://github.com/user-attachments/assets/717b96bb-1abc-4eef-a3fb-680b86ee1dad)
+- now store and deliver to victim
