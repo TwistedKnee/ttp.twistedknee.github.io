@@ -25,7 +25,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
   - Access control vulnerabilities
 
 - Read the content of /home/carlos/secret
-  - SSRF
+  - [SSRF](bscp/ssrf.md)
   - [XXE Injection](/bscp/xxe.md)
   - OS Cmd Injection
   - Server-side template injection
@@ -51,7 +51,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - Access control
   - File upload vulnerabilities
   - Race conditions
-  - SSRF
+  - [SSRF](bscp/ssrf.md)
   - [XXE Injection](/bscp/xxe.md)
   - NoSQL injection
   - API testing
