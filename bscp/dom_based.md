@@ -1,5 +1,7 @@
 # DOM Based vulnerabilities notes
 
+[Portswigger](https://portswigger.net/web-security/dom-based)
+
 ## Methodology
 
 So simple easy start to DOM inspection would be to both manually search for sinks, or to use DOM Invader.
