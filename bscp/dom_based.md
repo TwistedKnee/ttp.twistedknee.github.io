@@ -10,7 +10,9 @@ To start DOM Invader load the extension in the burp browser:
 You can open DOM Invader in a tab in the developer tools in the browser:
 ![image](https://github.com/user-attachments/assets/ff1f2f18-fd9d-4b07-b6c1-03c832d5e8e8)
 
-Within here you can copy the canary to inject into parameters you have user input to, see current sinks and sources when your canary has been inputted, as well as other things. We will go over this more in details in the lab walkthroughs
+Within here you can copy the canary to inject into parameters you have user input to, see current sinks and sources when your canary has been inputted, as well as other things. We will go over this more in details in the lab walkthroughs.
+
+For the labs specifically we do seem to have a common addEventListener() that has a tain-flow vuln exposed on it. So make sure to also review the source page for possible things that might have sinks in them, see lists below.
 
 ### Sources
 
@@ -60,5 +62,25 @@ Further lists exists on [Hacktricks](https://book.hacktricks.xyz/pentesting-web/
 ## Labs Walkthrough
 
 ### DOM XSS using web messages
+
+- as listed in the Hacktricks list from above, we found the usage of `.innerHTML` on the document.getElementById function:
+- ![image](https://github.com/user-attachments/assets/6ba5d62e-99fb-4bb7-b15c-c2e36eebcf90)
+- Now we will use the exploit server to craft an iframe that calls the print() function in javascript
+
+```
+<iframe src="https://YOUR-LAB-ID.web-security-academy.net/" onload="this.contentWindow.postMessage('<img src=1 onerror=print()>','*')">
+```
+
+- store and deliver to victim
+
+### DOM XSS using web messages and a JavaScript URL
+
+
+
+
+
+
+
+
 
 
