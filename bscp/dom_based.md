@@ -75,9 +75,37 @@ Further lists exists on [Hacktricks](https://book.hacktricks.xyz/pentesting-web/
 
 ### DOM XSS using web messages and a JavaScript URL
 
+- review the site and notice another window.addEventListener function is defined here
+- ![image](https://github.com/user-attachments/assets/c595163a-1341-42dd-8809-0013ea8be57a)
+- looks like there might be a location.href dom we can abuse
+- Now we go to the exploit server to craft an iframe that calls the print() function in javascript
 
+```
+<iframe src="https://YOUR-LAB-ID.web-security-academy.net/" onload="this.contentWindow.postMessage('javascript:print()//http:','*')">
+```
 
+- store and devlier to victim
 
+### DOM XSS using web messages and JSON.parse
+
+- review the site and notice another window.addEventListener function is defined here
+- ![image](https://github.com/user-attachments/assets/72c0706f-10f9-432b-8e92-e7beaf5c35af)
+- Let's break this down
+1. a window.addEventListener is being created passing message, and function(e)
+2. This is an iframe creation, with the ACMEplayer object pointed to the created iframe with a json blob with an element equaling `iframe`, the try catch is just validating that it is json, if not break out and return
+3. a switch case that checks the value and see's what action needs to happen, in this case scrolling into view if `page-load` is the type.
+4. checking if `load-channel` is the type sets the iframes src value to the url and loads this url in the iframe
+5. checks for `player-height-changed` value and adjusts based on the value
+
+- we will abuse the `load-channel` part of this event listener by crafting a url that is just our xss payload, in the exploit server
+
+```
+<iframe src=https://YOUR-LAB-ID.web-security-academy.net/ onload='this.contentWindow.postMessage("{\"type\":\"load-channel\",\"url\":\"javascript:print()\"}","*")'>
+```
+
+- store and deliver to victim
+
+### 
 
 
 
