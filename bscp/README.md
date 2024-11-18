@@ -34,7 +34,8 @@ In preparation I am also going through Rana Khalil's course as well [here](https
   - File upload vulnerabilities
  
 - Misc
-  - CORS + information disclosure
+  - [CORS](bscp/cors.md)
+  - information disclosure
   - WebSockets
   - Prototype polution
 
@@ -59,7 +60,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
 - Client side
   - [XSS](/bscp/xss.md)
   - [CSRF](/bscp/csrf.md)
-  - CORS
+  - [CORS](bscp/cors.md)
   - [Clickjacking](/bscp/clickjacking.md)
   - [DOM-based vulns](bscp/dom_based.md)
   - Websockets
