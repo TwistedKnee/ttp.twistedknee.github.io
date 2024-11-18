@@ -54,6 +54,7 @@ Database
 |DOM-data manipulation 	|element.setAttribute()|
 |Denial of service 	|RegExp() |
 
+**ADDITIONAL**
 Further lists exists on [Hacktricks](https://book.hacktricks.xyz/pentesting-web/xss-cross-site-scripting/dom-xss)
 
 ## Labs Walkthrough
