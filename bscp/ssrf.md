@@ -21,7 +21,7 @@ attempt to change the URL to another IP or domain that might exist internally to
 
 ### Circumventing defenses
 
--Use alternative IP representation of `127.0.0.1` and `localhost`
+- Use alternative IP representation of `127.0.0.1` and `localhost`
 -- `2130706433`
 -- `017700000001`
 -- `127.1`
