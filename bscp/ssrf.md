@@ -22,13 +22,13 @@ attempt to change the URL to another IP or domain that might exist internally to
 ### Circumventing defenses
 
 - Use alternative IP representation of `127.0.0.1` and `localhost`
--- `2130706433`
--- `017700000001`
--- `127.1`
+  - `2130706433`
+  - `017700000001`
+  - `127.1`
 
 - Register your own domain name that resolves to `127.0.0.1`, `spoofed.burpcollaborator.net` can be used for this
 - Obfuscate blocked strings with URL encoding or case variation
 - provide a URL that you control, which redirects to the target URL
--- try other redirect codes too when doing this, switching from `http:` to `https:` can bypass some filters
+  - try other redirect codes too when doing this, switching from `http:` to `https:` can bypass some filters
 
 ## Labs walkthrough
