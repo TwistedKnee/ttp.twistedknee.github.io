@@ -32,3 +32,25 @@ attempt to change the URL to another IP or domain that might exist internally to
   - try other redirect codes too when doing this, switching from `http:` to `https:` can bypass some filters
 
 ## Labs walkthrough
+
+### Basic SSRF against the local server
+
+- attempt to get /admin but you see you're blocked
+- use check stock and notice the `stockApi` parameter to `http://localhost/admin` and send and you get access to the administration interface
+- read html to identify the URL to delete the target user, enter this in the stockApi and send: `http://localhost/admin/delete?username=carlos`
+
+### Basic SSRF against another back-end system
+
+- again use the check stock functionality, send it to intruder
+- change parameter to `http://192.168.0.1:8080/admin` then highlight the last IP octet in intruder
+- use numbers 1-255 as the payload and run it until you receive a `200` response, send this request to repeater
+- no change the URI to `/admin/delete?username=carlos` and send and you complete the lab 
+
+### Blind SSRF with out of band detection
+
+
+
+
+
+
+
