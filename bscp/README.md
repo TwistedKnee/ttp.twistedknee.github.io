@@ -14,7 +14,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
   - Authentication
   - Web Cache Poisoning
   - HTTP host header attacks
-  - HTTP request smuggling
+  - [HTTP request smuggling](bscp/http_req_smuggling.md)
 
 - Promote yourself to admin or steal his data
   - [SQL Injection](/bscp/sqli.md)
@@ -72,7 +72,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - SSTI
   - Web cache poisoning
   - HTTP Host header attacks
-  - HTTP request smuggling
+  - [HTTP request smuggling](bscp/http_req_smuggling.md)
   - OAuth authentication
   - JWT attacks
   - Prototype pollution
