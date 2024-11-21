@@ -14,6 +14,8 @@ The above video goes over more then that, but essentially there does exist a pos
 
 View any requests that include full URL's as parameters, like checking for stock. If so change the URL to one of your own to test if interaction does occur.
 
+Other injection points would be the http headers like the `referer` one
+
 Common URLs to test as
 
 - `127.0.0.1`
@@ -21,7 +23,7 @@ Common URLs to test as
 
 ### against backend systems
 
-attempt to change the URL to another IP or domain that might exist internally to retrieve it's contents
+Attempt to change the URL to another IP or domain that might exist internally to retrieve it's contents
 
 ### Circumventing defenses
 
@@ -52,9 +54,26 @@ attempt to change the URL to another IP or domain that might exist internally to
 
 ### Blind SSRF with out of band detection
 
+- visit product and intercept with burp and send it to repeater
+- select referer header and replace with collaborator with `right-click->insert collaborator payload`
+
+### SSRF with blacklist-based input filter
 
 
 
+- Visit a product, click "Check stock", intercept the request in Burp Suite, and send it to Burp Repeater.
+- Change the URL in the stockApi parameter to `http://127.0.0.1/` and observe that the request is blocked.
+- Bypass the block by changing the URL to: `http://127.1/`
+- Change the URL to `http://127.1/admin` and observe that the URL is blocked again.
+- Obfuscate the "a" as `http://127.1/%2561min`
 
+### SSRF with filter bypass via open redirection vulnerability
 
+Change the stock check URL to access the admin interface at http://192.168.0.12:8080/admin and delete the user carlos
+
+- visit a product and send the check stock call to repeater
+- when attempting to tamper with the stockApi as we have before but it doesn't work
+- click `next product` and notice the path parameter is placed in the location header of a redirection response
+- create a URL that exploits the open redirect vuln `/product/nextProduct?path=http://192.168.0.12:8080/admin`
+- amend to delete `/product/nextProduct?path=http://192.168.0.12:8080/admin/delete?username=carlos`
 
