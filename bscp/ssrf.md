@@ -4,6 +4,10 @@
 
 [URL validation bypass cheat sheet](https://portswigger.net/web-security/ssrf/url-validation-bypass-cheat-sheet)
 
+Awesome video about testing blind ssrf with timing is here: [KettleGod](https://www.youtube.com/watch?v=zOPjz-sPyQM) 
+
+The above video goes over more then that, but essentially there does exist a possibility in determining blind ssrf with timing based detection on ther response time of the messages. If the first message does a scoped ssrf on an internal network for a DNS record, caching would proceed it, meaning the first message will be longer while subsequent will be shorter and consistently the same. (Note this requires the usage of HTTP/2 to avoid Jitter messing with response times).
+
 ## Methodology
 
 ### Initial
