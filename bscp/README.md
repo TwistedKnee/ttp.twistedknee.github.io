@@ -27,7 +27,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
 - Read the content of /home/carlos/secret
   - [SSRF](bscp/ssrf.md)
   - [XXE Injection](/bscp/xxe.md)
-  - OS Cmd Injection
+  - [OS Cmd Injection](bscp/os_cmdi.md)
   - Server-side template injection
   - Directory traversal
   - insecure deserialization
@@ -45,7 +45,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [SQLi](/bscp/sqli.md)
   - Authentication
   - Path traversal
-  - Command Injection
+  - [Command Injection](bscp/os_cmdi.md)
   - Business logic vulnerabilities
   - Information Disclosure
   - Access control
