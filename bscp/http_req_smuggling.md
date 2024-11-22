@@ -8,6 +8,7 @@ In addition, in burp uncheck the `Update Content-Length` header
 [Working with http/2 in burp](https://portswigger.net/burp/documentation/desktop/http2)
 
 In burp repeater what to change in settings to test `http/1` or `http/2`:
+
 ![image](https://github.com/user-attachments/assets/91c35df6-6961-421c-8179-4790ef2db1b8)
 
 
@@ -470,7 +471,7 @@ Transfer-Encoding: chunked
 ```
 - ![image](https://github.com/user-attachments/assets/8a9bc52a-d6d0-4155-bfe6-eaf0b3e47697)
 - ![image](https://github.com/user-attachments/assets/9b7606c9-3c5a-45a6-be6c-eb670a7c6ffd)
-- ![image](https://github.com/user-attachments/assets/17675ee1-6ea5-4b72-b7d5-7ef03f234d28)
+- ![image](https://github.com/user-attachments/assets/47c8bcd0-0f40-4aeb-9799-b15efd5cba7f)
 - in the body attempt to smuggle an arbitrary prefix as follows, noticing that every second request gets a 404 response, indicating it has casued the back-end to append the request to the smuggled prefix 
 
 ```
