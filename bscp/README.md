@@ -28,7 +28,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
   - [SSRF](bscp/ssrf.md)
   - [XXE Injection](/bscp/xxe.md)
   - [OS Cmd Injection](bscp/os_cmdi.md)
-  - Server-side template injection
+  - [Server-side template injection](bscp/ssti.md)
   - Directory traversal
   - insecure deserialization
   - File upload vulnerabilities
@@ -69,7 +69,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - Insecure deserialization
   - Web LLM Attacks
   - GraphQL Vulns
-  - SSTI
+  - [SSTI](bscp/ssti.md)
   - Web cache poisoning
   - HTTP Host header attacks
   - [HTTP request smuggling](bscp/http_req_smuggling.md)
