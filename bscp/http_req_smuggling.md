@@ -463,12 +463,13 @@ If you're not familiar with Burp's exclusive features for HTTP/2 testing, please
 - In Burp's browser, use the lab's search function a couple of times and observe that the website records your recent search history. Send the most recent POST / request to Burp Repeater and remove your session cookie before resending the request. Notice that your search history is reset, confirming that it's tied to your session cookie
 - make sure burp repeater attributes settings is set to `http/2`
 - ![image](https://github.com/user-attachments/assets/bb09247b-5703-430d-8b48-5d65c40331ee)
-- using inspector add an arbitrary header to the request, append the sequence `\r\n` to the headers value, followed by the `Transfer-Encoding: chunked` header with this:
+- using inspector add an arbitrary header to the request, append the sequence `\r\n` to the headers value, followed by the `Transfer-Encoding: chunked` header with this, make sure a \r\n is correctly added into the header value:
 ```
 bar
 Transfer-Encoding: chunked
 ```
 - ![image](https://github.com/user-attachments/assets/8a9bc52a-d6d0-4155-bfe6-eaf0b3e47697)
+- ![image](https://github.com/user-attachments/assets/9b7606c9-3c5a-45a6-be6c-eb670a7c6ffd)
 - ![image](https://github.com/user-attachments/assets/17675ee1-6ea5-4b72-b7d5-7ef03f234d28)
 - in the body attempt to smuggle an arbitrary prefix as follows, noticing that every second request gets a 404 response, indicating it has casued the back-end to append the request to the smuggled prefix 
 
