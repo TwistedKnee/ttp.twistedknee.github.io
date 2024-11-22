@@ -29,7 +29,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
   - [XXE Injection](/bscp/xxe.md)
   - [OS Cmd Injection](bscp/os_cmdi.md)
   - [Server-side template injection](bscp/ssti.md)
-  - Directory traversal
+  - [Directory traversal](bscp/path_traversal.md)
   - insecure deserialization
   - File upload vulnerabilities
  
@@ -44,7 +44,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
 - Server Side
   - [SQLi](/bscp/sqli.md)
   - Authentication
-  - Path traversal
+  - [Path traversal](bscp/path_traversal.md)
   - [Command Injection](bscp/os_cmdi.md)
   - Business logic vulnerabilities
   - Information Disclosure
