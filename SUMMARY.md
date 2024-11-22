@@ -12,6 +12,7 @@
   * [ssrf](bscp/ssrf.md)
   * [http_req_smuggling](bscp/http_req_smuggling.md)
   * [os_cmdi](bscp/os_cmdi.md)
+  * [ssti](bscp/ssti.md)
 * [gcih](gcih/README.md)
   * [live\_windows\_examination\_with\_powershell](gcih/live\_windows\_examination\_with\_powershell.md)
   * [network\_investigation](gcih/network\_investigation.md)
