@@ -10,7 +10,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
 
 - Get access to any user
   - [XSS](/bscp/xss.md)
-  - [DOM-based vulns](bscp/dom_based.md)
+  - [DOM-based vulns](/bscp/dom_based.md)
   - Authentication
   - Web Cache Poisoning
   - HTTP host header attacks
@@ -22,19 +22,19 @@ In preparation I am also going through Rana Khalil's course as well [here](https
   - Insecure Deserialization
   - OAuth authentication
   - JWT
-  - [Access control vulnerabilities](bscp/access_control.md)
+  - [Access control vulnerabilities](/bscp/access_control.md)
 
 - Read the content of /home/carlos/secret
-  - [SSRF](bscp/ssrf.md)
+  - [SSRF](/bscp/ssrf.md)
   - [XXE Injection](/bscp/xxe.md)
-  - [OS Cmd Injection](bscp/os_cmdi.md)
-  - [Server-side template injection](bscp/ssti.md)
-  - [Directory traversal](bscp/path_traversal.md)
+  - [OS Cmd Injection](/bscp/os_cmdi.md)
+  - [Server-side template injection](/bscp/ssti.md)
+  - [Directory traversal](/bscp/path_traversal.md)
   - insecure deserialization
   - File upload vulnerabilities
  
 - Misc
-  - [CORS](bscp/cors.md)
+  - [CORS](/bscp/cors.md)
   - information disclosure
   - WebSockets
   - Prototype polution
@@ -44,14 +44,14 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
 - Server Side
   - [SQLi](/bscp/sqli.md)
   - Authentication
-  - [Path traversal](bscp/path_traversal.md)
-  - [Command Injection](bscp/os_cmdi.md)
+  - [Path traversal](/bscp/path_traversal.md)
+  - [Command Injection](/bscp/os_cmdi.md)
   - Business logic vulnerabilities
   - Information Disclosure
   - Access control
   - File upload vulnerabilities
   - Race conditions
-  - [SSRF](bscp/ssrf.md)
+  - [SSRF](/bscp/ssrf.md)
   - [XXE Injection](/bscp/xxe.md)
   - NoSQL injection
   - API testing
@@ -60,19 +60,19 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
 - Client side
   - [XSS](/bscp/xss.md)
   - [CSRF](/bscp/csrf.md)
-  - [CORS](bscp/cors.md)
+  - [CORS](/bscp/cors.md)
   - [Clickjacking](/bscp/clickjacking.md)
-  - [DOM-based vulns](bscp/dom_based.md)
+  - [DOM-based vulns](/bscp/dom_based.md)
   - Websockets
 
 - Advanced topics
   - Insecure deserialization
   - Web LLM Attacks
   - GraphQL Vulns
-  - [SSTI](bscp/ssti.md)
+  - [SSTI](/bscp/ssti.md)
   - Web cache poisoning
   - HTTP Host header attacks
-  - [HTTP request smuggling](bscp/http_req_smuggling.md)
+  - [HTTP request smuggling](/bscp/http_req_smuggling.md)
   - OAuth authentication
   - JWT attacks
   - Prototype pollution
