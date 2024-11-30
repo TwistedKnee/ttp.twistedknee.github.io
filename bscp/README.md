@@ -22,7 +22,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
   - Insecure Deserialization
   - OAuth authentication
   - JWT
-  - Access control vulnerabilities
+  - [Access control vulnerabilities](bscp/access_control.md)
 
 - Read the content of /home/carlos/secret
   - [SSRF](bscp/ssrf.md)
