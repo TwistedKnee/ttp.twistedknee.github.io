@@ -48,7 +48,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [Command Injection](/bscp/os_cmdi.md)
   - Business logic vulnerabilities
   - Information Disclosure
-  - Access control
+  - [Access control](/bscp/access_control.md)
   - File upload vulnerabilities
   - Race conditions
   - [SSRF](/bscp/ssrf.md)
