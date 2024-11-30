@@ -14,7 +14,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
   - Authentication
   - Web Cache Poisoning
   - HTTP host header attacks
-  - [HTTP request smuggling](bscp/http_req_smuggling.md)
+  - [HTTP request smuggling](/bscp/http_req_smuggling.md)
 
 - Promote yourself to admin or steal his data
   - [SQL Injection](/bscp/sqli.md)
