@@ -7,8 +7,8 @@
 ### Vertical privesc:
 
 - Attempt access to URLs for administrative function like `/admin` or checking `robots.txt` for possible URLs
-- - Brute force and attempt access as well
-- - Review Javascript and files for references to administrative URLs to gain access
+  - Brute force and attempt access as well
+  - Review Javascript and files for references to administrative URLs to gain access
 - Check URLs that take parameter based fuctions to enforce access control, like `/home.jsp?role=1` or `/home.jsp?admin=true`
 - If denied to delete based on denial on methods, try overwriting with `X-Original-URL` or `X-Rewrite-URL` like so where POST on /admin/deleteUser is denied:
 
