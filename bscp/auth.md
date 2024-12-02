@@ -72,10 +72,29 @@ Background: Given victims username and your own creds to test
 - delete the `temp-forgot-password-token` from the request in both the URL and body, change the username to carlos, set the new password to whatever you want and send the request
 - sign in to carlos' account with your set password
 
-### 
+### Username enumeration via subtly different responses
 
+using these lists:
+- [user list](https://portswigger.net/web-security/authentication/auth-lab-usernames)
+- [password list](https://portswigger.net/web-security/authentication/auth-lab-passwords)
 
+Steps:
 
+- submit fake username and password to the login, send this to intruder
+- highlight the username and set the user list above as the payload
+- Click `Settings` in burp and got to `Grep - Extract` click `Add` scroll down through the response until you find the error message `Invalid username or password.`, highlight this with your mouse and click `Ok`
+- run intruder
+- when finished notice the column with the error message we extracted, filter and find the one value different, instead of a full stop/period it has a trailing space, this is the username to target
+- now use that username and highlight the password now and use the above list and run until you get a 302
+- sign in with the username and password found
+
+### Username enumeration via response timing
+
+Background: you have creds
+
+using these lists:
+- [user list](https://portswigger.net/web-security/authentication/auth-lab-usernames)
+- [password list](https://portswigger.net/web-security/authentication/auth-lab-passwords)
 
 
 
