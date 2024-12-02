@@ -62,3 +62,22 @@ Background: Given victims creds and your own creds to test
 
 ### Password reset broken logic
 
+Background: Given victims username and your own creds to test
+
+- click `forgot your password?` and enter your own username
+- click the `Email client` button to view the password reset email that was sent, click the link and follow the full process
+- study the requests for resetting your password in burp, notice the `POST /forgot-password?temp-forgot-password-token` contains the username as hidden input, send to repeater
+- observe the password reset functionality still works even if you delete the value of the `temp-forgot-password-token` parameter in both the URL and request body
+- in browser request a new password reset again, send the `POST /forgot-password?temp-forgot-password-token` to repeater
+- delete the `temp-forgot-password-token` from the request in both the URL and body, change the username to carlos, set the new password to whatever you want and send the request
+- sign in to carlos' account with your set password
+
+### 
+
+
+
+
+
+
+
+
