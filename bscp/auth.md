@@ -38,3 +38,27 @@ Resetting users password:
 
 ### Username enumeration via different responses
 
+using these lists:
+- [user list](https://portswigger.net/web-security/authentication/auth-lab-usernames)
+- [password list](https://portswigger.net/web-security/authentication/auth-lab-passwords)
+
+Steps:
+
+- send login request to intruder, highlight username and select payloads as the user list from above
+- config intruder as sniper
+- run and check responses to see difference other then invalid username, `Incorrect password` is returned so that req is the user to target
+- replace name with that user, and highlight password with the above password list as the payload and run
+- check for `302` response, this will be the login creds to sign in with
+
+### 2FA simple bypass
+
+Background: Given victims creds and your own creds to test
+
+- log in with own creds
+- click the `email client` button to access your emails
+- log out of account
+- log in with victims creds
+- when prompted for verification code, manually change the URL to navigate to `/my-account`, this bypasses the 2FA steps
+
+### Password reset broken logic
+
