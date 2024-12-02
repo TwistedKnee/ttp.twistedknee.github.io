@@ -96,6 +96,29 @@ using these lists:
 - [user list](https://portswigger.net/web-security/authentication/auth-lab-usernames)
 - [password list](https://portswigger.net/web-security/authentication/auth-lab-passwords)
 
+Steps:
+
+- send invalid login to `POST /login`
+- Use the `X-Forwarded-For` header to bypass the IP based brute-force protection
+- Attempt to login with usernames and passwords, notice that when using your own username with incorrect password the length of time takes longer if using a long password
+- send this request to intruder and change the attack type to `Pitchfork`, add the `X-Forwarded-For` to the request
+- make the value for `X-Forwarded-For` be `127.0.0.1`in payload, highlight the `1`, in the side panel select position 1 from the payload position and select `Numbers`, enter the range 1-100 and set the step to 1
+- highlight the usernames section of the request and in it's payload add the user list from above
+- when the attack finishes at the top of the dialog click columns and select the `Response received` and `Response completed` options
+- notice that one response times was longer than others, this is our username to attempt brute force on
+- now change intruder position 2 to password and use the password list and brute force until you receive the `302` response 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
