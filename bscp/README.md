@@ -11,7 +11,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
 - Get access to any user
   - [XSS](/bscp/xss.md)
   - [DOM-based vulns](/bscp/dom_based.md)
-  - Authentication
+  - [Authentication](/bscp/auth.md)
   - Web Cache Poisoning
   - HTTP host header attacks
   - [HTTP request smuggling](/bscp/http_req_smuggling.md)
@@ -43,7 +43,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
 
 - Server Side
   - [SQLi](/bscp/sqli.md)
-  - Authentication
+  - [Authentication](/bscp/auth.md)
   - [Path traversal](/bscp/path_traversal.md)
   - [Command Injection](/bscp/os_cmdi.md)
   - Business logic vulnerabilities
