@@ -108,6 +108,90 @@ Steps:
 - notice that one response times was longer than others, this is our username to attempt brute force on
 - now change intruder position 2 to password and use the password list and brute force until you receive the `302` response 
 
+### Broken brute-force protection, IP block
+
+using the [password list](https://portswigger.net/web-security/authentication/auth-lab-passwords)
+victims username is given
+creds provided
+
+- investigate the login page, observe that IP is temporarily blocked if you submit 3 incorrect logins in a row
+- notice this counter resets for the number of failed login attemps by logging in to your own account before this limit is reached
+- send `POST /login` req to intruder, create a pitchfork attack with payload positions in both the username and password params
+- click `Resource pool`, add the attack to a resource with `Maximum concurrent requests` set to 1 from the `Payload position` drop-down list, add a list of payloads that laternates between your username and carlos, set your username as first in the list and have carlos at least placed in 100 times
+- edit the list of candidate passwords with your own password before each one, make sure this password is aligned with your username in the other list
+- select position 2 from the `Payload position` drop down list and add the password list from above then run the attack
+- find the 302 response, this should be your password for carlos
+
+### Username enumeration via account lock
+
+using these lists:
+- [user list](https://portswigger.net/web-security/authentication/auth-lab-usernames)
+- [password list](https://portswigger.net/web-security/authentication/auth-lab-passwords)
+
+Steps:
+
+- send `POST /login` req to burp intruder
+- select `Cluster bomb attack` from the attack type menu, add a payload position to the `username` param, add a blank payload position to the end of the request body by clicking  `Add §` twice, should work: `username=§invalid-username§&password=example§§`
+- in the payloads side panel add the list of usernames to the first payload, for the second paylod position select `Null payloads` and choose the option to generate 5 payloads
+- In the results, notice that the responses for one of the usernames were longer than responses when using other usernames. Study the response more closely and notice that it contains a different error message: `You have made too many incorrect login attempts`
+- now create a new intruder attack on the `POST /login`, select `Sniper attack`, set the `username` param to the username that you identified and add a payload position to the `password` param
+- add the list of passwords to the payload set and create a grep extraction rule for the errur you found above
+- in results look at the grep extraction column and notice there are a couple of different errors, but one of the responses did not contain any error message, this is our password
+- wait for a minute for the lockout to finish and sign in
+
+### 2FA broken logic
+
+Background: you have creds, and the victims username
+
+- login to your own account and investigate the 2FA verification process, notice the `POST /login2` request and the `verify` paramater that is being used to determine which user's account is being accessed
+- log out
+- send the `GET /login2` request to repeater and change the value of the `verify` param to `carlos` and send the request
+- go to the login page and enter your username and password, then submit an invalid 2FA code
+- send this `POST /login2` request to intruder
+- set the `verify` parameter to carlos and add a payload position to the `mfa-code` param, brute force as a 4 number payload!
+- [image](https://github.com/user-attachments/assets/695cadfa-5cc5-4d3b-9be1-298592936aa7)
+
+- find the 302 response in intruder and load it in the browser
+- click my account to finish lab
+
+### Brute-forcing a stay-logged-in cookie
+
+Background: you have creds, you have the victims username
+
+this list 
+- [password list](https://portswigger.net/web-security/authentication/auth-lab-passwords)
+
+Steps:
+
+- login with your own creds with the `Stay logged in` option selected, this sets a `stay-logged-in` cookie
+- highlight cookie in burp and look at the insepctor panel which shows this as a base64 value, it should show the decoded value as something like: `wiener:51dc30ddc473d43a6011e9ebba6ca770`
+- examining the end of this cookie shows it is an md5 hash, which means the cookie is formed like this: `base64(username:md5(password))`
+- log out
+- in the most recent `GET /my-account?id=wiener` req with the `stay-logged-in` cookie param send to inrtruder
+- with the cookie value highlighted go to `payload processing` add the following rules in order
+  - Hash: `MD5`
+  - Add prefix: `wiener:`
+  - Encode: `Base64-encode`
+- we know `Update email` is only present after login so we will set a grep match rule to flag any response containing `Update email` in the response, now we will start the attack
+- ![image](https://github.com/user-attachments/assets/72d623f7-8cb5-4995-b616-4eea97bcd0a6)
+- 
+- confirm this works, if it does continue
+- remove your own password from the payload list
+- change `GET /my-account?id=carlos`, add password list, change prefix to `carlos:` and run attack
+
+### Offline password cracking
+
+Background: you have creds, you have victims username obtain Carlos's stay-logged-in cookie and use it to crack his password. Then, log in as carlos and delete his account from the "My account" page. 
+- 
+
+
+
+
+
+
+
+
+
 
 
 
