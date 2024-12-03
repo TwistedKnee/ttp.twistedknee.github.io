@@ -64,7 +64,7 @@ You can log in to your own account using the following credentials: wiener:peter
 - in burp send the request `POST /my-account/change-blog-post-author-display` to repeater
 - in Tornado the template expressions are surrounded with double curly braces, so in repeater notice that you can escape out of the expression and inject arbitrary template syntax as follows `blog-post-author-display=user.name}}{{7*7}}`
 - Reload the page containing your test comment and notice the page containing your test comment now says `PeterWiener49}}`
-- Tornado does use syntax for executing Python with `{% somePython %}`, and pythong supports the `system()` command
+- Tornado does use syntax for executing Python with `\{\% somePython \%\}`, and pythong supports the `system()` command
 - combine this to create syntax to execute the deletion of carlos's file:
 
 ```
