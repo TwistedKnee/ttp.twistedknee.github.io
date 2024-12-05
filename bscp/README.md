@@ -36,7 +36,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
 - Misc
   - [CORS](/bscp/cors.md)
   - information disclosure
-  - WebSockets
+  - [WebSockets](/bscp/web_sockets.md)
   - Prototype polution
 
 In Portswigger they have 31 current topics, this may increase over time. Here they are listed in their categories
@@ -63,7 +63,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [CORS](/bscp/cors.md)
   - [Clickjacking](/bscp/clickjacking.md)
   - [DOM-based vulns](/bscp/dom_based.md)
-  - Websockets
+  - [Websockets](/bscp/web_sockets.md)
 
 - Advanced topics
   - Insecure deserialization
