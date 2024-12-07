@@ -4,6 +4,9 @@
 
 ## Methodology
 
+- use a cache buster parameter to avoid poisoning arbitrary users: `?cache=1234`
+- send request of main page until you see a `X-Cache: hit` or `X-Cache: miss` - this means caching is happening
+
 ## Labs walkthrough
 
 ### Web cache poisoning with an unkeyed header
