@@ -19,7 +19,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
 - Promote yourself to admin or steal his data
   - [SQL Injection](/bscp/sqli.md)
   - [CSRF](/bscp/csrf.md)
-  - Insecure Deserialization
+  - [Insecure Deserialization](/bscp/insecure_deserialization.md)
   - OAuth authentication
   - JWT
   - [Access control vulnerabilities](/bscp/access_control.md)
@@ -66,7 +66,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [Websockets](/bscp/web_sockets.md)
 
 - Advanced topics
-  - Insecure deserialization
+  - [Insecure deserialization](/bscp/insecure_deserialization.md)
   - Web LLM Attacks
   - GraphQL Vulns
   - [SSTI](/bscp/ssti.md)
