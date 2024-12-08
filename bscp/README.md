@@ -12,7 +12,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
   - [XSS](/bscp/xss.md)
   - [DOM-based vulns](/bscp/dom_based.md)
   - [Authentication](/bscp/auth.md)
-  - Web Cache Poisoning
+  - [Web Cache Poisoning](/bscp/web_cache_poisoning.md)
   - HTTP host header attacks
   - [HTTP request smuggling](/bscp/http_req_smuggling.md)
 
@@ -70,7 +70,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - Web LLM Attacks
   - GraphQL Vulns
   - [SSTI](/bscp/ssti.md)
-  - Web cache poisoning
+  - [Web cache poisoning](/bscp/web_cache_poisoning.md)
   - HTTP Host header attacks
   - [HTTP request smuggling](/bscp/http_req_smuggling.md)
   - OAuth authentication
