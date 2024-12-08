@@ -6,6 +6,9 @@
 
 - use a cache buster parameter to avoid poisoning arbitrary users: `?cache=1234`
 - send request of main page until you see a `X-Cache: hit` or `X-Cache: miss` - this means caching is happening
+- if your query parameters are reflected in the response and when changed cause a `X-Cache: miss` in the response they are keyed and you can break out of them
+- test with param miner for possible hidden headers, or get requests information or just to test for any unkeyed value you can use in caching attacks
+- check if the `utm_content` parameter is supported
 
 ## Labs walkthrough
 
@@ -86,16 +89,96 @@ Background:
 Background: 
 
 ```
-
+ This lab is vulnerable to web cache poisoning because the query string is unkeyed. A user regularly visits this site's home page using Chrome. To solve the lab, poison the home page with a response that executes alert(1) in the victim's browser
 ```
 
+- load the websites home page, and send the `GET` request in burp to repeater
+- Add arbitrary query parameters to the request. Observe that you can still get a cache hit even if you change the query parameters. This indicates that they are not included in the cache key
+- we can add the `Origin` header as a cache buster, let's add it to the request
+- when you get a cache miss, notice that you injected parameters are reflected in the response, if the response to your request is cached, remove the query parameters and they will still be reflected in the cached response
+- add an arbitrary parameter that breaks out o f the reflected string and injects an XSS payload: `GET /?evil='/><script>alert(1)</script>`
+- keep replaying until your payload is reflectd in the response and `X-Cache: hit` header is in the response
+- remove the query string and send it again, while using the same cache buster, check that you still receive the cached response containing your payload
+- remove the cache-buster `Origin` header and add your payload back to the query string, replay until you have poisoned the cache
 
+### Web cache poisoning via an unkeyed query parameter
 
+Background: 
 
+```
+This lab is vulnerable to web cache poisoning because it excludes a certain parameter from the cache key. A user regularly visits this site's home page using Chrome. To solve the lab, poison the cache with a response that executes alert(1) in the victim's browser. 
+```
 
+- Observe that the home page is a suitable cache oracle. Notice that you get a cache miss whenever you change the query string. This indicates that it is part of the cache key. Also notice that the query string is reflected in the response
+- Add a cache-buster query parameter
+- Use Param Miner's "Guess GET parameters" feature to identify that the parameter utm_content is supported by the application
+- Confirm that this parameter is unkeyed by adding it to the query string and checking that you still get a cache hit. Keep sending the request until you get a cache miss. Observe that this unkeyed parameter is also reflected in the response along with the rest of the query string
+- Send a request with a utm_content parameter that breaks out of the reflected string and injects an XSS payload: `GET /?utm_content='/><script>alert(1)</script>`
+- Once your payload is cached, remove the utm_content parameter, right-click on the request, and select "Copy URL". Open this URL in the browser and check that the alert() is triggered when you load the page
+- Remove your cache buster, re-add the utm_content parameter with your payload, and replay the request until the cache is poisoned
 
+### Parameter cloaking
 
+Background: 
 
+```
+This lab is vulnerable to web cache poisoning because it excludes a certain parameter from the cache key. There is also inconsistent parameter parsing between the cache and the back-end. A user regularly visits this site's home page using Chrome. To solve the lab, use the parameter cloaking technique to poison the cache with a response that executes alert(1) in the victim's browser. 
+```
 
+- identify that the `utm_content` parameter is supported, observe that it is also excluded from the cache key
+- append another parameter using the `;` and notice the cache treats this as a single parameter, this means that the extra parameter is also excluded from the cache key, we can also just use `Param Miner` with the `Bulk Scan > Rails parameter cloaking scan` to identify the vulnerability automatically
+- observe that every page imports the script `/js/geolocate.js`, executing the callback function: `setCountryCookie()` send the request `GET /js/geolocate.js?callback=setCountryCookie` to repeater
+- Notice that you can control the name of the function that is called on the returned data by editing the callback parameter. However, you can't poison the cache for other users in this way because the parameter is keyed
+- study this cache behavior, observe that if you add duplicate `callback` parameters, only the final one is reflected in the response, but both are stil keyed. If you append the second `callback` parameter to the `utm_content` parameter using a semicolon it is excluded from the cache key and still overwrites the callback function in the response
 
+```
+GET /js/geolocate.js?callback=setCountryCookie&utm_content=foo;callback=arbitraryFunction
 
+HTTP/1.1 200 OK
+X-Cache-Key: /js/geolocate.js?callback=setCountryCookie
+…
+arbitraryFunction({"country" : "United Kingdom"})
+```
+
+- send the request again, but this time pass in `alert(1)` as the callback function: `GET /js/geolocate.js?callback=setCountryCookie&utm_content=foo;callback=alert(1)`
+- get the response cached, then load the home page in the browser, check that the alert is triggered
+- replay until it poisons the cache
+
+### Web cache poisoning via a fat GET request
+
+Background:
+
+```
+This lab is vulnerable to web cache poisoning. It accepts GET requests that have a body, but does not include the body in the cache key. A user regularly visits this site's home page using Chrome. To solve the lab, poison the cache with a response that executes alert(1) in the victim's browser
+```
+
+- Observe that every page imports the script `/js/geolocate.js`, executing the callback function `setCountryCookie()`. Send the request `GET /js/geolocate.js?callback=setCountryCookie` to repeater
+- Notice that you can control the name of the function that is called in the response by passing in a duplicate callback parameter via the request body. Also notice that the cache key is still derived from the original callback parameter in the request line
+
+```
+GET /js/geolocate.js?callback=setCountryCookie
+…
+callback=arbitraryFunction
+
+HTTP/1.1 200 OK
+X-Cache-Key: /js/geolocate.js?callback=setCountryCookie
+…
+arbitraryFunction({"country" : "United Kingdom"})
+```
+
+- send the request again but this time pass in `alert(1)` as the callback function
+- remove any cache busters and repoison the cache
+
+### URL normalization
+
+Background: 
+
+```
+This lab contains an XSS vulnerability that is not directly exploitable due to browser URL-encoding. To solve the lab, take advantage of the cache's normalization process to exploit this vulnerability. Find the XSS vulnerability and inject a payload that will execute alert(1) in the victim's browser. Then, deliver the malicious URL to the victim. 
+```
+
+- browse to any non-existant path such as `GET /random` and notice your path is reflected in the error message, send this to repeater
+- add a suitable reflected XSS payload to the request line: `GET /random</p><script>alert(1)</script><p>foo`
+- Notice that if you request this URL in the browser, the payload doesn't execute because it is URL-encoded
+- in repeater poison the cache with your payload and then immediately load the URL in the browser, this time the alert does trigger because the browsers encoded payload was RL decoded by the cache, causing a cache hit with the earlier request
+- repoison the cache then immediately go to the lab and click `deliver to victim`
