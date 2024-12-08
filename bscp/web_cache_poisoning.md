@@ -26,7 +26,22 @@ Background:
 - send the malicious request, keep replaying the request until you see your exploit server URL being reflected in the response and `X-Cache: hit` in the headers
 - to simulate the victim, load the poisoned URL in the browser and make sure that the `alert()` is triggered, note that you have to perform this test before the cache expires which is every 30 seconds
 
-###   
+### Web cache poisoning with an unkeyed cookie
+
+Background: 
+```This lab is vulnerable to web cache poisoning because cookies aren't included in the cache key. An unsuspecting user regularly visits the site's home page. To solve this lab, poison the cache with a response that executes alert(1) in the visitor's browser.```
+
+- go to the sites home page
+- Notice that the first response you received sets the cookie `fehost=prod-cache-01`
+- Reload the home page and observe that the value from the fehost cookie is reflected inside a double-quoted JavaScript object in the response
+- send this to repeater and add a cache buster as a query parameter
+- change the cookie to some arbitrary value and resend and observe it being reflected in the reponse
+- now put a payload in the cookie like so: `fehost=someString"-alert(1)-"someString`
+- Replay the request until you see the payload in the response and X-Cache: hit in the headers
+- Load the URL in the browser and confirm the alert() fires
+- now go back to repeater and remove the cache buster and redeliver
+
+### 
 
 
 
