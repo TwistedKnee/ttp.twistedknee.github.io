@@ -35,7 +35,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
  
 - Misc
   - [CORS](/bscp/cors.md)
-  - information disclosure
+  - [information disclosure](/bscp/info_disclosure.md)
   - [WebSockets](/bscp/web_sockets.md)
   - Prototype polution
 
