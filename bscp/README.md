@@ -46,7 +46,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [Authentication](/bscp/auth.md)
   - [Path traversal](/bscp/path_traversal.md)
   - [Command Injection](/bscp/os_cmdi.md)
-  - Business logic vulnerabilities
+  - [Business logic vulnerabilities](/bscp/business_logic.md)
   - [Information Disclosure](/bscp/info_disclosure.md)
   - [Access control](/bscp/access_control.md)
   - File upload vulnerabilities
