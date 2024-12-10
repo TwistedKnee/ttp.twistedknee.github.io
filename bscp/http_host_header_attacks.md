@@ -13,13 +13,13 @@
     - or use a subdomain that you already have compromised `hacked-subdomain.vulnerable-website.com`
 - send ambiguous requests
   - inject duplicate Host headers
-    - ```
+     ```
       Host: vulnerable-website.com
       Host: bad-stuff-here
       ```
       
   -  supply an absolute URL
-    - ```
+     ```
       GET https://vulnerable-website.com/ HTTP/1.1
       Host: bad-stuff-here
       ```
