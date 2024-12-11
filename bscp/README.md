@@ -20,7 +20,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
   - [SQL Injection](/bscp/sqli.md)
   - [CSRF](/bscp/csrf.md)
   - [Insecure Deserialization](/bscp/insecure_deserialization.md)
-  - OAuth authentication
+  - [OAuth authentication](/bscp/oauth.md)
   - JWT
   - [Access control vulnerabilities](/bscp/access_control.md)
 
@@ -73,7 +73,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [Web cache poisoning](/bscp/web_cache_poisoning.md)
   - [HTTP Host header attacks](/bscp/http_host_header_attacks.md)
   - [HTTP request smuggling](/bscp/http_req_smuggling.md)
-  - OAuth authentication
+  - [OAuth authentication](/bscp/oauth.md)
   - JWT attacks
   - Prototype pollution
   - Essential skills
