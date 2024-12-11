@@ -20,6 +20,7 @@
   * [web cache poisoning](/bscp/web_cache_poisoning.md)
   * [information disclosure](/bscp/info_disclosure.md)
   * [business logic vulnerabilities](/bscp/business_logic.md)
+  * [http host header](/bscp/http_host_header_attacks.md)
   * [oauth](/bscp/oauth.md)
 * [gcih](gcih/README.md)
   * [live\_windows\_examination\_with\_powershell](/gcih/live\_windows\_examination\_with\_powershell.md)
