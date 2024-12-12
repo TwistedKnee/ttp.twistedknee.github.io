@@ -129,8 +129,27 @@ You can log in to your own account using the following credentials: wiener:peter
 - use the avatar upload functionality to upload the above file, then in the repeater tab change the path to `GET /files/avatars/exploit.php HTTP/1.1` and send
 - you will now have carlos' secret in the response
 
-### 
+### Web shell upload via Content-Type restriction bypass
 
+Background:
+
+```
+This lab contains a vulnerable image upload function. It attempts to prevent users from uploading unexpected file types, but relies on checking user-controllable input to verify this.
+
+To solve the lab, upload a basic PHP web shell and use it to exfiltrate the contents of the file /home/carlos/secret. Submit this secret using the button provided in the lab banner.
+
+You can log in to your own account using the following credentials: wiener:peter 
+```
+
+- log in and upload an image as your avatar, go to your account page
+- in burp go to `proxy > http history` and notice that your image was fetched using a `GET` request to `/files/avatars/<YOUR-IMAGE>` and send it to repeater
+- on your system create a file called exploit.php containing this: `<?php echo file_get_contents('/home/carlos/secret'); ?>`
+- attempt to upload this script as your avatar but notice you get blocked, with an error saying only files with MIME type `image/jpeg` or `image/png`
+- in burp go to history and send the `POST /my-account/avatar` request to repeater
+- change the `content-type` to `image/jpeg` and send
+- switch to the `GET` request in repeater and send to get the info for carlos' secret
+
+### Web shell upload via path traversal
 
 
 
