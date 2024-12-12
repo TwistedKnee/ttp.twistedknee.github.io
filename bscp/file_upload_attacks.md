@@ -109,4 +109,55 @@ Tip: You can try sending OPTIONS requests to different endpoints to test for any
 
 ## Labs walkthrough
 
+### Remote code execution via web shell upload
+
+Background: 
+
+```
+This lab contains a vulnerable image upload function. It doesn't perform any validation on the files users upload before storing them on the server's filesystem.
+
+To solve the lab, upload a basic PHP web shell and use it to exfiltrate the contents of the file /home/carlos/secret. Submit this secret using the button provided in the lab banner.
+
+You can log in to your own account using the following credentials: wiener:peter 
+```
+
+- log into your account, notice the option for uploading an avatar image
+- upload an arbitrary image and notice that afterwards your preview of your avatar is now displayed on the page
+- in `Proxy > HTTP history` click the filter bar to open the `HTTP history filter` window, under the `Filter by MIME type` enable the `images` checkbox then apply the changes
+- no in burp history search for the `GET` request to `/files/avatars/<YOUR-IMAGE>` and send it to repeater
+- now on your system create a file called exploit.php containing this: `<?php echo file_get_contents('/home/carlos/secret'); ?>`
+- use the avatar upload functionality to upload the above file, then in the repeater tab change the path to `GET /files/avatars/exploit.php HTTP/1.1` and send
+- you will now have carlos' secret in the response
+
 ### 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
