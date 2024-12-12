@@ -31,7 +31,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
   - [Server-side template injection](/bscp/ssti.md)
   - [Directory traversal](/bscp/path_traversal.md)
   - [insecure deserialization](/bscp/insecure_deserialization.md)
-  - File upload vulnerabilities
+  - [File upload vulnerabilities](/bscp/file_upload_attacks.md)
  
 - Misc
   - [CORS](/bscp/cors.md)
@@ -49,7 +49,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [Business logic vulnerabilities](/bscp/business_logic.md)
   - [Information Disclosure](/bscp/info_disclosure.md)
   - [Access control](/bscp/access_control.md)
-  - File upload vulnerabilities
+  - [File upload vulnerabilities](/bscp/file_upload_attacks.md)
   - Race conditions
   - [SSRF](/bscp/ssrf.md)
   - [XXE Injection](/bscp/xxe.md)
