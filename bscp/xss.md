@@ -6,6 +6,12 @@
 
 ## Methodology
 
+Testing for XSS flow:
+- How are “non-malicious” HTML tags such as `<h2>` handled?
+- What about incomplete tags `<iframe src=//example.com/c=`
+- How do they handle encodings such as `<%00h2`? (`%0d`, `%0a`, `%09` etc)
+- Is it just a blacklist of hardcoded strings? Does `</script/x>` work? `<ScRipt>` etc.
+
 __stealing cookies code__
 
 after running the code below in something say like stored xss in a comment field, you can just reuse the users cookies to gain access to the site as that user
