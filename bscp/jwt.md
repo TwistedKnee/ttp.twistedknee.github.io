@@ -1,6 +1,7 @@
 # JWT Notes
 
 [Portswigger](https://portswigger.net/web-security/jwt)
+
 [video](https://portswigger.net/burp/documentation/desktop/testing-workflow/session-management/jwts)
 
 install the jwt editor extension in burp
