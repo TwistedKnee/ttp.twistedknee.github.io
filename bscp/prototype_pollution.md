@@ -224,6 +224,67 @@ Things to look for:
 ### Status code override
 
 
+- Find a way to trigger an error response and take note of the default status code.
+- Try polluting the prototype with your own status property. Be sure to use an obscure status code that is unlikely to be issued for any other reason.
+- Trigger the error response again and check whether you've successfully overridden the status code.
+
+### JSON spaces override
+
+The Express framework provides a json spaces option, which enables you to configure the number of spaces used to indent any JSON data in the response. In many cases, developers leave this property undefined as they're happy with the default value, making it susceptible to pollution via the prototype chain. 
+
+If you've got access to any kind of JSON response, you can try polluting the prototype with your own json spaces property, then reissue the relevant request to see if the indentation in the JSON increases accordingly. You can perform the same steps to remove the indentation in order to confirm the vulnerability. 
+
+
+Note: When attempting this technique in Burp, remember to switch to the message editor's Raw tab. Otherwise, you won't be able to see the indentation change as the default prettified view normalizes this.
+
+### Charset override
+
+Express servers often implement so-called "middleware" modules that enable preprocessing of requests before they're passed to the appropriate handler function. For example, the `body-parser` module is commonly used to parse the body of incoming requests in order to generate a `req.body` object. This contains another gadget that you can use to probe for server-side prototype pollution.
+
+Notice that the following code passes an options object into the `read()` function, which is used to read in the request body for parsing. One of these options, `encoding`, determines which character encoding to use. This is either derived from the request itself via the `getCharset(req)` function call, or it defaults to UTF-8. 
+
+If you can find an object whose properties are visible in a response, you can use this to probe for sources. In the following example, we'll use UTF-7 encoding and a JSON source. 
+
+- Add an arbitrary UTF-7 encoded string to a property that's reflected in a response. For example, `foo` in UTF-7 is `+AGYAbwBv-`
+
+```
+{
+    "sessionId":"0123456789",
+    "username":"wiener",
+    "role":"+AGYAbwBv-"
+}
+```
+
+- send the request, servers won't use UTF-7 encoding by default, so this string should appear in the response in its encoded form
+- try to pollute the prototype with a `content-type` property that explicitly specifies the UTF-7 character set:
+
+```
+{
+    "sessionId":"0123456789",
+    "username":"wiener",
+    "role":"default",
+    "__proto__":{
+        "content-type": "application/json; charset=utf-7"
+    }
+}
+```
+
+- repeat the first request, if you successfully polluted the prototype the UTF-7 string should now be decoded in the response
+
+### Scanning for server-side prototype pollution sources
+
+Extension Server-Side Prototype Pollution Scanner 
+
+Steps to use:
+- Install the Server-Side Prototype Pollution Scanner extension from the BApp Store
+- explore the target website using burps browser to map as much of the content as possible
+- in the http history tab filter the list to show only in scope items
+- select all items in the list
+- right click your selection and go to `Extensions > Server-Side Prototype Pollution Scanner > Server-Side Prototype Pollution` then select one of the scanning techniques from the list
+- when prompted modify the attack configuration if required, then click OK to launch the scan
+
+Note: If you're unsure which scanning technique to use, you can also select Full scan to run a scan using all of the available techniques. However, this will involve sending significantly more requests.
+
 
 ## Labs walkthrough
 
