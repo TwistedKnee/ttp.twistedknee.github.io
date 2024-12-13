@@ -358,27 +358,27 @@ To solve the lab:
 You can solve this lab manually in your browser, or use DOM Invader to help you. 
 ```
 
-Manual:
-Find a prototype pollution source
+**Manual:**
+**Find a prototype pollution source**
 - In your browser, try polluting Object.prototype by injecting an arbitrary property via the query string: `/?__proto__[foo]=bar`
 - open the browser devtools panel and go to the `console` tab
 - enter `object.prototype`
 - study the properties of the returned object and observe that your injected `foo` property has been added, you've successfully found a prototype source
 
-Identify a gadget
+**Identify a gadget**
 - in the browser devtools panel go to the sources tab
 - study the javascript files that are loaded by the target site and look for any DOM XSS sinks
 - in `searchLoggerConfigurable.js` notice that if the config object has a `transport_url` property this is used to dynamically append a script to the DOM
 - observe that a `transport_url` property is defined for the `config` object, so this doesn't appear vulnerable
 - observe that the next line uses the `object.definedProperty()` method to make the `transport_url` unwritable and unconfigurable, however notice that it doesn't define a `value` property
 
-Craft an exploit
+**Craft an exploit**
 - using the prototype pollution source you identified ealier, try injecting an arbitrary value property: `/?__proto__[value]=foo`
 - in the browser devtools panel, go to the elements tab and study the HTML content of the page, observe that a `<script>` element has been rendered on the page, with the `src` attribute `foo`
 - modify the payload in the URL to inject an XSS poc like: `/?__proto__[value]=data:,alert(1);`
 - observe that the `alert(1)` is called and the lab is solved
 
-DOM Invader solution:
+**DOM Invader solution:**
 
 - load the lab in burps built in browser
 - enable dom invader and enable the prototype pollution option
@@ -403,8 +403,35 @@ This lab is vulnerable to DOM XSS via client-side prototype pollution. To solve 
 You can solve this lab manually in your browser, or use DOM Invader to help you. 
 ```
 
+**Manual solution:**
+**Find a prototype pollution source**
+- in your browser try polluting `Object.prototype` by injecting an arbitrary property via the query string: `/?__proto__[foo]=bar`
+- open the browser devtools panel and go to the `console` tab
+- enter `object.prototype`
+- study the properties of the returned object, observe that it now has a `foo` property with the value `bar`
 
+**Identify a gadget**
+- in devtools panel go to the sources tab
+- study the javascript files that are loaded by the target site and look for any DOM XSS sinks
+- in `searchLogger.js` notice that if the `config` object has a `transport_url` property this is used to dynamically append a script to the DOM
+- notice that no `transport_url` property is defined for the `config` object, this is a potential gadget for controlling the `src` of the `<script>` element
 
+**Crafting and exploit**
+- Using the prototype pollution source you identified earlier, try injecting an arbitrary transport_url property: `/?__proto__[transport_url]=foo`
+- in the browser devtools panel, go to the elements tab and study the HTML content of the page, observe that a `<script>` element has been rendered on the page, with the `src` attribute `foo`
+- modify the payload in the URL to inject an XSS poc like: `/?__proto__[transport_url]=data:,alert(1);`
+- observe the javascript triggers and completes the lab
+
+**DOM invader solution**
+
+- load the lab in burps built in browser
+- enable dom invader and enable the prototype pollution option
+- open the browser devtools panel, go to the DOM Invader tab then reload the page
+- observe DOM invader found two prototype pollution vectors in the search property
+- click `scan for gadgets` a new tab opens in which dom invader begins scanning for gadgets using the selected source
+- when the scan is complete open the devtools panel in the same tab as the scan, then go to the `DOM Invader` tab
+- observe that DOM Invader has successfully accessed the `script.src` sink via the `transport_url` gadget
+- click `exploit` and dom invader automatically generates a proof of concept exploit and calls `alert(1)`
 
 
 
