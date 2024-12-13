@@ -18,9 +18,13 @@ Occasionally, you may find that WAFs and suchlike fail to properly URL decode yo
 
 ### Obfuscation via double URL encoding
 
+Let's say you're trying to inject a standard XSS PoC, such as <img src=x onerror=alert(1)>, via a query parameter. In this case, the URL might look something like this:
+`[...]/?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E`
 
+When checking the request, if a WAF performs the standard URL decoding, it will easily identify this well-known payload. The request is blocked from ever reaching the back-end. But what if you double-encode the injection? In practice, this means that the % characters themselves are then replaced with `%25`:
+`[...]/?search=%253Cimg%2520src%253Dx%2520onerror%253Dalert(1)%253E`
 
-
+### Obfuscation via HTML encoding
 
 
 
