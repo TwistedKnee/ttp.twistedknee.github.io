@@ -76,5 +76,5 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [OAuth authentication](/bscp/oauth.md)
   - [JWT attacks](/bscp/jwt.md)
   - Prototype pollution
-  - Essential skills
+  - [Essential skills](/bscp/essential_skills.md)
 
