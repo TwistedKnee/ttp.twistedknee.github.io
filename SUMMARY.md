@@ -22,6 +22,7 @@
   * [business logic vulnerabilities](/bscp/business_logic.md)
   * [http host header attacks](/bscp/http_host_header_attacks.md)
   * [oauth](/bscp/oauth.md)
+  * [file upload attacks](/bscp/file_upload_attacks.md)
   * [jwt](/bscp/jwt.md)
 * [gcih](gcih/README.md)
   * [live\_windows\_examination\_with\_powershell](/gcih/live\_windows\_examination\_with\_powershell.md)
