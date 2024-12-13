@@ -128,9 +128,10 @@ Due to the tight time limit, we recommend using Burp Scanner to help you. You ca
 
 Hint: `If you get stuck, try looking up our Academy topic on the identified vulnerability class. `
 
+- i checked the website, went through all the features including seeing an item and checking stock
+- i noticed the `POST` request for checking stock and right clicked it and did an active scan which showed me the Xinclude injection vulnerability, which is just a payload in the productId: `<foo xmlns:xi="http://www.w3.org/2001/XInclude"><xi:include parse="text" href="file:///etc/passwd"/></foo>`
 
-
-
+### Scanning non-standard data structures
 
 
 
