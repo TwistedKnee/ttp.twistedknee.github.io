@@ -18,7 +18,7 @@ Occasionally, you may find that WAFs and suchlike fail to properly URL decode yo
 
 ### Obfuscation via double URL encoding
 
-Let's say you're trying to inject a standard XSS PoC, such as <img src=x onerror=alert(1)>, via a query parameter. In this case, the URL might look something like this:
+Let's say you're trying to inject a standard XSS PoC, such as \<img src=x onerror=alert(1)>, via a query parameter. In this case, the URL might look something like this:
 
 `[...]/?search=%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E`
 
