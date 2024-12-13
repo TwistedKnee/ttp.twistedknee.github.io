@@ -24,6 +24,7 @@
   * [oauth](/bscp/oauth.md)
   * [file upload attacks](/bscp/file_upload_attacks.md)
   * [jwt](/bscp/jwt.md)
+  * [essential skills](/bscp/essential_skills.md)
 * [gcih](gcih/README.md)
   * [live\_windows\_examination\_with\_powershell](/gcih/live\_windows\_examination\_with\_powershell.md)
   * [network\_investigation](/gcih/network\_investigation.md)
