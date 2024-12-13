@@ -285,10 +285,81 @@ Steps to use:
 
 Note: If you're unsure which scanning technique to use, you can also select Full scan to run a scan using all of the available techniques. However, this will involve sending significantly more requests.
 
+### Bypassing input filters for server-side prototype pollution
+
+websites often attempt to prevent or patch prototype pollution vulns by filtering suspicious keys like `__proto__`, to bypass an attacker can:
+
+- Obfuscate the prohibited keywords so they're missed during the sanitization. For more information, see Bypassing flawed key sanitization.
+- Access the prototype via the constructor property instead of __proto__. For more information, see Prototype pollution via the constructor
+
+Node applications can also delete or disable __proto__ altogether using the command-line flags --disable-proto=delete or --disable-proto=throw respectively. However, this can also be bypassed by using the constructor technique. 
+
+### Remote code execution via server-side prototype pollution
+
+**Identifying a vulnerable request**
+
+Some of Node's functions for creating new child processes accept an optional shell property, which enables developers to set a specific shell, such as bash, in which to run commands. By combining this with a malicious NODE_OPTIONS property, you can pollute the prototype in a way that causes an interaction with Burp Collaborator whenever a new Node process is created: 
+
+```
+"__proto__": {
+    "shell":"node",
+    "NODE_OPTIONS":"--inspect=YOUR-COLLABORATOR-ID.oastify.com\"\".oastify\"\".com"
+}
+```
+
+Tip: The escaped double-quotes in the hostname aren't strictly necessary. However, this can help to reduce false positives by obfuscating the hostname to evade WAFs and other systems that scrape for hostnames
+
+**Remote code execution via child_process.fork()**
+
+As this gadget lets you directly control the command-line arguments, this gives you access to some attack vectors that wouldn't be possible using NODE_OPTIONS. Of particular interest is the --eval argument, which enables you to pass in arbitrary JavaScript that will be executed by the child process. This can be quite powerful, even enabling you to load additional modules into the environment: 
+
+```
+"execArgv": [
+    "--eval=require('<module>')"
+]
+```
+
+In addition to fork(), the child_process module contains the execSync() method, which executes an arbitrary string as a system command. By chaining these JavaScript and command injection sinks, you can potentially escalate prototype pollution to gain full RCE capability on the server. 
+
+**Remote code execution via child_process.execSync()**
+
+Just like fork(), the execSync() method also accepts options object, which may be pollutable via the prototype chain. Although this doesn't accept an execArgv property, you can still inject system commands into a running child process by simultaneously polluting both the shell and input properties: 
+
+- The input option is just a string that is passed to the child process's stdin stream and executed as a system command by execSync(). As there are other options for providing the command, such as simply passing it as an argument to the function, the input property itself may be left undefined.
+- The shell option lets developers declare a specific shell in which they want the command to run. By default, execSync() uses the system's default shell to run commands, so this may also be left undefined. 
+
+By polluting both of these properties, you may be able to override the command that the application's developers intended to execute and instead run a malicious command in a shell of your choosing. Note that there are a few caveats to this: 
+
+- The shell option only accepts the name of the shell's executable and does not allow you to set any additional command-line arguments.
+- The shell is always executed with the -c argument, which most shells use to let you pass in a command as a string. However, setting the -c flag in Node instead runs a syntax check on the provided script, which also prevents it from executing. As a result, although there are workarounds for this, it's generally tricky to use Node itself as a shell for your attack.
+- As the input property containing your payload is passed via stdin, the shell you choose must accept commands from stdin. 
+
+Although they aren't really intended to be shells, the text editors Vim and ex reliably fulfill all of these criteria. If either of these happen to be installed on the server, this creates a potential vector for RCE: 
+
+```
+"shell":"vim",
+"input":":! <command>\n"
+```
 
 ## Labs walkthrough
 
+### Client-side prototype pollution via browser APIs
 
+Background:
+
+```
+This lab is vulnerable to DOM XSS via client-side prototype pollution. The website's developers have noticed a potential gadget and attempted to patch it. However, you can bypass the measures they've taken.
+
+To solve the lab:
+
+    Find a source that you can use to add arbitrary properties to the global Object.prototype.
+
+    Identify a gadget property that allows you to execute arbitrary JavaScript.
+
+    Combine these to call alert().
+
+You can solve this lab manually in your browser, or use DOM Invader to help you. 
+```
 
 
 
