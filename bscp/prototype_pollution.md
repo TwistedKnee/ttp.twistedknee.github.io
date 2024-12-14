@@ -433,15 +433,42 @@ You can solve this lab manually in your browser, or use DOM Invader to help you.
 - observe that DOM Invader has successfully accessed the `script.src` sink via the `transport_url` gadget
 - click `exploit` and dom invader automatically generates a proof of concept exploit and calls `alert(1)`
 
+### DOM XSS via an alternative prototype pollution vector
 
+Background:
 
+```
+This lab is vulnerable to DOM XSS via client-side prototype pollution. To solve the lab:
 
+- Find a source that you can use to add arbitrary properties to the global Object.prototype.
+- Identify a gadget property that allows you to execute arbitrary JavaScript.
+- Combine these to call alert().
 
+You can solve this lab manually in your browser, or use DOM Invader to help you. 
+```
 
+Tip: Pay attention to the XSS context. You need to adjust your payload slightly to ensure that the JavaScript syntax remains valid following your injection. 
 
+**Manual solution:**
+**Find a prototype pollution source**
+- in your browser try polluting `Object.prototype` by injecting an arbitrary property via the query string: `/?__proto__[foo]=bar`
+- open the browser devtools panel and go to the `console` tab
+- enter `object.prototype`
+- study the properties of the returned object, observe that it now has a `foo` property with the value `bar`
 
+**Identify a gadget**
+- in the browser devtools panel, go to the sources tab
+- study the javascript files that are loaded by the target site and look for any DOM XSS sinks
+- notice that there is an `eval()` sink in `searchLoggerAlternative.js`
+- notice that the `manager.sequence` property is passed to `eval()` but this isn't defined by default
 
-
+Craft an exploit
+- Using the prototype pollution source you identified earlier, try injecting an arbitrary sequence property containing an XSS proof-of-concept payload: `/?__proto__.sequence=alert(1)`
+- observe that the payload doesn't execute
+- in the devtools panel, go to the `console` tab and observe that you have triggered an error
+- click the link at the top of the stack trace to jump to the line where `eval()` is called
+- click the line number to add a breakpoint to this line, then refresh the page
+- hover the mouse over the `manager.sequence` reference and observe that its value is `alert(1)1`
 
 
 
