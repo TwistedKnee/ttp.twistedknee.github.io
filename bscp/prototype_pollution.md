@@ -462,13 +462,74 @@ Tip: Pay attention to the XSS context. You need to adjust your payload slightly 
 - notice that there is an `eval()` sink in `searchLoggerAlternative.js`
 - notice that the `manager.sequence` property is passed to `eval()` but this isn't defined by default
 
-Craft an exploit
+**Craft an exploit**
 - Using the prototype pollution source you identified earlier, try injecting an arbitrary sequence property containing an XSS proof-of-concept payload: `/?__proto__.sequence=alert(1)`
 - observe that the payload doesn't execute
 - in the devtools panel, go to the `console` tab and observe that you have triggered an error
 - click the link at the top of the stack trace to jump to the line where `eval()` is called
 - click the line number to add a breakpoint to this line, then refresh the page
-- hover the mouse over the `manager.sequence` reference and observe that its value is `alert(1)1`
+- hover the mouse over the `manager.sequence` reference and observe that its value is `alert(1)1` which is invalida javascript
+- click the line number again to remove the breakpoint, then click the play icon at the top of the browser window to resume code execution
+- add trailing minus character to the payload to fix up the final javascript syntax: `/?__proto__.sequence=alert(1)-`
+- observe that the alrt(1) is called and the lab is solved
+
+**DOM Invader solution**
+- load the lab in burps browser
+- enable dom invader and enable the prototype pollution option
+- open the devtools panel and go to the `dom invader` tab and reload the page
+- observe that DOM invader has identified a prototype pollution vector in the `search` property
+- click `scan for gadgets` and a new tab opens in which DOM invader begins scanning for gadgets using the selected source
+
+### Client-side prototype pollution via flawed sanitization
+
+Background:
+
+```
+This lab is vulnerable to DOM XSS via client-side prototype pollution. Although the developers have implemented measures to prevent prototype pollution, these can be easily bypassed.
+To solve the lab:
+
+- Find a source that you can use to add arbitrary properties to the global Object.prototype.
+- Identify a gadget property that allows you to execute arbitrary JavaScript.
+- Combine these to call alert().
+```
+
+**Find a prototype pollution source:**
+- try polluting Object.prototype by injecting an arbitrary property via the query string: `/?__proto__.foo=bar`
+- Open the browser DevTools panel and go to the `Console` tab
+- enter `object.prototype`
+- study the properties of the returned object and observe that your injected `foo` property has not been added
+- try alternative prototype pollution vectors like: `/?__proto__[foo]=bar` or `/?constructor.prototype.foo=bar`
+- observe that in each instance, `object.prototype` is not modified
+- go to the sources tab and study the JavaScript files that are loaded by the target site: `deparamSanitized.js` use the `sanitizeKey()` function defined in `searchLoggerFiltered.js` to strip potentially dangerous property keys based on a blocklist, however it does not apply this filter recursively
+- back in the URl try injecting one of the blocked keys in such a way that the dangerous key remains following the sanization process:
+
+```
+/?__pro__proto__to__[foo]=bar
+/?__pro__proto__to__.foo=bar
+/?constconstructorructor[protoprototypetype][foo]=bar
+/?constconstructorructor.protoprototypetype.foo=bar
+```
+
+- in the console enter `object.prototype` again, notice that it now has its own `foo` property with the value `bar`
+
+**Identify a gadget:**
+- study the javscript files again and notice that `searchLogger.js` dynamically appends a script to the DOM using the `config` objects `transport_url` property if present
+- notice that no `transport_url` proeprty is set for the `config` object, this is a potential gadget
+
+**Craft and exploit:**
+- using the prototype pollution source you identified earlier, try injecting an arbitrary `transport_url` proeprty: `/?__pro__proto__to__[transport_url]=foo`
+- in the browser devtools go to the `elemetns` tab and study the HTML content of the page, observe that a `<script>` element has been rendered on the page with the `src` attribute `foo`
+- modify the payload in the URL to inject and XSS poc like: `/?__pro__proto__to__[transport_url]=data:,alert(1);`
+- observe that the `alert(1)` is called and the lab is solved
+
+
+
+
+
+
+
+
+
 
 
 
