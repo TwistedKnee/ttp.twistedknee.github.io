@@ -37,7 +37,7 @@ In preparation I am also going through Rana Khalil's course as well [here](https
   - [CORS](/bscp/cors.md)
   - [information disclosure](/bscp/info_disclosure.md)
   - [WebSockets](/bscp/web_sockets.md)
-  - Prototype polution
+  - [Prototype polution](/bscp/prototype_pollution.md)
 
 In Portswigger they have 31 current topics, this may increase over time. Here they are listed in their categories
 
@@ -75,6 +75,6 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [HTTP request smuggling](/bscp/http_req_smuggling.md)
   - [OAuth authentication](/bscp/oauth.md)
   - [JWT attacks](/bscp/jwt.md)
-  - Prototype pollution
+  - [Prototype pollution](/bscp/prototype_pollution.md)
   - [Essential skills](/bscp/essential_skills.md)
 
