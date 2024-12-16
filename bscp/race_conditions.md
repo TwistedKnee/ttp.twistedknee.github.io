@@ -264,35 +264,145 @@ def handleResponse(req, interesting):
   - if you get a 302 response, notice that this login appears to be successful, make a note of the corresponding password from the `Payload` column
 - wait for the account lock to reset then log in as carlos using the identifie password, access the admin panel delete the user carlos to complete
 
-### 
+### Multi-endpoint race conditions
 
+Background:
 
+```
+This lab's purchasing flow contains a race condition that enables you to purchase items for an unintended price.
 
+To solve the lab, successfully purchase a Lightweight L33t Leather Jacket. 
+```
 
+Predict a potential collision
+- log in and purhcase a gift card so you can study the purchasing flow
+- consider that the shopping cart mechanism and in particular the restrictions that determine what you are allowed to order, are worth trying to bypass
+- in burp history identify all of the requests for interacting with the cart, example: `POST /cart` to add items, `POST /cart/checkout` to submit the order
+- add another gift card to your cart, then send the `GET /cart` request to repeater
+- in repeater try sending `GET /cart` request both with and without your session cookie, confirm that without your session cookie you can only access an empty cart. infer this:
+  - the state of the cart is stored server-side in your session
+  - any operations on the cart are keyed on your session ID or the associated use ID
+- notice that submitting and receiving confirmation of a successful order takes place over a single request
+- consider that there may be a race window between when your oder is validated and when it is confirmed, this could enable you to add more items to the order after the server checks whether you have enough credit
 
+Benchmark the behavior
+- send both the `POST /cart` and `POST /cart/checkout` request to repeater
+- add the two tabs into a new group in repeater
+- send the two requests in sequence over a single connection a few times, notice from the response times that the first request consistently takes significantly longer than the second one
+- add a `GET` request for the homepage to the start of your tab group
+- send all three requests in sequence over a single connection, observe that the first request still takes longer, but by warming the connection this way the second and third requests are now completed within a much smaller window
+- deduce that this delay is caused by the back end network architecture rather than the respective processing time of each endpoint, therefore it is not likely to interfere with your attack
+- remove the `GET` request for the homepage from your tab group
+- make sure you have a single gift card in your cart
+- in repeater modify the `POST /cart` request in your tab group so that the `productId` parameter is set to `1`
+- send the requests in sequence again
+- observe that the order is rejected due to insufficient funds as you would expect
 
+Prove the concept
+- remove the jacket from your cart and add another gift card
+- in repeater try sending the requests again, but this time in parallel
+- look at the response to the `POST /cart/checkout`
+  - if you received the same `insufficient funds` response, remove the jacket from your cart and repeat the attack, this may take several attempts
+  - if you received a 200 response, check whether you successfully purchased the leather jacket
+ 
+### Single-endpoint race conditions
 
+Background:
 
+```
+This lab's email change feature contains a race condition that enables you to associate an arbitrary email address with your account.
 
+Someone with the address carlos@ginandjuice.shop has a pending invite to be an administrator for the site, but they have not yet created an account. Therefore, any user who successfully claims this address will automatically inherit admin privileges.
 
+To solve the lab:
 
+    Identify a race condition that lets you claim an arbitrary email address.
+    Change your email address to carlos@ginandjuice.shop.
+    Access the admin panel.
+    Delete the user carlos
 
+You can log in to your own account with the following credentials: wiener:peter.
 
+You also have access to an email client, where you can view all emails sent to @exploit-<YOUR-EXPLOIT-SERVER-ID>.exploit-server.net addresses. 
+```
 
+Predict a potential collision
+- log in and attempt to change your email to `anything@exploit-<YOUR-EXPLOIT-SERVER-ID>.exploit-server.net` observe that a confirmation email is sent to your intended new address, and you're prompted to click a link containing a unique token to confirm the change
+- complete the process and confirm that your email address has been updated on your account page
+- try submitting two different `@exploit-<YOUR-EXPLOIT-SERVER-ID>.exploit-server.net` email addresses in succession, then go to the email client
+- notice that if you try to use the first confirmation link you received this is no longer valid, from this you can infer that the website only stores one pending email address at a time. as submitting a new email addresss edits this entry in the database rather than appending to it, there is potential for a collision
 
+Benchmark the behavior
+- send the `POST /my-account/change-email` request to repeater
+- add the new tab to a group
+- in repeater add the new tab to a group, irght click the grouped tab then select `duplicate tab` and create 19 additional tabs
+- in each tab modify the first part of the email address so that it is unique to each request like test1@email, test2@email, etc
+- send the requests in sequence over separate connections
+- go back to the email client and observe that you have received a single confirmation email for each of the email change requests
 
+Probe for clues
+- in repeater, send the group of requests again, but this time in parallel
+- go to the email client and study the new set of confirmation emails you've received. notice that this time, the recipient address doesn't always match the pending new email address
+- consider that there may be a race window between when the website:
+  - kicks off a task that eventually sends and email the provided address
+  - retrieves data from the database and uses this to render the email template
+- dude that when a parallel request changes the pending email addresss stored in the database during this window, this results in confirmation emails being sent to the wrong address
 
+Prove the concept
+- in repeater, create a new group containing two copies of the `POST /my-account/change-email` request
+- change the `email` parameter of one request to `anything@exploit-<YOUR-EXPLOIT-SERVER-ID>.exploit-server.net`
+- change the `email` param of the other request to `carlos@ginandjuice.shop`
+- send the requests in parallel
+- check your inbox
+  - if you received a confirmation email in which the address in the body matches your own address, resend the requests in parallel and check again
+  - if you received a confirmation email in which the address in the body is `carlos@ginandjuice.shop` click the confirmation link to update your address accordingly
+  - go to your account page and notice that you now see a link for accessing the admin panel
+  - visit the admin panel and dleete the user `carlos`
+ 
+### Exploiting time-sensitive vulnerabilities
 
+Background:
 
+```
+This lab contains a password reset mechanism. Although it doesn't contain a race condition, you can exploit the mechanism's broken cryptography by sending carefully timed requests.
 
+To solve the lab:
 
+    Identify the vulnerability in the way the website generates password reset tokens.
+    Obtain a valid password reset token for the user carlos.
+    Log in as carlos.
+    Access the admin panel and delete the user carlos.
 
+You can log into your account with the following credentials: wiener:peter. 
+```
 
+Study the behavior
+- study the password reset process by submitting a password reset for your own account and observe that you're sent an email containing a reset link. the query string of this link includes your username and a token
+- send the `POST /forgot-password` request to repeater
+- in repeater, send the request a few times then check your inbox again
+- observe that every reset request results in a link with a different token
+- consider the following:
+  - the token is of a consistent length, this suggests that it's either a randomly generated string with a fixed number of characters, or could be a hash of some unknown data, which may be predictable
+  - the fact that the token is different each time indicates that, if it is in fact a hash digest, it must contain some kind of internal state, such as an RNG, a counter, or a timestamp
+- duplicate the repeater tab and add both tabs to a new group
+- send the pair of reset requests in parallel a few times
+- oberve that there is still a significant delay between each response and that you still get a different otken in each confirmation email. infer that your requests are still being processed in sequence rather than concurrently
 
+Bypass the per-session locking restriction
+- notice that your session cookie suggests that the website uses a PHP back-end. this could mean that the server only processes one request at a time per session
+- send the `GET /forgot-password` request to burp repeater, remove the session cookie from the request then send it
+- from the response copy the newly issued session cookie and CSRF token and use them to replace the respective values in one of the two `POST /forgot-password` requests, you now have a pair of password reset requests from two different sessions
+- send the two `POST` requests in parallel a few times and observe that the processing times are now much more closely aligned and sometimes identical
 
-
-
-
-
-
-
+Confirm the vulnerability
+- go back to to your inbox and notice that when the response times match for the pair of reset requests, this results in two confirmation emails that use an identical token. this confirm that a timestamp must be one of the inputs for the hash
+- consider that this also means the token would be predictable if you knew the other inputs for the hash function
+- notice the separate `username` param, this suggests that the username might not be included in the hash, which means that two different usernames could theoretically have the same token
+- in repeater, go to the pair of `POST /forgot-password` request and change the username param of one to carlos
+- resend the requests in parallel again, if the attack worked both users should be assigned the same reset token, although you won't be able to see this
+- check your inbox again, and observe that this time, you've only received one new confirmation email, infer that the other email hopefully contianing the same token has been sent to carlos
+- copy the link from the email and change the username to carlos and load int he browser
+- set the new password for the carlos account and try logging in
+  - if you can't log in, resend the pair of password resets emails and repeat the process
+  - if you successfully log in visit the admin panel and delete the user carlos to solve the lab
+ 
