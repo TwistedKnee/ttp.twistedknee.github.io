@@ -50,7 +50,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [Information Disclosure](/bscp/info_disclosure.md)
   - [Access control](/bscp/access_control.md)
   - [File upload vulnerabilities](/bscp/file_upload_attacks.md)
-  - Race conditions
+  - [Race conditions](/bscp/race_conditions.md)
   - [SSRF](/bscp/ssrf.md)
   - [XXE Injection](/bscp/xxe.md)
   - NoSQL injection
