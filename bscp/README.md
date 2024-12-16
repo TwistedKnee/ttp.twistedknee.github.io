@@ -68,7 +68,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
 - Advanced topics
   - [Insecure deserialization](/bscp/insecure_deserialization.md)
   - Web LLM Attacks
-  - GraphQL Vulns
+  - [GraphQL Vulns](/bscp/graphql.md)
   - [SSTI](/bscp/ssti.md)
   - [Web cache poisoning](/bscp/web_cache_poisoning.md)
   - [HTTP Host header attacks](/bscp/http_host_header_attacks.md)
