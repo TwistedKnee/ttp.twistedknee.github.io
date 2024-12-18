@@ -286,21 +286,13 @@ To solve the lab, you'll first need to exfiltrate the value of the password rese
   - start attack
   - sort the attack results by `payload 1` then `length` to identify responses with an `account locked` message insread of the `invalid username or pass word` message
   - repeat the above steps to identify further JSON parameters, you can do this by incrementing the index of the keys array with each attempt like: `"$where":"Object.keys(this)[2].match('^.{}.*')"`, notice that one of the JSON parameters is for a password reset token
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- test the identified password reset field name as a query param on different endpoints:
+  - in burp history identify the `GET /forgot-password` request as a potentially interesting endpoint, as it relates to the password reset steps, send this to repeater
+  - in repeater submit an invalid field in the URL `GET /forgot-password?foo=invalid` notice that the response is identical to the original response
+  - submit the exfiltrated name of the password reset token field in the URL: ` GET /forgot-password?YOURTOKENNAME=invalid`, notice that you receive an `invalid token` error message, this confirms that you have the correct token name and endpoint
+- in intruder use the `POST /login` request to construct an attack that extracts the value of carlos' password reset token
+  - keep the settings from your previous attack but update the `$where` param: `"$where":"this.YOURTOKENNAME.match('^.{§§}§§.*')"`
+  - start attack
+  - sort the attack results by `payload 1` then `length` to identify responses with an `account locked` message instead of the `invalid username or password` message, note the letters from the `payload 2` column
+- in repeater submit the value of the password reset token in the URL of the `GET / forgot-password` to: ` GET /forgot-password?YOURTOKENNAME=TOKENVALUE`
+- right click the response and select `request in browser > original session` open this in the browser and change the password and login with the new password for carlos' account
