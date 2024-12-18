@@ -238,13 +238,54 @@ You can log in to your own account using the following credentials: wiener:peter
 
 Tip: The password only uses lowercase letters
 
-- 
+- log into the lab and in burps history select the `GET /user/lookup?user=wiener` request and send to repeater
+- submit a `'` character in the user parameter, notice this causes an error
+- submit a valid JavaScript payload in the `user` param, for example: `wiener'+'`, notice that it retrieves the account details for the wiener user indicating that a form of serverside injection may be occurring
+- identify whether you can inject boolean conditions to change the response:
+  - submit a false condition in the `user` param: `wiener' && '1'=='2`, notice this gives a `Could not find user` error
+  - submit a true condition: `wiener' && '1'=='1` notice that this doesn't cause an error
+- identify the password length
+  - change the user param to `administrator' && this.password.length < 30 || 'a'=='b` notice that the response retrieves the account details for the administrator user, indicating that the password is less than 30 characters
+  - reduce the password length in the payload, then resend the request
+  - continue to try different lengths
+  - notice that when you submit the value `9` you retrieve the account details for the `administrator` user but when you submit the value `8` you receive an error message indicating that the password is 8 characters long
+- send this request to intruder
+- in intruder enumerate the password:
+  - change the user param to `administrator' && this.password[§0§]=='§a§`
+  - select `cluster bomb attack` from the attack type drop down menu
+  - in the paylo0ads side panel, select position `1` from the `payload position` drop down list, add the numbers from `0-7`
+  - select position `2` from the payload position drop down list, use the built-in `a-z` list
+  - click start attack
+  - sort the attack results by `payload 1` then `length` notice that one request for each character position has evaluated to trye and retrieved the details for the administrator user
+- use found creds to log in as `administrator` 
 
+### Exploiting NoSQL operator injection to extract unknown fields
 
+Background:
 
+```
+The user lookup functionality for this lab is powered by a MongoDB NoSQL database. It is vulnerable to NoSQL injection.
 
+To solve the lab, you'll first need to exfiltrate the value of the password reset token for the user carlos. 
+```
 
-
+- attempt to log in to the application with `carlos` username and password `invalid`
+- in burp history find the `POST /login` request and send to repeater
+- change the password param to `{"$ne":"invalid"}` then send. notice that you now receive an `account locked` error message, you can't access carlos' account, but this response indicates that the `$ne` operator has been accepted and the application is vulnerable
+- in browser attempt to reset the password for the `carlos` account, when you submit the `carlos` username observe that the reset mechanism involves email verification, so you can't reset the account yourself
+- in repeater use the `POST /login` request to test whether the application is vulnerable to JavaScript injection:
+  - add `"$where": "0"` as an additional param in the JSON data: `{"username":"carlos","password":{"$ne":"invalid"}, "$where": "0"}`
+  - send the request, notice that you receive an `invalid username or password` error message
+  - change `"$where": "0"` to `"$where": "1"` then resend and notice you get an `account locked` error message, meaning the `$where` clause is being evaluated
+- send request to intruder, in intruder do the following:
+  - update the `$where` param as: `"$where":"Object.keys(this)[1].match('^.{}.*')"`
+  - add two payload positions as shown: `"$where":"Object.keys(this)[1].match('^.{§§}§§.*')"`
+  - select `cluster bomb attack`
+  - in `payloads` select the first position one, then set the `payload type` to `numbers` set the number range as `0-20`
+  - in position 2 set the `payload type` as `simple list` and use the `a-z`, `A-Z` and `0-9` lists
+  - start attack
+  - sort the attack results by `payload 1` then `length` to identify responses with an `account locked` message insread of the `invalid username or pass word` message
+  - repeat the above steps to identify further JSON parameters, you can do this by incrementing the index of the keys array with each attempt like: `"$where":"Object.keys(this)[2].match('^.{}.*')"`, notice that one of the JSON parameters is for a password reset token
 
 
 
