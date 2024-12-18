@@ -24,9 +24,23 @@ Next find out how to interact with them, find these details:
 
 **Discovering API documentation**
 
+even if the API isn't discoverable you can use burp scanner to crawl the API, you can also browse applications manually using burps browser, look for endpoints that ay refer to API docs: 
+- /api
+- /swagger/index.html
+- /openapi.json
 
+If you identify an ednpoint for a resource, make sure to investigate the base path, like these:
+- /api/swagger/v1
+- /api/swagger
+- /api
 
+You can also use a list of common paths to find documentation using Intruder
 
+**Using machine readable documentation**
+
+You can use a range of automated tools to analyze any machine readable API docs that you find. Using the OpenAPI Parser extension in burp makes this easier, or use Postman or SoapUI. Another I like is Bruno.
+
+### Identifying API endpoints
 
 
 
