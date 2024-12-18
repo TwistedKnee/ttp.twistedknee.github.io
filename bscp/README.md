@@ -53,7 +53,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [Race conditions](/bscp/race_conditions.md)
   - [SSRF](/bscp/ssrf.md)
   - [XXE Injection](/bscp/xxe.md)
-  - NoSQL injection
+  - [NoSQL injection](/bscp/nosql_injection.md)
   - API testing
   - Web cache deception
  
