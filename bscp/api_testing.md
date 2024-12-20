@@ -144,6 +144,22 @@ if the application behaves differently, this may indicate that the invalid value
 
 ### Exploiting server-side parameter pollution in a query string
 
+- trigger a password reset for the administrator account in the application
+- in burp history find the `POST /forgot-password` request in the `/static/js/forgotPassword.js` JavaScript file, send this request to repeater
+- in repeater resend to see the response is consistent
+- change the username to an invalid value like `administratorx`, send and notice you get an `invalid account` error
+- add a second parameter-value pair to the server-side request using a URL-encoded & character. For example, add URL-encoded `&x=y`: `username=administrator%26x=y`, send and notice the `Parameter is not supported error message` meaning the parameter was evaluated separately instead of as the username variable
+- Attempt to truncate the server-side query string using a URL-encoded `#` character: `username=administrator%23`, notice the `field is not supported` error message, meaning that their exists a `field` parameter that was excluded by the `#` value
+- Truncate the query string after the added parameter-value pair. For example, add URL-encoded `&field=x#`: `username=administrator%26field=x%23`, Send the request. Notice that this results in an `Invalid field` error message. This suggests that the server-side application may recognize the injected field parameter
+- send this request to intruder and select the `x` in the above `username=administrator%26field=x%23` parameter to brute force it, use the `Server-side variable names` list in intruder and start the attack. Notice the `200` requests to see `email` and `username` are valid parameters
+- now in repeater add `email` to the `field` variable: `username=administrator%26field=email%23`, this returns a normal value meaning it is a valid field
+- review the `/static/js/forgotPassword.js` file again and notice the `reset_token` like `/forgot-password?reset_token=${resetToken}`
+- in repeater change the values to include the `reset_token` value instead of `email`: `username=administrator%26field=reset_token%23`, send and notice this gives you a reset token value
+- now in the browser add your password reset token as the value of the `reset_token` parameter . For example: `/forgot-password?reset_token=123456789`, reset the administrator's password
+- log in as administrator and delete the carlos user
+
+### Finding and exploiting an unused API endpoint
+
 
 
 
