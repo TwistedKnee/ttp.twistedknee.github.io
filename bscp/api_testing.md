@@ -177,30 +177,36 @@ To solve the lab, exploit a hidden API endpoint to buy a Lightweight l33t Leathe
 - notice the error saying no `price` value is present in the json, change the body of it too `{"price": 0}` and send
 - now in the browser refresh the jacket's page and notice the price is now `$0` add this to your cart and buy it to finish
 
-### 
+### Exploiting a mass assignment vulnerability
 
+Background:
 
+```
+To solve the lab, find and exploit a mass assignment vulnerability to buy a Lightweight l33t Leather Jacket. You can log in to your own account using the following credentials: wiener:peter
+```
 
+- log into the application and select the `Lightweight "l33t" Leather Jacket` product, add it to your cart and attempt to buy it
+- notice that you don't have enough store credit to buy
+- in burps history notice both the `GET` and `POST` API requests for `/api/checkout`
+- Notice that the response to the `GET` request contains the same JSON structure as the `POST` request. Observe that the JSON structure in the `GET` response includes a `chosen_discount` parameter, which is not present in the `POST` request
+- send the `POST /api/checkout` request to repeater
+- add the chosen_discount parameter to the request. The JSON should look like the following
 
+```
+{
+    "chosen_discount":{
+        "percentage":0
+    },
+    "chosen_products":[
+        {
+            "product_id":"1",
+            "quantity":1
+        }
+    ]
+}
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- send the request and notice you receive no error, indicating it is being processed fine
+- Change the `chosen_discount` value to the string `x`, then send the request. Observe that this results in an error message as the parameter value isn't a number. This may indicate that the user input is being processed
+- Change the `chosen_discount` percentage to `100`, then send the request to solve the lab
 
