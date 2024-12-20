@@ -160,9 +160,24 @@ if the application behaves differently, this may indicate that the invalid value
 
 ### Finding and exploiting an unused API endpoint
 
+Background:
 
+```
+To solve the lab, exploit a hidden API endpoint to buy a Lightweight l33t Leather Jacket. You can log in to your own account using the following credentials: wiener:peter
+```
 
+- in the lab go to a product
+- in repeater notice the `/api/products/3/price` API, send this to repeater
+- in repeater change the `GET` HTTP header to `OPTIONS` and send, notice the `PATCH` option, change the request to this
+- notice you get an `unauthorized` error
+- in the browser, log in with wiener's credentials
+- now select the `Lightweight "l33t" Leather Jacket` product and in burps history find the `/API/products/1/price` and send to repeater
+- change the HTTP method to `PATCH` and send, notice the error saying `content-type` isn't `application/json`
+- in repeater change the content type to `application/json` and include an empty json value in the body `{}` and send
+- notice the error saying no `price` value is present in the json, change the body of it too `{"price": 0}` and send
+- now in the browser refresh the jacket's page and notice the price is now `$0` add this to your cart and buy it to finish
 
+### 
 
 
 
