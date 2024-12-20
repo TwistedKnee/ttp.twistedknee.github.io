@@ -54,7 +54,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [SSRF](/bscp/ssrf.md)
   - [XXE Injection](/bscp/xxe.md)
   - [NoSQL injection](/bscp/nosql_injection.md)
-  - API testing
+  - [API testing](/bscp/api_testing.md)
   - Web cache deception
  
 - Client side
