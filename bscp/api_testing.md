@@ -136,7 +136,13 @@ if the application behaves differently, this may indicate that the invalid value
 
 ### Exploiting an API endpoint using documentation
 
+- log into the application with provided creds, and update your email address
+- in burp history send the `PATCH /api/user/wiener` request to repeater
+- in repeater notice that this retrieves credentials for `wiener`, now remove the wiener from it and send just `/api/user`, this returns an error, now just do `/api` and this gets back the api documentation
+- right click the response and select `show response in browser` and open this in the browser
+- to solve click on the `DELETE` row in the documentaiton and enter `carlos` and send it
 
+### Exploiting server-side parameter pollution in a query string
 
 
 
