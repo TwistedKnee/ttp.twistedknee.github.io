@@ -247,6 +247,8 @@ Craft an exploit
 - Go to the URL that you delivered to carlos in your exploit: `https://YOUR-LAB-ID.web-security-academy.net/my-account/wcd.js`
 - grab the API from the cache, make sure you waited the 30 seconds between testing and you delivering the exploit
 
+### Exploiting path delimiters for web cache deception
+
 
 
 
