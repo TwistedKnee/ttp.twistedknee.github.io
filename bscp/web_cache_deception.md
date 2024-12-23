@@ -113,8 +113,113 @@ Test all ASCII characters and a range of common extensions, including `.css`, `.
 
 Delimiter list [here](https://portswigger.net/web-security/web-cache-deception/wcd-lab-delimiter-list)
 
+Note: To prevent Burp Intruder from encoding the delimiter characters, turn off Burp Intruder's automated character encoding under `Payload encoding` in the `Payloads` side panel
+
+**Delimiter decoding discrepancies**
+
+Differences in which delimiter characters are decoded by the cache and origin server can result in discrepancies in how they interpret the URL path, even if they both use the same characters as delimiters. Consider the example `/profile%23wcd.css`, which uses the URL-encoded `#` character:
+
+- The origin server decodes `%23` to `#`. It uses `#` as a delimiter, so it interprets the path as `/profile` and returns profile information.
+- The cache also uses the `#` character as a delimiter, but doesn't decode `%23`. It interprets the path as `/profile%23wcd.css`. If there is a cache rule for the .css extension it will store the response
+
+**Exploiting delimiter decoding discrepancies**
+You may be able to exploit a decoding discrepancy by using an encoded delimiter to add a static extension to the path that is viewed by the cache, but not the origin server.
+
+Use the same testing methodology you used to identify and exploit delimiter discrepancies, but use a range of encoded characters. Make sure that you also test encoded non-printable characters, particularly `%00`, `%0A` and `%09`. If these characters are decoded they can also truncate the URL path. 
+
+### Exploiting static directory cache rules
+
+Cache rules often target static directories by matching specific URL path prefixes, like `/static`, `/assets`, `/scripts`, or `/images`. These rules can also be vulnerable to web cache deception. 
+
+Discrepancies in how the cache and origin server normalize the URL can enable an attacker to construct a path traversal payload that is interpreted differently by each parser. Consider the example `/static/..%2fprofile`
+- An origin server that decodes slash characters and resolves dot-segments would normalize the path to `/profile` and return profile information
+- a cache that doesn't resolve dot-segments or decode slashes would interpret the path as `/static/..%2fprofile` If the cache stores responses for requests with the /static prefix, it would cache and serve the profile information
+
+Note: an exploitable normalization discrepancy requires that either the cache or origin server decodes characters in the path traversal sequence as well as resolving dot-segments
+
+**Detecting normalization by the origin server**
+
+To test how the origin server normalizes the URL path, send a request to a non-cacheable resource with a path traversal sequence and an arbitrary directory at the start of the path. To choose a non-cacheable resource, look for a non-idempotent method like `POST`. For example, modify `/profile` to `/aaa/..%2fprofile`
+
+- if you get info the same like `/profile` the dot segments and the path traversal is being processed
+- if you get an error then you most likely don't have one or both dot segment or path traversal to abuse
 
 
+Note: When testing for normalization, start by encoding only the second slash in the dot-segment. This is important because some CDNs match the slash following the static directory prefix. You can also try encoding the full path traversal sequence, or encoding a dot instead of the slash. This can sometimes impact whether the parser decodes the sequence.
 
+**Detecting normalization by the cache server**
+
+In `Proxy > HTTP history`, look for requests with common static directory prefixes and cached responses. Focus on static resources by setting the HTTP history filter to only show messages with 2xx responses and script, images, and CSS MIME types.
+
+You can then choose a request with a cached response and resend the request with a path traversal sequence and an arbitrary directory at the start of the static path. Choose a request with a response that contains evidence of being cached. For example, `/aaa/..%2fassets/js/stockCheck.js`
+
+- If the response is no longer cached, this indicates that the cache isn't normalizing the path before mapping it to the endpoint. It shows that there is a cache rule based on the /assets prefix.
+- If the response is still cached, this may indicate that the cache has normalized the path to /assets/js/stockCheck.js
+
+You can also add a path traversal sequence after the directory prefix. For example, modify `/assets/js/stockCheck.js` to `/assets/..%2fjs/stockCheck.js`
+
+- If the response is no longer cached, this indicates that the cache decodes the slash and resolves the dot-segment during normalization, interpreting the path as `/js/stockCheck.js`. It shows that there is a cache rule based on the `/assets` prefix.
+- If the response is still cached, this may indicate that the cache hasn't decoded the slash or resolved the dot-segment, interpreting the path as `/assets/..%2fjs/stockCheck.js`
+
+To confirm that the cache rule is based on the static directory, replace the path after the directory prefix with an arbitrary string. For example, /assets/aaa. If the response is still cached, this confirms the cache rule is based on the /assets prefix. Note that if the response doesn't appear to be cached, this doesn't necessarily rule out a static directory cache rule as sometimes 404 responses aren't cached.
+
+Note: It's possible that you may not be able to definitively determine whether the cache decodes dot-segments and decodes the URL path without attempting an exploit. 
+
+**Exploiting normalization by the origin server**
+
+If the origin server resolves encoded dot-segments, but the cache doesn't, you can attempt to exploit the discrepancy by constructing a payload according to the following structure: `/<static-directory-prefix>/..%2f<dynamic-path>`
+
+For example, consider the payload `/assets/..%2fprofile`:
+
+- The cache interprets the path as: `/assets/..%2fprofile`
+- The origin server interprets the path as: `/profile`
+
+The origin server returns the dynamic profile information, which is stored in the cache. 
+
+**Exploiting normalization by the cache server**
+
+If the cache server resolves encoded dot-segments but the origin server doesn't, you can attempt to exploit the discrepancy by constructing a payload according to the following structure: `/<dynamic-path>%2f%2e%2e%2f<static-directory-prefix>`
+
+Note: When exploiting normalization by the cache server, encode all characters in the path traversal sequence. Using encoded characters helps avoid unexpected behavior when using delimiters, and there's no need to have an unencoded slash following the static directory prefix since the cache will handle the decoding. 
+
+In this situation, path traversal alone isn't sufficient for an exploit. For example, consider how the cache and origin server interpret the payload `/profile%2f%2e%2e%2fstatic`:
+
+- The cache interprets the path as: `/static`
+- The origin server interprets the path as: `/profile%2f%2e%2e%2fstatic`
+
+The origin server is likely to return an error message instead of profile information.
+
+To exploit this discrepancy, you'll need to also identify a delimiter that is used by the origin server but not the cache. Test possible delimiters by adding them to the payload after the dynamic path:
+
+- If the origin server uses a delimiter, it will truncate the URL path and return the dynamic information.
+- If the cache doesn't use the delimiter, it will resolve the path and cache the response.
+
+For example, consider the payload `/profile;%2f%2e%2e%2fstatic`. The origin server uses ; as a delimiter:
+
+- The cache interprets the path as: `/static`
+- The origin server interprets the path as: `/profile`
+
+The origin server returns the dynamic profile information, which is stored in the cache. You can therefore use this payload for an exploit. 
+
+### Exploiting file name cache rules
+
+Certain files such as `robots.txt`, `index.html`, and `favicon.ico` are common files found on web servers. They're often cached due to their infrequent changes. Cache rules target these files by matching the exact file name string.
+
+To identify whether there is a file name cache rule, send a `GET` request for a possible file and see if the response is cached. 
+
+**Detecting normalization discrepancies**
+
+To test how the origin server normalizes the URL path, use the same method that you used for static directory cache rules. 
+
+To test how the cache normalizes the URL path, send a request with a path traversal sequence and an arbitrary directory before the file name. For example, `/aaa%2f%2e%2e%2findex.html`:
+
+- If the response is cached, this indicates that the cache normalizes the path to `/index.html`
+- If the response isn't cached, this indicates that the cache doesn't decode the slash and resolve the dot-segment, interpreting the path as `/profile%2f%2e%2e%2findex.html`
+
+**Exploiting normalization discrepancies**
+
+Because the response is only cached if the request matches the exact file name, you can only exploit a discrepancy where the cache server resolves encoded dot-segments, but the origin server doesn't. Use the same method as for static directory cache rules - simply replace the static directory prefix with the file name.
 
 ## Labs Walkthrough
+
+### 
