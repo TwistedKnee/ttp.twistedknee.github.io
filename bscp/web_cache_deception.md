@@ -19,9 +19,18 @@ Note: When the victim accesses the malicious URL, their response is stored in th
  
 **Using a cache buster**
 
+While testing for discrepancies and crafting a web cache deception exploit, make sure that each request you send has a different cache key. Otherwise, you may be served cached responses, which will impact your test results. 
 
+As both URL path and any query parameters are typically included in the cache key, you can change the key by adding a query string to the path and changing it each time you send a request. Automate this process using the Param Miner extension. To do this, once you've installed the extension, click on the top-level `Param miner > Settings` menu, then select `Add dynamic cachebuster`. Burp now adds a unique query string to every request that you make. You can view the added query strings in the Logger tab. 
 
+**Detecting cached responses**
 
+Review response headers like:
+- X-Cache
+  - `X-Cache: hit` - means response served from cache
+  - `X-Cache: miss` - means response served is not from cache, but in most circumstances the next request will be, send again to test
+  - `X-Cache: dynamic` - means response was dynamically served, usually not a target for caching
+  - `X-Cache: refresh` - means reponse cache was outdated and needed refreshing
 
 
 
