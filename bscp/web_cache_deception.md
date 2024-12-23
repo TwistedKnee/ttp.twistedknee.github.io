@@ -222,4 +222,33 @@ Because the response is only cached if the request matches the exact file name, 
 
 ## Labs Walkthrough
 
-### 
+### Exploiting path mapping for web cache deception
+
+Background:
+
+```
+To solve the lab, find the API key for the user carlos. You can log in to your own account using the following credentials: wiener:peter
+```
+
+Identify a target endpoint
+- log into the application and notice that the reponse contains your API keys
+
+Identify a path mapping discrepancy
+- find the `GET /my-account` in burp history and send to repeater, add an arbitrary value to the end of it like `/my-account/abc` and send
+- Notice that you still receive a response containing your API key. This indicates that the origin server abstracts the URL path to `/my-account`
+- Add a static extension to the URL path, for example `/my-account/abc.js`
+- Send the request. Notice that the response contains the `X-Cache: miss` and `Cache-Control: max-age=30`
+- resend and see that you get a `X-Cache: hit` response saying that the response was cached
+
+Craft an exploit
+- go to exploit server
+- in the body of the server create a javascript fetch against the my-account that will be cached: `<script>document.location="https://YOUR-LAB-ID.web-security-academy.net/my-account/wcd.js"</script>`
+- Click Deliver exploit to victim. When the victim views the exploit, the response they receive is stored in the cache.
+- Go to the URL that you delivered to carlos in your exploit: `https://YOUR-LAB-ID.web-security-academy.net/my-account/wcd.js`
+- grab the API from the cache, make sure you waited the 30 seconds between testing and you delivering the exploit
+
+
+
+
+
+
