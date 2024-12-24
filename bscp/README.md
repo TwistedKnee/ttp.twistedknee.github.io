@@ -55,7 +55,7 @@ In Portswigger they have 31 current topics, this may increase over time. Here th
   - [XXE Injection](/bscp/xxe.md)
   - [NoSQL injection](/bscp/nosql_injection.md)
   - [API testing](/bscp/api_testing.md)
-  - Web cache deception
+  - [Web cache deception](/bscp/web_cache_deception.md)
  
 - Client side
   - [XSS](/bscp/xss.md)
