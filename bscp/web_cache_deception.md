@@ -249,8 +249,92 @@ Craft an exploit
 
 ### Exploiting path delimiters for web cache deception
 
+Identify a target endpoint
+- log into the application and notice that the reponse contains your API keys
 
+Identify path delimiters used by the origin server
+- in burp history send the `GET /my-account` to repeater
+- add an arbitrary path to the end like `/abc` and send
+- notice the `404 not found` error in the response, this indicates that the origin server doesn't abstract the path to `/my-account`
+- remove the arbitrary path but add an arbitrary string to the original path like: `/my-accountabc`
+- still getting a `404 not found` error in the response
+- send the request to intruder, make the attack type `sniper attack` and add a payload position after `/my-account` like: `/my-account§§abc`
+- use this [delimiter list](https://portswigger.net/web-security/web-cache-deception/wcd-lab-delimiter-list) as the payload
+- under `payload encoding` deselect `URL encode these characters` and start the attack, find responses that equal `200` which are the `?` and `;` characters
 
+Investigate path delimiter discrepancies
+- go back to repeater and add the `?` and send and review what happens, make it a static file at the end of `abc` like `abc.js` and notice that the response is telling us it was cached, now do the same with `;`
+- notice that with `;` the response does have a `X-Cache: miss` header
+- this will be are target to cache using similar steps as above
 
+Craft an exploit
+- go to the exploit server and add this to the body: `<script>document.location="https://YOUR-LAB-ID.web-security-academy.net/my-account;wcd.js"</script>`
+- store it and deliver to the victim
+- then visit the above url to steal the users api keys that were cached
 
+### Exploiting origin server normalization for web cache deception
+
+Identify a target endpoint
+- log into the application and notice that the reponse contains your API keys
+
+Identify path delimiters used by the origin server
+- in burp history send the `GET /my-account` to repeater
+- add an arbitrary path to the end like `/abc` and send
+- notice the `404 not found` error in the response, this indicates that the origin server doesn't abstract the path to `/my-account`
+- remove the arbitrary path but add an arbitrary string to the original path like: `/my-accountabc`
+- still getting a `404 not found` error in the response
+- send the request to intruder, make the attack type `sniper attack` and add a payload position after `/my-account` like: `/my-account§§abc`
+- use this [delimiter list](https://portswigger.net/web-security/web-cache-deception/wcd-lab-delimiter-list) as the payload
+- under `payload encoding` deselect `URL encode these characters` and start the attack, find responses that equal `200` which is the `?` character
+
+Investigate normalization discrepancies
+- in repeater remove the arbitrary `abc` string and add an arbitrary directory followed by an encoded dot-segment to the start of the original path like: `/aaa/..%2fmy-account`
+- send the request and notice the `200` response with your API key
+- reivew the burp history and notice static resources are in the `/resources` directory, notice that responses with requests to the `/resources` prefix show evidence of caching
+- find a request with a call to the `/resources` directory and send to repeater
+- in repeater add an encoded dot-segment after the `/resources` path prefix such as `/resources/..%2fyour-resource`
+- send the request and notice the `404` response which contains the `X-Cache: miss` header meaning it was cached
+- modify the URL path after `/resources` to an arbitrary string like: `/resources/aaa` and send
+- notice that the `404` response now has the `X-Cache: miss` header
+
+Craft an exploit
+- now craft this to directory traversal to `/my-account` on a `/resources` call like: `/resources/..%2fmy-account` and send
+- notice it does give you back a `X-Cache: hit` when sent twice, indicating it was cached
+- now go to exploit server and place this in: `<script>document.location="https://YOUR-LAB-ID.web-security-academy.net/resources/..%2fmy-account?wcd"</script>`
+- store it and deliver to victim
+- go to the above resource path in your exploit to get carlos' API key 
+
+### Exploiting cache server normalization for web cache deception
+
+Identify a target endpoint
+- log into the application and notice that the reponse contains your API keys
+
+Identify path delimiters used by the origin server
+- in burp history send the `GET /my-account` to repeater
+- add an arbitrary path to the end like `/abc` and send
+- notice the `404 not found` error in the response, this indicates that the origin server doesn't abstract the path to `/my-account`
+- remove the arbitrary path but add an arbitrary string to the original path like: `/my-accountabc`
+- still getting a `404 not found` error in the response
+- send the request to intruder, make the attack type `sniper attack` and add a payload position after `/my-account` like: `/my-account§§abc`
+- use this [delimiter list](https://portswigger.net/web-security/web-cache-deception/wcd-lab-delimiter-list) as the payload
+- under `payload encoding` deselect `URL encode these characters` and start the attack, find responses that equal `200` which are the `#`,`%23`,`?` and `%3f` characters
+
+Investigate path delimiter discrepancies
+- in repeater add review each delimiter while adding a `.js` extension to the end of `abc` and test sending
+- notice that responses don't show evidence of caching
+
+Investigate normalization discrepancies
+- remove the query string and add an arbitrary directory followed by an encoded dot-segment to the start of the original path like: `/aaa/..%2fmy-account`
+- in burp history notice that static resources are saved under `/resources` notice that responses to requests with the `/resources` shows evidence of caching
+- send a `/resources` request to repeater and add that dot-segment peace like earlier: `/aaa/..%2fresources/YOUR-RESOURCE` then send it
+- notice the `404` has a cache header now
+- add a dot-segment path prefix to `/resources` now like: `/resources/..%2fYOUR-RESOURCE` and notice the `404` response no longer contains evidence of caching, this indicates that the cache decodes and resolves the dot-segment and has a cache rule based on the `resources` prefix
+
+Craft an exploit
+- in repeater that contains the `/aaa/..%2fmy-account` request. Use the `?` delimiter to attempt to construct an exploit like: `/my-account?%2f%2e%2e%2fresources`
+- send the request and notice this receives a `200` response with your API key, but doesn't contain evidence of caching
+- repeat this testing the `%23` and `%3f` characters instead of `?` notice that when you use the `%23` you get a `200` response with the caching header
+- go to exploit server and place this in the body: `<script>document.location="https://YOUR-LAB-ID.web-security-academy.net/my-account%23%2f%2e%2e%2fresources?wcd"</script>`
+- store and deliver
+- go to the above link in your exploit to get carlos' api key
 
