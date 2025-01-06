@@ -4,6 +4,8 @@
 
 [Portswigger](https://portswigger.net/web-security/cross-site-scripting)
 
+[Payloads without () parantheses: [link](https://portswigger.net/research/the-seventh-way-to-call-a-javascript-function-without-parentheses)
+
 ## Methodology
 
 Testing for XSS flow:
