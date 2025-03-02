@@ -1,0 +1,3 @@
+- [] Conduct search engine discovery and recon for info leakage, tools like google dorking, sitedigger, shodan, FOCA, punkspider, bbot. Use a search engine to search for Network diagrams and Configurations, Credentials, Error message content
+- [] Fingerprint web server - Find the version and type of a running web server to determine known vulnerabilities and the appropriate exploits. Using "HTTP header field ordering" and "Malformed requests test".
+- [] Review webserver metafiles for information leakage
