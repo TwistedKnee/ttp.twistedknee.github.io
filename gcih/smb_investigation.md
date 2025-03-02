@@ -6,7 +6,7 @@ smbclient
 smbclient -L 10.10.0.1 -U sec504
 ```
 
-rpcclient
+rpcclient test
 
 ```
 rpcclient 10.10.0.1 -U sec504
