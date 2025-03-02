@@ -30,4 +30,4 @@
 		```
 3. More: https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/README.md
 
-
+cheat sheet: https://portswigger.net/web-security/ssrf/url-validation-bypass-cheat-sheet
