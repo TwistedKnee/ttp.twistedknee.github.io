@@ -1,6 +1,6 @@
 # Table of contents
 
-* [index](README.md)
+* [index](methodology/README.md)
 * [bscp](bscp/README.md)
   * [sqli](bscp/sqli.md)
   * [xss](bscp/xss.md)
