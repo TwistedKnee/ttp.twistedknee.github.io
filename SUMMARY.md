@@ -1,6 +1,9 @@
 # Table of contents
 
 * [index](methodology/README.md)
+* [checklists](checklists/README.md)
+  * [info_gathering](checklists/info_gathering.md)
+  * 
 * [bscp](bscp/README.md)
   * [sqli](bscp/sqli.md)
   * [xss](bscp/xss.md)
