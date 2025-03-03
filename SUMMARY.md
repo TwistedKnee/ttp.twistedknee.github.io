@@ -2,8 +2,7 @@
 
 * [index](methodology/README.md)
 * [checklists](checklists/README.md)
-<<<<<<< HEAD
-  * [1.info_gathering](1.info_gathering.md)
+  * [info_gathering](info_gathering.md)
   * [2. configuration_and_deploy_management_testing](checklists/2. configuration_and_deploy_management_testing)
 =======
   * [info_gathering](checklists/1.+info_gathering.md)
