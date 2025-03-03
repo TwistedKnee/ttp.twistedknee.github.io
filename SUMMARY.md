@@ -2,8 +2,8 @@
 
 * [index](methodology/README.md)
 * [checklists](checklists/README.md)
-  * [1. info_gathering](checklists/1. info_gathering.md)
-  * [2. configuration_and_deploy_management_testing](checklists/2. configuration_and_deploy_management_testing)
+  * [info_gathering](checklists/1.+info_gathering.md)
+  * [configuration_and_deploy_management_testing](checklists/2. configuration_and_deploy_management_testing)
 * [bscp](bscp/README.md)
   * [sqli](bscp/sqli.md)
   * [xss](bscp/xss.md)
