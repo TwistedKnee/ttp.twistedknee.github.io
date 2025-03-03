@@ -2,7 +2,16 @@
 
 * [index](methodology/README.md)
 * [checklists](checklists/README.md)
-
+  * [info_gathering](checklists/info_gathering)
+  * [configuration and deploy management testing](checklists/configuration_and_deploy_management_testing)
+  * [identity managment testing](checklists/identity_management_testing)
+  * [authentication testing](checklists/authentication_testing)
+  * [authorization testing](checklists/authorization_testing)
+  * [session management testing](checklists/session_management_testing)
+  * [data validation testing](checklists/data_validation_testing)
+  * [error handling](checklists/error_handling)
+  * [cryptography](checklists/cryptography)
+  * [business logic testing](checklists/business_logic_testing) 
 * [bscp](bscp/README.md)
   * [sqli](bscp/sqli.md)
   * [xss](bscp/xss.md)
