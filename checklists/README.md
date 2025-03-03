@@ -12,4 +12,5 @@ I will probably rely on the owasp checklist for my start, and link to my methodo
 8. [error handling](error_handling)
 9. [cryptography](cryptography)
 10. [business logic testing](business_logic_testing)
-11. [client_side_testing](/checklists/client_side_testing)
+11. [client_side_testing](client_side_testing)
+
