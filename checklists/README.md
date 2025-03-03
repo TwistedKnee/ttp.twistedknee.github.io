@@ -2,7 +2,7 @@ Start of my checklists for web hacking, I've been lazy and using others or relyi
 
 I will probably rely on the owasp checklist for my start, and link to my methodology. 
 
-1. [info_gathering](checklists/info_gathering)
+1. [info_gathering](checklists/info_gathering.md)
 2. [configuration and deploy management testing](checklists/configuration_and_deploy_management_testing)
 3. [identity managment testing](checklists/identity_management_testing)
 4. [authentication testing](checklists/authentication_testing)
