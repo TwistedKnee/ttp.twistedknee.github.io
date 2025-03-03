@@ -2,7 +2,7 @@
 
 * [index](methodology/README.md)
 * [checklists](checklists/README.md)
-  * [info_gathering](checklists/info_gathering)
+  * [info_gathering](checklists/info_gathering.md)
   * [configuration and deploy management testing](checklists/configuration_and_deploy_management_testing)
   * [identity managment testing](checklists/identity_management_testing)
   * [authentication testing](checklists/authentication_testing)
