@@ -1,6 +1,5 @@
 - [ ] testing for reflected XSS - inject into forms
 - [ ] testing for stored XSS - inject into forms
-- [ ] testing for DOM xss - inspect source and sinks
 - [ ] testing for HTTP verb tampering - craft custom HTTP requests to test the other methods to bypass URL authentication and authorization
 - [ ] testing for HTTP parameter pollution - identify any form or action that allows user-supplied input to bypass input validation and filters using HPP
 - [ ] testing for SQL injection - union, boolean, error based, out of band, time delay

