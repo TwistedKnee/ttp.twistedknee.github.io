@@ -1,0 +1,1 @@
+My second course with zeropointsecurity, hoping to follow through like I did with the first and get it's certification as well. 
