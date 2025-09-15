@@ -1,6 +1,6 @@
 ## TITLE
 
-So when doing a CTF I wanted to view all the javascript variables my session had access to, so I find this script that when ran in the console removes the default ones for you to view:
+So when doing a CTF I wanted to view all the javascript variables my session had access to, so I found this script that when ran in the console removes the default ones for you to view:
 
 ```
 {
