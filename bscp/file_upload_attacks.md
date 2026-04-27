@@ -95,7 +95,7 @@ This is a much more robust way of validating the file type, but even this isn't 
 
 **Uploading malicious client-side scripts**
 
-if you can upload HTML files or SVG images, you can potentially use <script> tags to create stored XSS payloads
+if you can upload HTML files or SVG images, you can potentially use \<script> tags to create stored XSS payloads
 
 **Exploiting vulnerabilities in the parsing of uploaded files**
 

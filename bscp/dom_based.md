@@ -90,7 +90,7 @@ Further lists exists on [Hacktricks](https://book.hacktricks.xyz/pentesting-web/
 
 ### DOM XSS using web messages
 
-- as listed in the Hacktricks list from above, we found the usage of `.innerHTML` on the document.getElementById function:
+- as listed in the Hacktricks list from above, we found the usage of `.innerHTML` on the document.getElementById function, in addeventlistener:
 - ![image](https://github.com/user-attachments/assets/6ba5d62e-99fb-4bb7-b15c-c2e36eebcf90)
 - Now we will use the exploit server to craft an iframe that calls the print() function in javascript
 

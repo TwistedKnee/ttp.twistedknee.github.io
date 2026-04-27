@@ -125,7 +125,7 @@ X-Ignore: X
 ```
 
 - the request was blocked due to the second request's Host header conflicting with the smuggled Host header.
-- now do this so that the second requests headers are appened to the smuggled request body instead, and send twice
+- now do this so that the second requests headers are appended to the smuggled request body instead, and send twice
 
 ```
 POST / HTTP/1.1

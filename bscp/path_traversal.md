@@ -6,7 +6,7 @@ Path Traversal or Discovery Traversal
 
 ## Methodology
 
-When reviewing traffic look out for references to files, based on parameter name or seeing files referenced in parameters. 
+When reviewing traffic look out for references to files, based on parameter name or seeing files referenced in parameters. In burp it hides images requests, check these in the proxy settings so you can see the request and look for any vulnerabilities present.
 
 ### Common traversal techniques
 

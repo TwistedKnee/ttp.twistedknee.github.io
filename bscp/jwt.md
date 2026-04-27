@@ -193,7 +193,7 @@ Part 1 Brute-force the secret key:
 - log into your account
 - in burp history send the `GET /my-account` with you signed in JWT to repeater
 - in repeater, change the path to `/admin` and send the request and notice you are blocked
--  Copy the JWT and brute-force the secret. You can do this using hashcat as follows: `hashcat -a 0 -m 16500 <YOUR-JWT> /path/to/jwt.secrets.list`
+-  Copy the JWT and brute-force the secret. You can do this using hashcat as follows: `hashcat -a 0 -m 16500 <YOUR-JWT> /path/to/jwt.secrets.list` https://github.com/wallarm/jwt-secrets/blob/master/jwt.secrets.list
 -  the secret is `secret1`
 
 Part 2 Generate a forged signing key:

